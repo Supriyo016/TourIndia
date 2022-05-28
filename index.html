@@ -13,15 +13,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&family=Ruthie&display=swap" rel="stylesheet" />
 
   <!--=============== CSS ===============-->
-  <link rel="stylesheet" href="assets/css/styles.css"/>
-  <script src="assets/js/main.js"></script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 
   <title>Tour India</title>
 </head>
 
 <body>
-  <!--==================== NAV ====================-->
   <header class="header" id="header">
     <nav class="nav container">
       <a href="#home" class="nav__logo"><span class="nav_logo_inner">Tour</span> India</a>
@@ -29,7 +27,7 @@
       <div class="nav__menu" id="nav-menu">
         <ul class="nav__list">
           <li class="nav__item">
-            <a href="Home.html" class="nav__link"><i class="fas fa-home"></i> Home</a>
+            <a href="#home" class="nav__link"><i class="fas fa-home"></i> Home</a>
           </li>
           <li class="nav__item">
             <a href="#discover" class="nav__link"> <i class="fas fa-book"></i> Discover</a>
@@ -44,38 +42,14 @@
             <a href="#place" class="nav__link"><i class="fas fa-image"></i> Gallery</a>
           </li>
           <li class="nav__item">
-            <a href="#home" class="nav__link"><i class="fas fa-image"></i> News Feed</a>
+            <a href="#about" class="nav__link"><i class="fas fa-info-circle"></i> About</a>
           </li>
-          <!-- <li class="nav__item">
-            <a href="#" class="nav__link">More <i class="fa fa-angle-down"></i></a>
-            <ul>
-              <li class="nav__item">
-                <a href="#about" class="nav__link"><i class="fas fa-info-circle"></i> About</a>
-              </li>
-              <li class="nav__item">
-                <a href="#contactus" class="nav__link"><i class="fas fa-info-circle"></i> Contact Us</a>
-              </li>
-            </ul>
-          </li> -->
-
         </ul>
       </div>
-      <!-- <div class="login-form-container">
-        <i class="fas fa-times" id="form-close"></i>
-        <form action="">
-          <h3>login</h3>
-          <input type="emaill" class="box" placeholder="Enter your email">
-          <input type="password" class="box" placeholder="Enter your password">
-          <input type="submit" value="login now" class="btn">
-          <input type="checkbox" id="remember">
-          <label for="remember">Remember me</label>
-          <p>Forget Password <a href="#">click here</a></p>
-          <p>Don't have an account <a href="#">Create account</a></p>
-        </form>
-      </div> -->
     </nav>
   </header>
-  
+
+  <main class="main">
     <!--==================== HOME ====================-->
     <section class="home" id="home">
       <!-- <img src="assets/slideshow/slide1.jpg" alt="" class="home__img" /> -->
@@ -142,7 +116,7 @@
       <div class="box-container">
         <div class="box">
           <i class="fas fa-hotel"></i>
-          <h3>Affortable Hotels</h3>
+          <h3>We Affortable Hotels</h3>
           <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sed
             ratione consequuntur consequatur porro maiores odit, doloremque
@@ -192,7 +166,7 @@
 
         <div class="box">
           <i class="fas fa-headset"></i>
-          <a href="ContactUs.html" ><h3>24/7 Services</h3></a>
+          <h3>24/7 Services</h3>
           <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sed
             ratione consequuntur consequatur porro maiores odit, doloremque
@@ -339,7 +313,7 @@
     </section>
 
 
-
+    
     <!--==================== ABOUT ====================-->
     <section class="about section" id="about">
       <div class="about__container container grid">
@@ -423,7 +397,6 @@
     </section>
   </main>
 
-   <!--==================== Footer ====================-->
   <section class="footer">
     <div class="box-container">
       <div class="box">
@@ -438,20 +411,27 @@
       <div class="box">
         <h3>Extra links</h3>
         <a href="#"> <i class="fas fa-angle-right"></i> Ask questions</a>
-        <a href="AboutUs.html"> <i class="fas fa-angle-right"></i> About Us</a>
+        <a href="#"> <i class="fas fa-angle-right"></i> About Us</a>
         <a href="#"> <i class="fas fa-angle-right"></i> Privacy Policy</a>
         <a href="#"> <i class="fas fa-angle-right"></i> Terms of use</a>
       </div>
 
       <div class="box">
-        <a href="ContactUs.html"><h3>Contact Info</h3></a>
+        <h3>Contact Info</h3>
         <p><i class="fas fa-map"></i> Kolkata, India</p>
-        <p><i class="fas fa-phone"></i> +91 0123456789</p>
-        <p><i class="fas fa-envelope"></i> tourindia@gmail.com</p>
+        <p><i class="fas fa-phone"></i> +123-68395-78</p>
+        <p><i class="fas fa-envelope"></i> abc@gmail.com</p>
         <p><i class="fas fa-clock"></i> 7:00am-10.00pm</p>
       </div>
+
+      <!-- <div class="box">
+            <h3>Follow us</h3>
+            <a href="#"><i class="fab fa-facebook-f"></i> Facebook</a>
+            <a href="#"><i class="fab fa-twitter"></i> Twitter</a>
+            <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="#"><i class="fab fa-linkedin"></i> Linkdin</a>
+        </div> -->
     </div>
-    
     <div class="footer__animation">
       <div class="social-links">
         <h1 class="follow_us">Follow Us</h1>
@@ -465,5 +445,7 @@
   </section>
   <!-- footer ends here -->
 </body>
+
+<script src="assets\js\main.js"></script>
 
 </html>
