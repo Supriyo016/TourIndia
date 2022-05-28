@@ -598,20 +598,20 @@ input {
 .discover__images .discover__images__image1 {
   border-radius: 8px;
   margin-right: 34px;
-  background: url("/assets/img/discover1.jpg") repeat;
+  background: url("../img/discover1.jpg") repeat;
   height: 370px;
   width: 280px;
 }
 .discover__images .discover__images__image2 {
   border-radius: 7px;
   margin-right: 34px;
-  background: url("/assets/img/discover2.jpg") repeat;
+  background: url("../img/discover2.jpg") repeat;
   height: 370px;
   width: 280px;
 }
 .discover__images .discover__images__image3 {
   border-radius: 7px;
-  background: url("/assets/img/discover4.jpg") repeat;
+  background: url("../img/discover4.jpg") repeat;
   height: 370px;
   width: 280px;
 }
