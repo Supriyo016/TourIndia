@@ -185,16 +185,16 @@ input {
 @keyframes animate {
   0%,
   100% {
-    background-image: url("/assets/img/slideshow/slide1.jpg");
+    background-image: url("../img/slideshow/slide1.jpg");
   }
   25% {
-    background-image: url("/assets/img/slideshow/slide2.jpg");
+    background-image: url("../img/slideshow/slide2.jpg");
   }
   50% {
-    background-image: url("/assets/img/slideshow/slide3.jpg");
+    background-image: url("../img/slideshow/slide3.jpg");
   }
   25% {
-    background-image: url("/assets/img/slideshow/slide4.jpg");
+    background-image: url("../img/slideshow/slide4.jpg");
   }
 }
 
@@ -905,7 +905,7 @@ input {
 
 /*=============== FOOTER ===============*/
 .footer {
-  background-image: url("/assets/img/footer_image2.jpg");
+  background-image: url("../img/footer_image2.jpg");
   /* background: rgb(65, 62, 62); */
   background-position: center;
   background-size: cover;
