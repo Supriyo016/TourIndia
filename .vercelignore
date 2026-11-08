@@ -1,0 +1,7 @@
+legacy/
+tests/
+docs/
+playwright-report/
+test-results/
+.claude/
+.github/

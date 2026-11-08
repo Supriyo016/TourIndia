@@ -1,0 +1,716 @@
+@import "tailwindcss";
+
+/*
+ * Tour India design system.
+ * Carried over from the original site: the two-tone wet-paint wordmark, the
+ * deep peacock teal (hue 190) and the rani-pink of the old header, now used
+ * only as a hairline accent.
+ */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  color-scheme: light;
+  --bg: #fbf8f2;
+  --surface: #ffffff;
+  --surface-2: #f3ecdf;
+  --ink: #13262b;
+  --ink-2: #3a4f55;
+  --muted: #5a6c72;
+  --line: #e2d9c8;
+  --brand: #14505c;
+  --brand-strong: #0e3c46;
+  --brand-soft: #dcebee;
+  --on-brand: #ffffff;
+  --accent: #e8890c;
+  --accent-strong: #cf7600;
+  --accent-ink: #a14f00;
+  --on-accent: #1d1203;
+  --gold: #a8860b;
+  --rani: #a8186f;
+  --forest: #2c6a4b;
+  --danger: #b3261e;
+  --map-fill: #cfe0df;
+  --map-stroke: #fbf8f2;
+  --shadow-sm: 0 1px 2px rgb(19 38 43 / 0.07);
+  --shadow-md: 0 6px 18px -8px rgb(19 38 43 / 0.2);
+  --shadow-lg: 0 18px 40px -18px rgb(19 38 43 / 0.32);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1a20;
+  --surface: #15252c;
+  --surface-2: #1c3038;
+  --ink: #f2eee6;
+  --ink-2: #c9d2d2;
+  --muted: #9dacaf;
+  --line: #2a4049;
+  --brand: #75c6d4;
+  --brand-strong: #a3dce6;
+  --brand-soft: #173c46;
+  --on-brand: #08222a;
+  --accent: #f2a33c;
+  --accent-strong: #f6b65f;
+  --accent-ink: #f5b25c;
+  --on-accent: #1d1203;
+  --gold: #e3c04a;
+  --rani: #e77bbb;
+  --forest: #7cc9a0;
+  --danger: #ff8a80;
+  --map-fill: #24444e;
+  --map-stroke: #0e1a20;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 6px 18px -8px rgb(0 0 0 / 0.6);
+  --shadow-lg: 0 18px 40px -18px rgb(0 0 0 / 0.75);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --color-gold: var(--gold);
+  --color-rani: var(--rani);
+  --color-forest: var(--forest);
+  --color-danger: var(--danger);
+
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-figtree), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-wordmark: var(--font-wet-paint), var(--font-fraunces), serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --breakpoint-xs: 26.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 560;
+    line-height: 1.14;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  }
+  h2 {
+    font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.6rem);
+  }
+  h3 {
+    font-size: clamp(1.2rem, 1.1rem + 0.45vw, 1.45rem);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 40rem) {
+    .container-x {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .section {
+    padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 650;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .lede {
+    color: var(--ink-2);
+    font-size: 1.125rem;
+    max-width: 62ch;
+  }
+
+  .prose-guide p {
+    color: var(--ink-2);
+    max-width: 70ch;
+  }
+  .prose-guide p + p {
+    margin-top: 1em;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.15rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    font-size: 0.98rem;
+    font-weight: 620;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      transform 160ms ease,
+      box-shadow 160ms ease;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .btn svg {
+    transition: transform 180ms ease;
+  }
+  .btn:hover svg.nudge {
+    transform: translateX(3px);
+  }
+  .btn-primary {
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+  .btn-primary:hover {
+    background: var(--brand-strong);
+  }
+  .btn-accent {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .btn-accent:hover {
+    background: var(--accent-strong);
+  }
+  .btn-outline {
+    background: transparent;
+    border-color: var(--line);
+    color: var(--ink);
+  }
+  .btn-outline:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+  .btn-on-photo {
+    background: rgb(255 255 255 / 0.14);
+    border-color: rgb(255 255 255 / 0.5);
+    color: #fff;
+  }
+  .btn-on-photo:hover {
+    background: rgb(255 255 255 / 0.26);
+  }
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-md);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+  .icon-btn:hover {
+    background: var(--surface-2);
+    color: var(--brand);
+  }
+
+  .link-u {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0 1.5px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 220ms ease;
+  }
+  .link-u:hover,
+  .link-u:focus-visible {
+    background-size: 100% 1.5px;
+  }
+  .link-text {
+    color: var(--brand);
+    font-weight: 560;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .link-text:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    transition:
+      transform 200ms ease,
+      box-shadow 200ms ease,
+      border-color 200ms ease;
+  }
+  .card-hover:hover,
+  .card-hover:focus-within {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+  /* Hairline border that sweeps from saffron through rani to peacock on hover. */
+  .card-hover::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(120deg, var(--accent), var(--rani), var(--brand));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 220ms ease;
+    pointer-events: none;
+  }
+  .card-hover:hover::after,
+  .card-hover:focus-within::after {
+    opacity: 1;
+  }
+
+  .zoom-media {
+    overflow: hidden;
+  }
+  .zoom-media img {
+    transition: transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .card-hover:hover .zoom-media img,
+  .zoom-media:hover img {
+    transform: scale(1.045);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 2.25rem;
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-2);
+    font-size: 0.875rem;
+    font-weight: 540;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+  .chip:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+  .chip[aria-pressed="true"],
+  .chip[aria-current="true"] {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--on-brand);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.1rem 0.55rem;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--ink-2);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .tag-estimate {
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    color: var(--accent-ink);
+  }
+  .tag-verified {
+    background: color-mix(in srgb, var(--forest) 16%, transparent);
+    color: var(--forest);
+  }
+  .tag-editorial {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .field-label {
+    font-size: 0.92rem;
+    font-weight: 620;
+    color: var(--ink);
+  }
+  .field-hint {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .field-error {
+    font-size: 0.86rem;
+    font-weight: 560;
+    color: var(--danger);
+  }
+  .input {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 1rem;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+  .input::placeholder {
+    color: var(--muted);
+  }
+  .input:hover {
+    border-color: var(--muted);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 26%, transparent);
+  }
+  .input[aria-invalid="true"] {
+    border-color: var(--danger);
+  }
+
+  /* Dashed line, echoing a route on a map, used as a section divider. */
+  .route-rule {
+    height: 2px;
+    background-image: linear-gradient(90deg, var(--accent) 55%, transparent 55%);
+    background-size: 14px 2px;
+    opacity: 0.7;
+  }
+
+  .photo-scrim {
+    background: linear-gradient(180deg, rgb(8 20 26 / 0) 30%, rgb(8 20 26 / 0.82) 100%);
+  }
+}
+
+/* The map is plain SVG, so its interaction states live in CSS. */
+.map-state path,
+.map-state circle {
+  fill: var(--map-fill);
+  stroke: var(--map-stroke);
+  stroke-width: 0.9;
+  transition:
+    fill 160ms ease,
+    opacity 160ms ease;
+}
+.map-state:hover path,
+.map-state:focus-visible path,
+.map-state:hover circle,
+.map-state:focus-visible circle,
+.map-state[data-selected="true"] path,
+.map-state[data-selected="true"] circle {
+  fill: var(--accent);
+}
+.map-state:focus-visible {
+  outline: none;
+}
+.map-state:focus-visible path {
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+[data-region-filter] .map-state {
+  opacity: 0.32;
+}
+[data-region-filter="north"] .map-state[data-region="north"],
+[data-region-filter="west"] .map-state[data-region="west"],
+[data-region-filter="central"] .map-state[data-region="central"],
+[data-region-filter="south"] .map-state[data-region="south"],
+[data-region-filter="east"] .map-state[data-region="east"],
+[data-region-filter="northeast"] .map-state[data-region="northeast"],
+[data-region-filter="islands"] .map-state[data-region="islands"] {
+  opacity: 1;
+}
+[data-region-filter="north"] .map-state[data-region="north"] path,
+[data-region-filter="west"] .map-state[data-region="west"] path,
+[data-region-filter="central"] .map-state[data-region="central"] path,
+[data-region-filter="south"] .map-state[data-region="south"] path,
+[data-region-filter="east"] .map-state[data-region="east"] path,
+[data-region-filter="northeast"] .map-state[data-region="northeast"] path,
+[data-region-filter="islands"] .map-state[data-region="islands"] path {
+  fill: color-mix(in srgb, var(--brand) 55%, var(--map-fill));
+}
+
+/* Illustrated characters: looping motion is opt-in by class and always disabled for reduced motion. */
+@keyframes bob {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes wave {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0);
+  }
+  15%,
+  45% {
+    transform: rotate(16deg);
+  }
+  30% {
+    transform: rotate(-8deg);
+  }
+}
+@keyframes drift {
+  from {
+    transform: translateX(-140px);
+  }
+  to {
+    transform: translateX(calc(100vw + 40px));
+  }
+}
+@keyframes wheel {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes flicker {
+  50% {
+    transform: scale(0.92, 1.08);
+  }
+}
+@keyframes needle {
+  0%,
+  100% {
+    transform: rotate(-16deg);
+  }
+  50% {
+    transform: rotate(20deg);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+@keyframes slide-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes loader-dash {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+.anim-bob {
+  animation: bob 3.4s ease-in-out infinite;
+}
+.anim-wave {
+  transform-box: fill-box;
+  transform-origin: 20% 90%;
+  animation: wave 3.2s ease-in-out infinite;
+}
+.anim-wheel {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wheel 1.6s linear infinite;
+}
+.anim-flicker {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flicker 1.1s ease-in-out infinite;
+}
+.anim-needle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: needle 2.6s ease-in-out infinite;
+}
+.anim-drift {
+  animation: drift 26s linear infinite;
+}
+.anim-pop {
+  animation: pop-in 260ms ease both;
+}
+.anim-menu {
+  animation: slide-pop 170ms ease both;
+}
+.hero-text > * {
+  animation: hero-rise 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.hero-text > *:nth-child(2) {
+  animation-delay: 90ms;
+}
+.hero-text > *:nth-child(3) {
+  animation-delay: 170ms;
+}
+
+/* Scroll-driven progress and reveals: no JavaScript, and they degrade to nothing. */
+@supports (animation-timeline: scroll()) {
+  @keyframes progress {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  .scroll-progress {
+    transform-origin: 0 50%;
+    animation: progress linear both;
+    animation-timeline: scroll(root);
+  }
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+  }
+  .reveal {
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 26%;
+  }
+  @keyframes to-top {
+    from,
+    8% {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+    }
+    12%,
+    to {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+  .to-top {
+    animation: to-top linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+html.theme-transition,
+html.theme-transition * {
+  transition:
+    background-color 240ms ease,
+    border-color 240ms ease,
+    color 240ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print,
+  header,
+  footer,
+  .to-top,
+  .scroll-progress {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+  .print-break {
+    break-inside: avoid;
+  }
+  .card {
+    border-color: #bbb;
+    box-shadow: none;
+  }
+}
+
+/* Leaflet is styled for theme rather than importing its full stylesheet twice. */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--surface-2);
+}
+[data-theme="dark"] .leaflet-tile {
+  filter: brightness(0.72) contrast(1.1) saturate(0.7);
+}

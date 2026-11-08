@@ -1,0 +1,57 @@
+[
+ {
+  "slug": "ganga-aarti",
+  "title": "Ganga aarti at Varanasi",
+  "href": "/destinations/varanasi",
+  "src": "/videos/ganga-aarti.webm",
+  "poster": "/videos/ganga-aarti.webp",
+  "duration": 47,
+  "author": "Kasyap",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ganga_aarti_at_Varanasi.webm"
+ },
+ {
+  "slug": "basgo-ladakh",
+  "title": "View from Basgo monastery, Ladakh",
+  "href": "/destinations/leh",
+  "src": "/videos/basgo-ladakh.webm",
+  "poster": "/videos/basgo-ladakh.webp",
+  "duration": 25,
+  "author": "Yann Forget",
+  "license": "CC BY 3.0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panorama_from_Basgo_monastery,_Ladakh,_2.webm"
+ },
+ {
+  "slug": "holi-bengaluru",
+  "title": "Children playing Holi in Bengaluru",
+  "href": "/culture/festivals/holi",
+  "src": "/videos/holi-bengaluru.webm",
+  "poster": "/videos/holi-bengaluru.webp",
+  "duration": 17,
+  "author": "Subhashish Panigrahi",
+  "license": "CC BY-SA 4.0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Children_playing_colors_during_Holi_in_a_Bengaluru_street.webm"
+ },
+ {
+  "slug": "durga-puja-kolkata",
+  "title": "Durga Puja crowds in Kolkata",
+  "href": "/culture/festivals/durga-puja",
+  "src": "/videos/durga-puja-kolkata.webm",
+  "poster": "/videos/durga-puja-kolkata.webp",
+  "duration": 23,
+  "author": "Indrajit Das",
+  "license": "CC BY-SA 4.0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Durga_Puja_in_Kolkata_2017_Video_Time_Lapse_01.webm"
+ },
+ {
+  "slug": "nohkalikai",
+  "title": "The cliffs at Nohkalikai, Meghalaya",
+  "href": "/destinations/shillong-sohra",
+  "src": "/videos/nohkalikai.webm",
+  "poster": "/videos/nohkalikai.webp",
+  "duration": 36,
+  "author": "Wann Majaw",
+  "license": "CC BY 4.0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nohkalikai_Cliffs.webm"
+ }
+]
