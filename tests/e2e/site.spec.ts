@@ -223,7 +223,7 @@ test.describe("date, calendar and notes", () => {
     await page.goto("/bookings?destination=hampi");
     await page.getByLabel("A place to stay").check();
     await page.getByRole("button", { name: "Next" }).click();
-    await expect(page.getByLabel("Destination")).toHaveValue("hampi");
+    await expect(page.getByRole("combobox", { name: "Destination" })).toHaveValue("hampi");
     await page.getByRole("button", { name: "Next" }).click();
     await expect(page.getByText("Choose your dates.")).toBeVisible();
   });
@@ -756,7 +756,9 @@ test.describe("trust and identity", () => {
   test("bookings page disclaims being a travel agent and has no checkout", async ({ page }) => {
     await page.goto("/bookings");
     await expect(page.getByText("Tour India is not a travel agent")).toBeVisible();
-    await expect(page.locator("input")).toHaveCount(0);
+    // The planning-request form has fields, but nothing that takes payment.
+    await expect(page.locator('input[autocomplete^="cc-"], input[name*="card" i]')).toHaveCount(0);
+    await expect(page.getByText(/card number|pay now|checkout/i)).toHaveCount(0);
   });
 
   test("external links open safely", async ({ page }) => {

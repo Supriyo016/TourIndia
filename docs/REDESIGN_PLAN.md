@@ -65,11 +65,11 @@ Each phase has a test gate: typecheck, lint, unit tests, Playwright and a build.
   - All national holidays, plus major festivals of every religion and region, nature events (monsoon, bird migration, blooms) and fairs, each with details and a source.
   - Month, list and year views, filters, and .ics export.
 - [x] **P10. Assistant.** Done 2026-11-16: opt-in WebLLM (Qwen2.5 0.5B) grounded on the guide answer, plus a Google search link. Yatri is upgraded on the model the owner chooses. It answers about this site only, never disparages other sites, and can add web results if a search key is supplied.
-- [ ] **P11. SEO and quality.**
+- [x] **P11. SEO and quality.** Done 2026-11-16.
   - JSON-LD for TouristDestination, Event, Article and BreadcrumbList.
   - Open Graph images, a sitemap split by section, and Search Console verification.
   - Lighthouse and axe on key pages, and fixes to reach the targets.
-- [ ] **P12. Security review.** An independent review covering OWASP Top 10, auth, OTP brute force, IDOR, XSS, CSRF, injection, uploads, rate limits and headers. All findings fixed.
+- [x] **P12. Security review.** Done 2026-11-16: 8 findings, all fixed. An independent review covering OWASP Top 10, auth, OTP brute force, IDOR, XSS, CSRF, injection, uploads, rate limits and headers. All findings fixed.
 - [ ] **P13. Ship.**
   - Commit and push `rebuild/nextjs` to GitHub.
   - Deploy to Vercel, run live checks, and update the docs.

@@ -218,10 +218,13 @@ export function Header() {
           <button type="button" className="icon-btn" aria-label="Search (press /)" onClick={() => setSearchOpen(true)}>
             <Search className="size-5" aria-hidden />
           </button>
-          <Link href="/saved" className="icon-btn max-[22.5rem]:hidden" aria-label="Saved destinations and passport">
+          <Link href="/saved" className="icon-btn max-xs:hidden" aria-label="Saved destinations and passport">
             <Heart className="size-5" aria-hidden />
           </Link>
-          <ThemeToggle />
+          {/* On the narrowest phones the theme menu moves into the mobile menu, so the bar fits. */}
+          <div className="max-xs:hidden">
+            <ThemeToggle />
+          </div>
           <UserMenu />
           <button
             type="button"
@@ -237,6 +240,10 @@ export function Header() {
 
       {mobileOpen && (
         <nav aria-label="Mobile" className="scroll-thin anim-menu max-h-[calc(100dvh-var(--header-h,6.5rem))] overflow-y-auto overscroll-contain border-t border-line bg-surface xl:hidden">
+          <div className="container-x flex items-center justify-between border-b border-line py-2 xs:hidden">
+            <span className="font-semibold">Theme</span>
+            <ThemeToggle />
+          </div>
           <ul className="container-x py-2">
             {navigation.map((item) => {
               const links = item.groups?.flatMap((group) => group.links) ?? [];

@@ -1,21 +1,33 @@
 # Project status
 
-**Last updated:** 2026-11-09
-**Phase:** Live on Vercel. Forms await a database.
+**Last updated:** 2026-11-16
+**Phase:** Redesign v2 complete (see `REDESIGN_PLAN.md`). Accounts and community are built and tested, and switch on when the owner adds the settings below.
 **Production:** https://tour-india-pi.vercel.app
-**Branch:** `rebuild/nextjs`. Changes are committed locally but not pushed. `master` and the GitHub Pages site are untouched.
+**Branch:** `rebuild/nextjs`. `master` and the GitHub Pages site are untouched.
 
-## Latest additions (deployed and committed 2026-11-16, not pushed)
+## Redesign v2 (2026-11-16)
 
-The site video (re-encoded to a 10 MB 720p WebM), slider caption moved to the upper right, live date and time bar, holiday calendar, plan notes, cookie consent with signed session cookies, and the Yatri assistant with chat and terminal. Locally: 174 of 174 unit and API tests and 70 of 70 browser tests passed. Live: all 188 sitemap pages and internal links, the assistant, consent and video endpoints, and the new browser flows passed. Two live test runs were interrupted by local connection resets and passed when re-run.
+- **Shell:** 7 main items plus "More", a glass header over the slider with the live IST clock inside it, a route loading bar, a Light/Dark/System menu, and themed scrollbars.
+- **Hero and 3D:** taglines that change with each slide, lower-right controls with a timer ring, a three.js globe of every guide, and 3D tilt on cards.
+- **Video:** autoplays in view at a third of the screen height, with 720p, 480p and 360p chosen from the network and a manual quality menu.
+- **Accounts:** email code sign-in, Google sign-in, profiles, account deletion, and an admin area with an audit log.
+- **Community:** encyclopedia entries with suggested edits that need admin approval; loves, ratings, sharing, viewpoints, tips, questions, replies and reports; and moderation that respects every faith.
+- **Planner:** pace, diet and traveller options; a plan check out of 100; Google Maps routes; useful official links.
+- **Booking and culture:** planning requests with references, art form pages, the festival year, and culture by region.
+- **Calendar:** holidays, confirmed festival dates, observances, state days and nature seasons, with filters, a list view and .ics export.
+- **Yatri:** an optional free on-device AI (WebLLM) grounded in the guides, and a Google search link.
+- **SEO:** Search Console verification hook, Open Graph image, Organization data, sitemap dates and priorities.
+- **Security:** an independent review found 8 issues (none critical); all are fixed and tested.
 
-**Yatri has not yet been run against the live Claude API**, because no API key is set. Its agent loop was tested with a stand-in client. Until `ANTHROPIC_API_KEY` is added, it answers from the site's guides.
+**Not verified:**
+- Email delivery and Google sign-in, because the keys don't exist yet. Development uses logged codes; Google sign-in is covered by unit tests of its checks only.
+- The on-device model was tested on one machine with WebGPU.
 
 ## Next exact action
 
-1. Push `rebuild/nextjs`, then connect the repository in Vercel with `rebuild/nextjs` as the production branch
-2. Create a MongoDB Atlas database and add `MONGODB_URI` and `MONGODB_DB` to Vercel, following `setup.md`
-3. A person reviews the items marked "Could not confirm" in `FACT_CHECK.md`
+1. Add the settings in `setup.md` ("Switching on accounts…") to Vercel: MongoDB, `AUTH_SECRET`, Resend, Google OAuth, `ADMIN_EMAILS`, `GOOGLE_SITE_VERIFICATION`
+2. Run `npm run db:setup` against the new database
+3. Verify the site in Google Search Console and submit the sitemap
 
 ## Needs the owner
 
