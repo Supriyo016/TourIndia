@@ -28,7 +28,7 @@ export function contentFor(target: Target): { title: string; path: string; sourc
     }
     default: {
       if (!SLUGS[target.type].has(target.id)) return undefined;
-      const paths: Record<string, string> = { story: "/stories/", festival: "/culture/festivals/", food: "/culture/food/", art: "/culture/arts#" };
+      const paths: Record<string, string> = { story: "/stories/", festival: "/culture/festivals/", food: "/culture/food/", art: "/culture/arts/" };
       const list: { slug: string; name?: string; title?: string }[] = { story: stories, festival: festivals, food: foods, art: artForms }[target.type];
       const item = list.find((entry) => entry.slug === target.id)!;
       return { title: item.name ?? item.title ?? target.id, path: `${paths[target.type]}${target.id}`, source: item };

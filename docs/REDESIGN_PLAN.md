@@ -58,10 +58,10 @@ Each phase has a test gate: typecheck, lint, unit tests, Playwright and a build.
   - Customisation: budget, pace, travel style, transport, accessibility, diet, kids and seniors.
   - Route analysis: distances, travel time, season and festival clashes, holiday crowds, budget split, warnings.
   - Google Maps embed and links, and links to official sites.
-- [ ] **P8. Booking and culture.**
+- [x] **P8. Booking and culture.** Done 2026-11-16.
   - Booking: an enquiry flow with steps, date and guest pickers, saved drafts and status tracking. No real payments.
   - Culture: filters, a timeline, regional maps, and the community features from P6.
-- [ ] **P9. Calendar.**
+- [x] **P9. Calendar.** Done 2026-11-16.
   - All national holidays, plus major festivals of every religion and region, nature events (monsoon, bird migration, blooms) and fairs, each with details and a source.
   - Month, list and year views, filters, and .ics export.
 - [ ] **P10. Assistant.** Yatri is upgraded on the model the owner chooses. It answers about this site only, never disparages other sites, and can add web results if a search key is supplied.

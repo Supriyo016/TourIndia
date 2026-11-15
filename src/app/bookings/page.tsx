@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink as ExternalIcon, Hotel, Landmark, Plane, ShieldCheck, TrainFront } from "lucide-react";
+import { BookingWizard, type BookingPlace } from "@/components/bookings/BookingWizard";
 import { ExternalLink, Notice, PageIntro } from "@/components/ui/primitives";
+import { destinations, getState } from "@/data";
 
 export const metadata: Metadata = {
   title: "Where to book",
@@ -39,6 +41,11 @@ const groups = [
   },
 ];
 
+const range = ([min, max]: [number, number]) => ({ min, max });
+const places: BookingPlace[] = destinations
+  .map(({ slug, name, stateSlug, budget }) => ({ slug, name, state: getState(stateSlug)?.name ?? "", budget: { budget: range(budget.budget), midRange: range(budget.midRange), comfort: range(budget.comfort) } }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
 export default function BookingsPage() {
   return (
     <>
@@ -47,6 +54,12 @@ export default function BookingsPage() {
         <Notice title="Tour India is not a travel agent" tone="warn">
           We are not a registered travel agent, tour operator, booking provider or payment processor. We never ask for card details, and we can&apos;t change or refund a booking made elsewhere. Links below leave this site, and we earn no commission from them.
         </Notice>
+
+        <section aria-labelledby="request-title">
+          <h2 id="request-title" className="mb-2">Ask us to help plan</h2>
+          <p className="mb-5 max-w-prose text-ink-2">Tell us what you need and we&apos;ll reply by email with suggestions and the official places to book. It&apos;s free, and you can track requests from your account.</p>
+          <BookingWizard places={places} />
+        </section>
 
         <ul className="grid gap-5 md:grid-cols-2">
           {groups.map(({ title, Icon, links, help }) => (

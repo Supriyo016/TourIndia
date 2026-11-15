@@ -206,6 +206,28 @@ test.describe("date, calendar and notes", () => {
     await expect(page.getByText("Diwali").first()).toBeVisible();
   });
 
+  test("the calendar filters occasions, lists them, and exports a month", async ({ page }) => {
+    await page.goto("/calendar");
+    await page.getByRole("button", { name: "Next month" }).click();
+    await page.getByRole("tab", { name: "List" }).click();
+    const observance = page.getByRole("button", { name: "Day of observance" });
+    await expect(observance).toHaveAttribute("aria-pressed", "true");
+    await observance.click();
+    await expect(observance).toHaveAttribute("aria-pressed", "false");
+    const download = page.waitForEvent("download");
+    await page.getByRole("button", { name: /Add to my calendar/ }).click();
+    expect((await download).suggestedFilename()).toMatch(/^tour-india-\d{4}-\d{2}\.ics$/);
+  });
+
+  test("booking requests walk through five steps and ask to sign in before sending", async ({ page }) => {
+    await page.goto("/bookings?destination=hampi");
+    await page.getByLabel("A place to stay").check();
+    await page.getByRole("button", { name: "Next" }).click();
+    await expect(page.getByLabel("Destination")).toHaveValue("hampi");
+    await page.getByRole("button", { name: "Next" }).click();
+    await expect(page.getByText("Choose your dates.")).toBeVisible();
+  });
+
   test("a note can be written, dated, edited, deleted and restored", async ({ page }) => {
     await page.goto("/calendar");
     await page.getByRole("button", { name: /^(Saturday|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday),? 15 / }).click();

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { DancerCharacter } from "@/components/characters/Characters";
 import { PageIntro } from "@/components/ui/primitives";
 import { getState } from "@/data";
@@ -43,8 +44,8 @@ export default function ArtsPage() {
               <h2 id={`${group.id}-h`} className="mb-4">{group.title}</h2>
               <ul className="grid gap-4 md:grid-cols-2">
                 {artForms.filter((form) => form.category === group.id).map((form) => (
-                  <li key={form.slug} className="card p-4">
-                    <h3 className="text-lg">{form.name}</h3>
+                  <li key={form.slug} data-tilt className="card card-hover relative p-4">
+                    <h3 className="text-lg"><Link href={`/culture/arts/${form.slug}`} className="after:absolute after:inset-0">{form.name}</Link></h3>
                     <p className="text-sm text-muted">{form.stateSlugs.map((slug) => getState(slug)?.name).filter(Boolean).join(", ")}</p>
                     <p className="mt-1.5 text-[0.97rem] text-ink-2">{form.summary}</p>
                     <p className="mt-2 text-[0.95rem] text-ink-2"><span className="font-semibold text-ink">Where: </span>{form.whereToExperience}</p>
