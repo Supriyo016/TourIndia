@@ -70,7 +70,7 @@ export default function GalleryPage() {
           <h2 id="videos" className="mb-5">Travel videos</h2>
           <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             <li className="card overflow-hidden">
-              <TourVideo className="aspect-video w-full bg-black object-cover" />
+              <TourVideo size="fill" />
               <div className="p-4">
                 <h3 className="text-lg">{tourVideo.title}</h3>
                 <p className="mt-1 text-xs text-muted">From Tour India</p>

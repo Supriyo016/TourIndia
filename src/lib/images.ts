@@ -13,9 +13,3 @@ export function getImage(key: ImageKey): LicensedImage | undefined {
 export function allImages(): (LicensedImage & { key: string })[] {
   return Object.entries(images).map(([key, image]) => ({ key, ...image }));
 }
-
-export function galleryImages(): (LicensedImage & { key: string })[] {
-  return allImages().filter(
-    ({ key }) => key.startsWith("gallery:") || key.startsWith("destination:") || key.startsWith("festival:"),
-  );
-}

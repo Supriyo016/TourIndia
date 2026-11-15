@@ -37,7 +37,9 @@
   --shadow-lg: 0 18px 40px -18px rgb(19 38 43 / 0.32);
 }
 
-:root[data-theme="dark"] {
+/* Also applies to any element marked data-theme="dark", such as the header over the home slider. */
+:root[data-theme="dark"],
+[data-theme="dark"] {
   color-scheme: dark;
   --bg: #0e1a20;
   --surface: #15252c;
@@ -621,6 +623,169 @@
   animation-delay: 170ms;
 }
 
+/* Hero: slow zoom on the photo, a 3D entrance for each tagline, a timer ring and drifting light. */
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.09) translate3d(-1%, -1%, 0);
+  }
+}
+.ken-burns {
+  animation: ken-burns 9s ease-out both;
+}
+@keyframes tagline-in {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateX(38deg) translateY(28px);
+    filter: blur(6px);
+  }
+}
+.hero-tagline {
+  transform-origin: 50% 100%;
+  animation: tagline-in 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes ring-fill {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.hero-ring {
+  stroke-dasharray: 1;
+  animation: ring-fill linear both;
+}
+.hero-btn {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: #fff;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+.hero-btn:hover {
+  background: rgb(255 255 255 / 0.18);
+}
+.hero-btn:active {
+  transform: scale(0.92);
+}
+@keyframes motes {
+  to {
+    background-position: 0 -600px, 0 -900px;
+  }
+}
+.hero-motes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(circle, rgb(255 214 140 / 0.7) 1px, transparent 2px),
+    radial-gradient(circle, rgb(255 255 255 / 0.45) 1px, transparent 2px);
+  background-size: 220px 300px, 340px 450px;
+  background-position: 0 0, 60px 90px;
+  animation: motes 40s linear infinite;
+  mask-image: linear-gradient(90deg, transparent, #000 40%, #000);
+}
+
+/* Small glass buttons over photos and video. */
+.glass-chip {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 999px;
+  background: rgb(8 20 26 / 0.5);
+  padding: 0 0.85rem;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+.glass-chip:hover {
+  background: rgb(8 20 26 / 0.7);
+}
+
+/* Shown instead of the WebGL globe on low-power devices and with reduced motion. */
+.globe-fallback {
+  background:
+    radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.35), transparent 30%),
+    radial-gradient(circle, rgb(124 201 214 / 0.55) 1px, transparent 1.6px) 0 0 / 14px 14px,
+    radial-gradient(circle at 50% 50%, #1c5865, #0b2a33 70%);
+  box-shadow: 0 0 80px rgb(117 198 212 / 0.35);
+}
+
+/* Cards that tilt towards the pointer in 3D. TiltLayer sets --rx and --ry. */
+[data-tilt] {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+  transform-style: preserve-3d;
+  transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+[data-tilt]:hover {
+  transition-duration: 80ms;
+}
+
+/* Glass surfaces: menus, dialogs and the header. Blur sits behind floating layers only. */
+.glass-panel {
+  border: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgb(255 255 255 / 0.08);
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+
+/* Scrollbars, themed to match: the page, inner panels (.scroll-thin) and horizontal rails (.rail). */
+html {
+  scrollbar-color: color-mix(in oklab, var(--brand) 55%, var(--line)) var(--bg);
+  scrollbar-gutter: stable;
+}
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--brand) 45%, var(--line)) transparent;
+}
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(16rem, 1fr);
+  gap: 1rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1rem;
+  padding-bottom: 0.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) color-mix(in oklab, var(--line) 60%, transparent);
+}
+.rail > * {
+  scroll-snap-align: start;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--brand) 50%, var(--line)) padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand) padding-box;
+}
+.rail::-webkit-scrollbar-thumb {
+  background: var(--accent) padding-box;
+}
+
 /* Scroll-driven progress and reveals: no JavaScript, and they degrade to nothing. */
 @supports (animation-timeline: scroll()) {
   @keyframes progress {
@@ -660,6 +825,27 @@
   }
   .to-top {
     animation: to-top linear both;
+    animation-timeline: scroll(root);
+  }
+  @property --scrolled {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+  }
+  @keyframes ring {
+    to {
+      --scrolled: 100%;
+    }
+  }
+  /* A ring around the back-to-top button that fills as you read. */
+  .to-top::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 999px;
+    background: conic-gradient(var(--brand) var(--scrolled), transparent 0);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+    animation: ring linear both;
     animation-timeline: scroll(root);
   }
 }

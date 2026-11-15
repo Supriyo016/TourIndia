@@ -236,5 +236,3 @@ export function answerLocally(question: string): string {
   if (results.length) return `Here's what I found on Tour India:\n${results.map((item) => `- ${link(item.title, item.href)} (${item.type})`).join("\n")}`;
   return `I couldn't find that in Tour India's guides. Try a state, a town, a festival or a month, or ${link("browse every guide", "/discover")}.`;
 }
-
-export const STORY_COUNT = stories.length;

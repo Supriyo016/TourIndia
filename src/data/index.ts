@@ -1,4 +1,4 @@
-import type { Destination, RegionId, StateProfile } from "@/types/content";
+import type { Destination, StateProfile } from "@/types/content";
 import { northDestinations } from "./destinations/north";
 import { westSouthDestinations } from "./destinations/west-south";
 import { eastIslandDestinations } from "./destinations/east-islands";
@@ -27,10 +27,6 @@ export function getState(slug: string): StateProfile | undefined {
 
 export function destinationsInState(stateSlug: string): Destination[] {
   return destinations.filter((item) => item.stateSlug === stateSlug);
-}
-
-export function destinationsInRegion(region: RegionId): Destination[] {
-  return destinations.filter((item) => item.region === region);
 }
 
 export function inSeason(month: number): Destination[] {

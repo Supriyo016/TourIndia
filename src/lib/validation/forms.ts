@@ -30,6 +30,3 @@ export const storySchema = z.object({
   consent: z.literal(true, { error: "Please confirm this is your own experience." }),
 });
 
-export type ContactInput = z.infer<typeof contactSchema>;
-export type NewsletterInput = z.infer<typeof newsletterSchema>;
-export type StoryInput = z.infer<typeof storySchema>;

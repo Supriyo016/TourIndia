@@ -9,7 +9,7 @@ import { SaveButton } from "./SaveButton";
 export function DestinationCard({ destination, priority }: { destination: Destination; priority?: boolean }) {
   const state = getState(destination.stateSlug);
   return (
-    <article className="card card-hover flex h-full flex-col overflow-hidden">
+    <article data-tilt className="card card-hover flex h-full flex-col overflow-hidden">
       <div className="zoom-media relative aspect-[4/3] rounded-t-[13px]">
         <Photo
           imageKey={`destination:${destination.slug}`}

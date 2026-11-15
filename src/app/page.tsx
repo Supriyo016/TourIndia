@@ -15,6 +15,7 @@ import { HeroSlider, type HeroSlide } from "@/components/hero/HeroSlider";
 import { IndiaMap } from "@/components/maps/IndiaMap";
 import { MapExplorer } from "@/components/maps/MapExplorer";
 import { statePreviews } from "@/components/maps/map-data";
+import { GlobeStage } from "@/components/three/GlobeStage";
 import { TourVideo } from "@/components/ui/TourVideo";
 import { JsonLd, Photo, SectionHeading } from "@/components/ui/primitives";
 import { site } from "@/config/site";
@@ -26,15 +27,16 @@ import { stories } from "@/data/stories";
 import { categories, formatMonthRange, monthName, regions } from "@/data/taxonomy";
 import { getImage, type ImageKey } from "@/lib/images";
 
-const heroSlides: [ImageKey, string, string, string][] = [
-  ["hero:taj-mahal", "Taj Mahal", "Agra", "/destinations/agra"],
-  ["hero:kashmir", "Dal Lake", "Kashmir", "/destinations/srinagar"],
-  ["hero:kerala", "The backwaters", "Kerala", "/destinations/alappuzha"],
-  ["hero:rajasthan", "Jaisalmer Fort", "Rajasthan", "/destinations/jaisalmer"],
-  ["hero:varanasi", "The ghats", "Varanasi", "/destinations/varanasi"],
-  ["hero:northeast", "Living root bridges", "Meghalaya", "/destinations/shillong-sohra"],
-  ["hero:goa", "The coast", "Goa", "/destinations/goa"],
-  ["hero:ladakh", "Nubra Valley", "Ladakh", "/destinations/leh"],
+/** Image, place, region, guide link, then the tagline shown with that slide. */
+const heroSlides: [ImageKey, string, string, string, string][] = [
+  ["hero:taj-mahal", "Taj Mahal", "Agra", "/destinations/agra", "Marble that changes colour with the light"],
+  ["hero:kashmir", "Dal Lake", "Kashmir", "/destinations/srinagar", "Quiet mornings on still water"],
+  ["hero:kerala", "The backwaters", "Kerala", "/destinations/alappuzha", "Slow days on palm-lined canals"],
+  ["hero:rajasthan", "Jaisalmer Fort", "Rajasthan", "/destinations/jaisalmer", "A golden fort at the edge of the Thar"],
+  ["hero:varanasi", "The ghats", "Varanasi", "/destinations/varanasi", "Evenings of lamps on the Ganga"],
+  ["hero:northeast", "Living root bridges", "Meghalaya", "/destinations/shillong-sohra", "Bridges grown by hand, not built"],
+  ["hero:goa", "The coast", "Goa", "/destinations/goa", "Sea, spice and Konkan sunsets"],
+  ["hero:ladakh", "Nubra Valley", "Ladakh", "/destinations/leh", "High desert under wide open skies"],
 ];
 
 const interestLinks = [
@@ -53,9 +55,9 @@ const tips = [
 ] as const;
 
 export default function HomePage() {
-  const slides: HeroSlide[] = heroSlides.flatMap(([key, place, region, href]) => {
+  const slides: HeroSlide[] = heroSlides.flatMap(([key, place, region, href, tagline]) => {
     const image = getImage(key);
-    return image ? [{ src: image.src, blur: image.blur, alt: image.alt, place, region, href, credit: `${image.author}, ${image.license}` }] : [];
+    return image ? [{ src: image.src, blur: image.blur, alt: image.alt, place, region, href, tagline, credit: `${image.author}, ${image.license}` }] : [];
   });
 
   const month = new Date().getMonth() + 1;
@@ -88,6 +90,28 @@ export default function HomePage() {
           <div className="container-x"><h1 className="!text-white">Explore our India</h1></div>
         </section>
       )}
+
+      <section className="section overflow-hidden bg-[radial-gradient(ellipse_at_70%_50%,color-mix(in_oklab,var(--brand)_22%,var(--bg)),var(--bg)_65%)]" aria-labelledby="globe-title">
+        <div className="container-x grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
+          <div className="reveal">
+            <h2 id="globe-title">Every guide, pinned on the globe</h2>
+            <p className="mt-3 max-w-prose text-lg text-ink-2">
+              Each light is one of our {destinations.length} destination guides. Drag the globe to look around, or pick a region.
+            </p>
+            <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+              {regions.map((region) => (
+                <li key={region.id}>
+                  <Link href={`/explore?region=${region.id}`} data-tilt className="card card-hover flex min-h-12 items-center justify-between gap-3 px-4 py-2.5">
+                    <span className="font-semibold">{region.name}</span>
+                    <span className="text-sm text-muted tabular-nums">{destinations.filter((item) => item.region === region.id).length} guides</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <GlobeStage pins={destinations.map((item) => item.coordinates)} className="aspect-square w-full max-w-[34rem] justify-self-center" />
+        </div>
+      </section>
 
       <section className="section" aria-labelledby="map-title">
         <div className="container-x">
@@ -294,7 +318,7 @@ export default function HomePage() {
       <section className="section" aria-labelledby="video-tour">
         <div className="container-x">
           <SectionHeading eyebrow="Video tour" title="See India in motion" lede="A short film of the places and celebrations that make the trip worthwhile." />
-          <TourVideo className="aspect-video w-full rounded-[var(--radius-lg)] bg-black object-cover" />
+          <TourVideo />
         </div>
       </section>
 

@@ -73,10 +73,19 @@ export const navigation: NavItem[] = [
       },
     ],
   },
-  { label: "Services", href: "/services" },
-  { label: "Gallery", href: "/gallery" },
   { label: "Travel Stories", short: "Stories", href: "/stories" },
-  { label: "About Us", href: "/about" },
+];
+
+/** Shown under "More" on wide screens, and in full in the mobile menu. Keep the bar itself to 7 items. */
+export const moreNavigation: NavLink[] = [
+  { label: "Calendar and notes", href: "/calendar", description: "Holidays, festivals and your plan notes." },
+  { label: "Gallery", href: "/gallery", description: "Photos and the video tour." },
+  { label: "Services", href: "/services", description: "Guides, transport and stays." },
+  { label: "Compare destinations", href: "/compare", description: "Season, budget and duration side by side." },
+  { label: "Travel quiz", href: "/quiz", description: "Five questions to narrow down where to go." },
+  { label: "Saved and passport", href: "/saved", description: "Your wishlist, trips and state stamps." },
+  { label: "About Us", href: "/about", description: "Who runs Tour India." },
+  { label: "Contact", href: "/contact", description: "Questions, corrections and ideas." },
 ];
 
 export const footerLinks: { title: string; links: NavLink[] }[] = [

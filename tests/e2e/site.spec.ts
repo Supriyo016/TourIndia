@@ -88,10 +88,29 @@ test.describe("routes and links", () => {
   test("primary navigation works", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    for (const [label, url] of [["Discover", /\/discover$/], ["Bookings", /\/bookings$/], ["Services", /\/services$/], ["Gallery", /\/gallery$/], ["About Us", /\/about$/]] as const) {
-      await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: label, exact: true }).click();
+    const primary = page.getByRole("navigation", { name: "Primary" });
+    // Seven main items, with everything else under More.
+    await expect(primary.locator(":scope > ul > li")).toHaveCount(8);
+    for (const [label, url] of [["Discover", /\/discover$/], ["Bookings", /\/bookings$/], ["Stories", /\/stories$/]] as const) {
+      await primary.getByRole("link", { name: label, exact: true }).click();
       await expect(page).toHaveURL(url);
     }
+    for (const [label, url] of [["Services", /\/services$/], ["Gallery", /\/gallery$/], ["About Us", /\/about$/]] as const) {
+      await primary.getByRole("button", { name: "More" }).click();
+      await primary.getByRole("link", { name: new RegExp(`^${label}`) }).click();
+      await expect(page).toHaveURL(url);
+    }
+  });
+
+  test("a loading bar runs across the top while a page loads", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/about");
+    const bar = page.getByTestId("route-progress");
+    const started = page.waitForFunction(() => document.querySelector("[data-testid=route-progress]")?.getAttribute("data-active") === "true");
+    await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Bookings", exact: true }).click();
+    await started;
+    await expect(page).toHaveURL(/\/bookings$/);
+    await expect(bar).toHaveAttribute("data-active", "false");
   });
 
   test("the mobile menu closes on any navigation and on resize", async ({ page }) => {
@@ -211,14 +230,36 @@ test.describe("date, calendar and notes", () => {
 });
 
 test.describe("home page additions", () => {
-  test("the slider caption sits in the upper right", async ({ page }) => {
+  test("the tagline changes with the slide, and the controls sit at the lower right", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/");
-    const caption = page.getByRole("region", { name: "Destinations across India" }).locator("a.link-u");
-    const box = (await caption.boundingBox())!;
-    const hero = (await page.getByRole("region", { name: "Destinations across India" }).boundingBox())!;
-    expect(box.y - hero.y).toBeLessThan(80);
-    expect(box.x).toBeGreaterThan(hero.width / 2);
+    const hero = page.getByRole("region", { name: "Destinations across India" });
+    const tagline = hero.locator(".hero-tagline");
+    const first = await tagline.textContent();
+    await hero.getByRole("button", { name: "Next photo" }).click();
+    await expect(tagline).not.toHaveText(first!);
+    const next = (await hero.getByRole("button", { name: "Next photo" }).boundingBox())!;
+    const area = (await hero.boundingBox())!;
+    expect(next.x).toBeGreaterThan(area.width / 2);
+    expect(next.y).toBeGreaterThan(area.y + area.height / 2);
+  });
+
+  test("the header is transparent glass over the slider and solid below it", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
+    const header = page.locator("header.site-header");
+    await expect(header).toHaveAttribute("data-overlay", "true");
+    await page.evaluate(() => window.scrollTo({ top: 1500, behavior: "instant" }));
+    await expect(header).toHaveAttribute("data-overlay", "false");
+    await page.goto("/about");
+    await expect(header).toHaveAttribute("data-overlay", "false");
+  });
+
+  test("the globe section lists every region", async ({ page }) => {
+    await page.goto("/");
+    const section = page.getByRole("region", { name: "Every guide, pinned on the globe" });
+    await expect(section.getByRole("link", { name: /North India/ })).toBeVisible();
+    await expect(page.getByTestId("globe-stage")).toBeAttached();
   });
 
   test("the site video is on the home page and doesn't preload", async ({ page }) => {
@@ -228,6 +269,22 @@ test.describe("home page additions", () => {
     await expect(video).toHaveAttribute("preload", "none");
     await expect(video).toHaveAttribute("poster", "/videos/tour-india-poster.webp");
     expect((await page.request.get("/videos/tour-india-poster.webp")).status()).toBe(200);
+    for (const size of ["", "-480", "-360"]) expect((await page.request.head(`/videos/tour-india${size}.webm`)).status()).toBe(200);
+  });
+
+  test("the video plays in view, fills a third of the screen, and quality can be chosen", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const video = page.getByTestId("tour-video");
+    await video.scrollIntoViewIfNeeded();
+    await expect.poll(() => video.evaluate((element: HTMLVideoElement) => !element.paused && element.currentTime > 0.2), { timeout: 15_000 }).toBe(true);
+    const box = (await video.boundingBox())!;
+    expect(Math.abs(box.height - 300)).toBeLessThan(4);
+    expect(Math.abs(box.x + box.width / 2 - 720)).toBeLessThan(12);
+    await page.getByRole("button", { name: /^Auto/ }).click();
+    await page.getByRole("menuitemradio", { name: "480p" }).click();
+    await expect(video).toHaveAttribute("data-quality", "480");
+    await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.currentSrc)).toContain("tour-india-480.webm");
   });
 });
 
@@ -252,6 +309,8 @@ test.describe("cookies", () => {
     await page.getByRole("button", { name: "Essential only" }).click();
     await expect(page.getByRole("region", { name: "Cookie choices" })).toHaveCount(0);
     await page.getByRole("button", { name: /Theme:/ }).click();
+    await page.getByRole("menuitemradio", { name: "Dark" }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     expect(await page.evaluate(() => localStorage.getItem("ti-theme"))).toBeNull();
     await page.goto("/destinations/hampi");
     expect(await page.evaluate(() => localStorage.getItem("ti-recent"))).toBeNull();
@@ -263,6 +322,7 @@ test.describe("cookies", () => {
     // The choice is saved by a request; wait for it before relying on it.
     await expect(page.getByRole("region", { name: "Cookie choices" })).toHaveCount(0);
     await page.getByRole("button", { name: /Theme:/ }).click();
+    await page.getByRole("menuitemradio", { name: "Dark" }).click();
     expect(await page.evaluate(() => localStorage.getItem("ti-theme"))).not.toBeNull();
     await page.getByRole("button", { name: "Cookie settings" }).click();
     await page.getByLabel(/Preferences/).uncheck();
@@ -358,6 +418,7 @@ test.describe("theme and motion", () => {
     await page.goto("/about");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await page.getByRole("button", { name: /Theme: system/ }).click();
+    await page.getByRole("menuitemradio", { name: "Light" }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
@@ -368,7 +429,7 @@ test.describe("theme and motion", () => {
   test("the slideshow advances, and pause stops it", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/");
-    const caption = page.getByRole("region", { name: "Destinations across India" }).locator("a.link-u");
+    const caption = page.getByRole("region", { name: "Destinations across India" }).locator(".hero-tagline");
     const first = await caption.textContent();
     await page.getByRole("button", { name: "Next photo" }).click();
     await expect(caption).not.toHaveText(first!);
@@ -573,8 +634,8 @@ test.describe("other tools", () => {
   test("gallery videos load and are credited", async ({ page }) => {
     await page.goto("/gallery");
     await expect(page.locator("video")).toHaveCount(6);
-    const src = await page.locator("video source").first().getAttribute("src");
-    expect(src).toBe("/videos/tour-india.webm");
+    await expect.poll(() => page.getByTestId("tour-video").getAttribute("src")).toMatch(/^\/videos\/tour-india(-480|-360)?\.webm$/);
+    const src = await page.getByTestId("tour-video").getAttribute("src");
     expect((await page.request.head(src!)).status()).toBe(200);
     await expect(page.locator("video").first()).toHaveAttribute("preload", "none");
     await page.goto("/credits");

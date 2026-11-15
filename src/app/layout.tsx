@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { Figtree, Fraunces, Rubik_Wet_Paint } from "next/font/google";
 import { YatriLauncher } from "@/components/assistant/YatriLauncher";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { TopBar } from "@/components/layout/TopBar";
+import { RouteProgress } from "@/components/layout/RouteProgress";
+import { TiltLayer } from "@/components/layout/TiltLayer";
 import { site } from "@/config/site";
 import "./globals.css";
 
@@ -50,12 +52,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-on-accent">
           Skip to content
         </a>
-        <TopBar />
+        <Suspense fallback={null}>
+          <RouteProgress />
+        </Suspense>
         <Header />
         <main id="main">{children}</main>
         <Footer />
         <CookieConsent />
         <YatriLauncher />
+        <TiltLayer />
       </body>
     </html>
   );
