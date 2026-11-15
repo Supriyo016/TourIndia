@@ -33,6 +33,104 @@ const collections = {
     properties: { count: { bsonType: "int" }, expiresAt: { bsonType: "date" } },
     indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
   },
+
+  // Accounts. Emails are unique; sessions and codes expire on their own (TTL indexes).
+  users: {
+    required: ["email", "role", "status", "interests", "marketingConsent", "profileComplete", "createdAt"],
+    properties: {
+      _id: { bsonType: "string" },
+      email: str(254),
+      name: str(60),
+      role: { enum: ["user", "admin"] },
+      status: { enum: ["active", "blocked"] },
+      homeState: str(60),
+      country: str(56),
+      interests: { bsonType: "array", maxItems: 12, items: str(30) },
+      travelStyle: str(20),
+      language: str(20),
+      marketingConsent: { bsonType: "bool" },
+      profileComplete: { bsonType: "bool" },
+      googleSub: str(64),
+      createdAt: { bsonType: "date" },
+      lastLoginAt: { bsonType: "date" },
+    },
+    indexes: [[{ email: 1 }, { unique: true }], [{ googleSub: 1 }, { sparse: true }]],
+  },
+  otp_codes: {
+    required: ["codeHash", "attempts", "sentAt", "expiresAt"],
+    properties: { codeHash: str(64), attempts: { bsonType: "int" }, sentAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
+  },
+  sessions: {
+    required: ["userId", "role", "createdAt", "expiresAt"],
+    properties: { userId: str(36), role: { enum: ["user", "admin"] }, createdAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }], [{ userId: 1 }, {}]],
+  },
+
+  // Community. Counts live in target_stats so pages never scan whole collections.
+  comments: {
+    required: ["target", "authorName", "kind", "body", "status", "reports", "createdAt"],
+    properties: {
+      target: str(100),
+      parentId: { bsonType: ["string", "null"] },
+      userId: { bsonType: ["string", "null"] },
+      authorName: str(60),
+      kind: { enum: ["viewpoint", "tip", "question"] },
+      body: str(2000),
+      status: { enum: ["visible", "pending", "hidden", "removed"] },
+      reports: { bsonType: "int" },
+      helpful: { bsonType: "int" },
+      createdAt: { bsonType: "date" },
+    },
+    indexes: [[{ target: 1, status: 1, createdAt: -1 }, {}], [{ status: 1, createdAt: -1 }, {}], [{ userId: 1 }, {}]],
+  },
+  reactions: {
+    required: ["target", "userId", "kind", "createdAt"],
+    properties: { target: str(100), userId: str(36), kind: { enum: ["love", "helpful"] }, createdAt: { bsonType: "date" } },
+    indexes: [[{ userId: 1 }, {}]],
+  },
+  ratings: {
+    required: ["target", "userId", "stars"],
+    properties: { target: str(100), userId: str(36), stars: { bsonType: "int", minimum: 1, maximum: 5 } },
+    indexes: [[{ userId: 1 }, {}]],
+  },
+  target_stats: {
+    required: [],
+    properties: { loves: { bsonType: "int" }, ratingCount: { bsonType: "int" }, ratingSum: { bsonType: "int" }, comments: { bsonType: "int" } },
+    indexes: [],
+  },
+  edit_proposals: {
+    required: ["target", "field", "proposed", "reason", "userId", "status", "createdAt"],
+    properties: {
+      target: str(100),
+      field: str(40),
+      reason: str(600),
+      userId: str(36),
+      status: { enum: ["pending", "approved", "rejected"] },
+      createdAt: { bsonType: "date" },
+    },
+    indexes: [[{ status: 1, createdAt: 1 }, {}], [{ userId: 1, status: 1 }, {}]],
+  },
+  content_overrides: {
+    required: ["target", "field", "value", "approvedAt"],
+    properties: { target: str(100), field: str(40), approvedAt: { bsonType: "date" } },
+    indexes: [[{ target: 1 }, {}]],
+  },
+  reports: {
+    required: ["commentId", "userId", "reason", "createdAt"],
+    properties: { commentId: str(36), userId: str(36), reason: str(20), createdAt: { bsonType: "date" } },
+    indexes: [],
+  },
+  audit_log: {
+    required: ["adminId", "action", "subject", "at"],
+    properties: { adminId: str(36), action: str(40), subject: str(100), at: { bsonType: "date" } },
+    indexes: [[{ at: -1 }, {}]],
+  },
+  booking_requests: {
+    required: ["reference", "status", "createdAt"],
+    properties: { reference: str(12), status: { enum: ["new", "contacted", "closed"] }, createdAt: { bsonType: "date" } },
+    indexes: [[{ reference: 1 }, { unique: true }], [{ userId: 1, createdAt: -1 }, {}]],
+  },
 };
 
 const client = new MongoClient(uri);
@@ -41,7 +139,7 @@ try {
   const db = client.db(process.env.MONGODB_DB ?? "tour_india");
   const existing = new Set((await db.listCollections().toArray()).map(({ name }) => name));
   for (const [name, { required, properties, indexes }] of Object.entries(collections)) {
-    const validator = { $jsonSchema: { bsonType: "object", required, properties } };
+    const validator = { $jsonSchema: { bsonType: "object", ...(required.length ? { required } : {}), properties } };
     if (existing.has(name)) await db.command({ collMod: name, validator });
     else await db.createCollection(name, { validator });
     for (const [keys, options] of indexes) await db.collection(name).createIndex(keys, options);
