@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/explore",
     "/discover",
     "/planner",
+    "/calendar",
     "/compare",
     "/quiz",
     "/bookings",

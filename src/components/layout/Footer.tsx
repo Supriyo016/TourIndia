@@ -5,6 +5,7 @@ import { publishedSocials, site } from "@/config/site";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { ExternalLink } from "@/components/ui/primitives";
 import { TrainCharacter } from "@/components/characters/Characters";
+import { CookieSettingsLink } from "./CookieConsent";
 import { Wordmark } from "./Wordmark";
 
 export function Footer() {
@@ -55,6 +56,11 @@ export function Footer() {
                     </Link>
                   </li>
                 ))}
+                {group.title === "Legal" && (
+                  <li>
+                    <CookieSettingsLink />
+                  </li>
+                )}
               </ul>
             </nav>
           ))}
@@ -94,7 +100,7 @@ export function Footer() {
       <a
         href="#top"
         aria-label="Back to top"
-        className="to-top fixed right-4 bottom-4 z-30 flex size-11 items-center justify-center rounded-full bg-accent text-on-accent shadow-lg transition-transform hover:-translate-y-0.5"
+        className="to-top fixed right-4 bottom-20 z-30 flex size-11 items-center justify-center rounded-full bg-accent text-on-accent shadow-lg transition-transform hover:-translate-y-0.5"
       >
         <ArrowUp className="size-5" aria-hidden />
       </a>

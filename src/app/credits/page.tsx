@@ -41,6 +41,7 @@ export default function CreditsPage() {
         <section aria-labelledby="film">
           <h2 id="film" className="mb-3">Videos</h2>
           <ul className="list-disc space-y-1 pl-5 text-ink-2">
+            <li>A video tour of India: from the original Tour India website</li>
             {videos.map((video) => (
               <li key={video.slug}>
                 {video.title}: {video.author},{" "}

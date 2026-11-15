@@ -41,6 +41,10 @@ Pages are Server Components. Client code is limited to the interactive parts: he
 
 The map is plain SVG with real links, so it works before JavaScript loads. Region highlighting and hover are CSS driven by data attributes.
 
+## Yatri assistant
+
+`src/features/assistant/knowledge.ts` answers questions from the site's data. `agent.ts` exposes those functions to Claude as tools through the SDK's tool runner, and `/api/assistant` streams the reply as NDJSON. With no API key, or if the model call fails before any text is sent, the route answers from `knowledge.ts` alone. The terminal (`terminal.ts`) runs in the browser against `/assistant-data.json`. The panel's code is only loaded when opened.
+
 ## Theme
 
 Colour tokens are CSS variables on `:root`, overridden by `[data-theme="dark"]`. A small inline script applies the saved choice before first paint.

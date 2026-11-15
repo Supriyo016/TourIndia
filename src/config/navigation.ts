@@ -50,6 +50,7 @@ export const navigation: NavItem[] = [
           { label: "Trip planner", href: "/planner", description: "A day-by-day itinerary you can edit and export." },
           { label: "Compare destinations", href: "/compare", description: "Season, budget and duration side by side." },
           { label: "Travel quiz", href: "/quiz", description: "Five questions to narrow down where to go." },
+          { label: "Calendar and notes", href: "/calendar", description: "Holidays by month, with your plan notes." },
           { label: "Saved and passport", href: "/saved", description: "Your wishlist, trips and state stamps." },
         ],
       },
@@ -94,6 +95,7 @@ export const footerLinks: { title: string; links: NavLink[] }[] = [
     title: "Plan",
     links: [
       { label: "Trip planner", href: "/planner" },
+      { label: "Calendar and notes", href: "/calendar" },
       { label: "Compare destinations", href: "/compare" },
       { label: "Travel quiz", href: "/quiz" },
       { label: "Saved and passport", href: "/saved" },

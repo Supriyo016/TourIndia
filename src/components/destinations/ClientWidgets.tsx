@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { CloudRain, Copy, Link2, Share2 } from "lucide-react";
 import { isStringList, STORAGE_KEYS, useStoredValue } from "@/hooks/use-stored-value";
+import { hasPreferenceConsent } from "@/lib/consent";
 
 interface ForecastDay {
   date: string;
@@ -74,7 +75,7 @@ const EMPTY: string[] = [];
 export function TrackRecentlyViewed({ slug }: { slug: string }) {
   const [, setRecent] = useStoredValue<string[]>(STORAGE_KEYS.recent, EMPTY, isStringList);
   useEffect(() => {
-    setRecent((current) => [slug, ...current.filter((item) => item !== slug)].slice(0, 12));
+    if (hasPreferenceConsent()) setRecent((current) => [slug, ...current.filter((item) => item !== slug)].slice(0, 12));
   }, [slug, setRecent]);
   return null;
 }

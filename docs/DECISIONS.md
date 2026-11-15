@@ -23,4 +23,9 @@
 | 19 | The UI says "Last updated", not "Last reviewed" or "Verified" | Fact-checking was only partial (see PROJECT_STATUS). The label should not claim more than was done | |
 | 20 | The About page refers to the first version as "a collaborative project", without names | Honest about its origin without naming people who haven't given permission | Owner can reword in `src/app/about/page.tsx` |
 | 21 | Weather from Open-Meteo through a server route | No key needed; coordinates come from our data, so no SSRF | Free tier is for non-commercial use; review if the site commercialises |
+| 23 | Yatri uses Claude Opus 5.5 with tools over this site's data, and falls back to rule-based answers | Grounded in the site's own guides, and still useful with no API key or during an outage | Opus is the costliest choice for a public chat; `ASSISTANT_MODEL` can change it |
+| 24 | The terminal's commands run in the browser against a static index; only `ask` uses the server | Free to run, and works with no AI key | |
+| 25 | The original `video.mp4` is re-encoded in the browser to 720p WebM (VP9 and Opus, 10 MB) and served with `preload="none"` | The 40 MB original repeatedly failed to upload to Vercel, and is heavy for visitors. ffmpeg couldn't be installed here | WebM plays in current browsers, though very old Safari versions may not. Its source and licence are unconfirmed. The original stays in `legacy/` |
+| 26 | "Advanced cookies" means a versioned consent manager and a signed, hardened session cookie | No tracking exists to add, and none was invented | Theme, recents and chat history are only kept with consent |
+| 27 | The calendar lists only sourced dates: fixed national days, 2027 dates already fact-checked, and one 2026 date | Lunar dates must not be guessed | Earlier 2026 festivals don't appear |
 | 22 | Migration on branch `rebuild/nextjs`, with the old site moved to `legacy/` | `master` and GitHub Pages stay untouched until cut-over | |

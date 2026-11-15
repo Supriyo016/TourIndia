@@ -102,7 +102,18 @@ export const STORAGE_KEYS = {
   trips: "ti-trips",
   packing: "ti-packing",
   expenses: "ti-expenses",
+  notes: "ti-notes",
+  yatri: "ti-yatri",
 } as const;
+
+export interface PlanNote {
+  id: string;
+  title: string;
+  body: string;
+  /** Optional calendar day this note belongs to. */
+  date: string | null;
+  updatedAt: string;
+}
 
 export interface SavedTrip {
   id: string;
@@ -133,6 +144,22 @@ export const isSavedTripList = (value: unknown) =>
       Array.isArray(trip.days) &&
       trip.days.every((day) => isRecord(day) && Array.isArray(day.items)),
   );
+
+export const isNoteList = (value: unknown) =>
+  Array.isArray(value) &&
+  value.every(
+    (note) =>
+      isRecord(note) &&
+      typeof note.id === "string" &&
+      typeof note.title === "string" &&
+      typeof note.body === "string" &&
+      (note.date === null || typeof note.date === "string") &&
+      typeof note.updatedAt === "string",
+  );
+
+export const isChatHistory = (value: unknown) =>
+  Array.isArray(value) &&
+  value.every((message) => isRecord(message) && (message.role === "user" || message.role === "assistant") && typeof message.content === "string");
 
 export const isExpenseState = (value: unknown) =>
   isRecord(value) &&

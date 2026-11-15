@@ -19,6 +19,7 @@ import { startCities } from "@/data/start-cities";
 import { interests as interestOptions } from "@/data/taxonomy";
 import { formatINR } from "@/lib/utils";
 import type { TravelInterest } from "@/types/content";
+import { PlanNotes } from "@/components/notes/PlanNotes";
 import { ItineraryDays } from "./ItineraryDays";
 import { RouteOverlay } from "./RouteOverlay";
 import { ExpenseTracker, PackingChecklist } from "./TripExtras";
@@ -389,6 +390,13 @@ function Planner({ catalogue, mapBase, map, initial }: PlannerProps & { initial:
                 </dl>
                 <p className="mt-2 text-sm text-muted">Costed at {trip.tier === "midRange" ? "mid-range" : trip.tier} level. Fares and rooms are not live.</p>
               </div>
+
+              <details className="card p-4">
+                <summary className="cursor-pointer text-lg font-semibold">Plan notes</summary>
+                <div className="mt-3">
+                  <PlanNotes compact selectedDate={trip.input.startDate} />
+                </div>
+              </details>
 
               <PackingChecklist destinations={tripDestinations} months={months} />
               <ExpenseTracker travellers={trip.input.travellers} />

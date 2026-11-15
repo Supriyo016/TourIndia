@@ -15,6 +15,7 @@ import { HeroSlider, type HeroSlide } from "@/components/hero/HeroSlider";
 import { IndiaMap } from "@/components/maps/IndiaMap";
 import { MapExplorer } from "@/components/maps/MapExplorer";
 import { statePreviews } from "@/components/maps/map-data";
+import { TourVideo } from "@/components/ui/TourVideo";
 import { JsonLd, Photo, SectionHeading } from "@/components/ui/primitives";
 import { site } from "@/config/site";
 import { destinations, inSeason } from "@/data";
@@ -287,6 +288,13 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="video-tour">
+        <div className="container-x">
+          <SectionHeading eyebrow="Video tour" title="See India in motion" lede="A short film of the places and celebrations that make the trip worthwhile." />
+          <TourVideo className="aspect-video w-full rounded-[var(--radius-lg)] bg-black object-cover" />
         </div>
       </section>
 

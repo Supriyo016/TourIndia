@@ -21,13 +21,14 @@ export default function PrivacyPage() {
             </>
           ),
         },
-        { heading: "What stays on your device", body: <p>Your wishlist, saved trips, passport stamps, packing list, expenses, recently viewed places and theme are kept in your browser&apos;s local storage. They are not sent to us. Clearing your browser data removes them.</p> },
+        { heading: "What stays on your device", body: <p>Your wishlist, saved trips, notes, passport stamps, packing list, expenses, and, if you allow it, recently viewed places, theme and Yatri chat are kept in your browser&apos;s local storage. They are not sent to us. Clearing your browser data removes them. See <Link className="link-text" href="/cookies">cookies and storage</Link>.</p> },
+        { heading: "The Yatri assistant", body: <p>When Yatri is connected to its AI model, the messages you send are passed through our server to Anthropic, which generates the reply and processes them under its own terms. We do not store your conversations on our server. Please don&apos;t share personal, payment or passport details with Yatri. Replies can be wrong, so check anything important.</p> },
         { heading: "Abuse prevention", body: <p>To limit automated abuse of forms, we store a salted hash of your IP address for a short period. We do not store the address itself.</p> },
         {
           heading: "Third parties",
           body: (
             <p>
-              We do not use advertising or analytics scripts. When you view a destination map, your browser requests map tiles from OpenStreetMap, which receives your IP address. Weather forecasts are fetched by our server from Open-Meteo. Our hosting provider and database provider process data on our behalf and may keep technical logs. If you follow a share or external link, that site&apos;s own policy applies.
+              We do not use advertising or analytics scripts. Anthropic processes messages sent to Yatri when it is connected. When you view a destination map, your browser requests map tiles from OpenStreetMap, which receives your IP address. Weather forecasts are fetched by our server from Open-Meteo. Our hosting provider and database provider process data on our behalf and may keep technical logs. If you follow a share or external link, that site&apos;s own policy applies.
             </p>
           ),
         },

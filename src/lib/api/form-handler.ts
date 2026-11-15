@@ -71,6 +71,31 @@ export function isSameOrigin(request: NextRequest): boolean {
   return allowed.has(originHost);
 }
 
+/**
+ * The checks every public POST goes through before its body is trusted:
+ * same origin, JSON, salt configured, rate limit, size limit.
+ */
+export async function guardJsonPost(
+  request: NextRequest,
+  bucket: string,
+  limit: { max: number; windowSeconds: number },
+): Promise<{ raw: string } | NextResponse> {
+  if (!isSameOrigin(request)) return fail(403, "This request was not allowed.");
+  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
+    return fail(415, "Send the form as JSON.");
+  }
+  if (!isSaltConfigured()) {
+    console.error("[forms] RATE_LIMIT_SALT must be at least 32 characters in production");
+    return fail(503, "This form isn't available right now. Please try again later.");
+  }
+  if (!(await isAllowed(bucket, clientAddress(request), limit))) {
+    return fail(429, "Too many attempts. Please wait a while and try again.");
+  }
+  const raw = await readBody(request);
+  if (raw === null) return fail(413, "That submission is too long.");
+  return { raw };
+}
+
 /** The shared path every public form takes: guard, limit, validate, store. */
 export function createFormHandler<S extends z.ZodType>({
   schema,
@@ -84,24 +109,12 @@ export function createFormHandler<S extends z.ZodType>({
   save: (db: Db, data: z.output<S>) => Promise<void>;
 }) {
   return async function POST(request: NextRequest) {
-    if (!isSameOrigin(request)) return fail(403, "This request was not allowed.");
-    if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
-      return fail(415, "Send the form as JSON.");
-    }
-    if (!isSaltConfigured()) {
-      console.error("[forms] RATE_LIMIT_SALT must be at least 32 characters in production");
-      return fail(503, "This form isn't available right now. Please try again later.");
-    }
-    if (!(await isAllowed(bucket, clientAddress(request), limit))) {
-      return fail(429, "Too many attempts. Please wait a while and try again.");
-    }
-
-    const raw = await readBody(request);
-    if (raw === null) return fail(413, "That submission is too long.");
+    const guarded = await guardJsonPost(request, bucket, limit);
+    if (guarded instanceof NextResponse) return guarded;
 
     let body: unknown;
     try {
-      body = JSON.parse(raw);
+      body = JSON.parse(guarded.raw);
     } catch {
       return fail(400, "That submission could not be read.");
     }

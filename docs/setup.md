@@ -58,6 +58,16 @@ GitHub Pages only serves static files, so it can't run the API routes.
 5. **Verify the preview** using the release checklist below.
 6. **Domain.** Add your domain in Vercel, which provisions HTTPS.
 
+## Connecting Yatri to AI
+
+Yatri answers from the site's guides until it has a key. To connect it:
+
+1. Create an API key in the Anthropic Console and set a monthly spend limit
+2. Add `ANTHROPIC_API_KEY` to the Vercel project's production environment variables
+3. Redeploy, then ask Yatri a question. The note "Answering from site guides" should disappear
+
+Optional: `ASSISTANT_MODEL` and `ASSISTANT_DAILY_LIMIT`. Connect the database as well, so rate limits hold across server instances.
+
 ## Release checklist
 
 - [ ] `npm run build` and all tests pass

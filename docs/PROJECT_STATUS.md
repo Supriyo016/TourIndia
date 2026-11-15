@@ -3,11 +3,17 @@
 **Last updated:** 2026-11-09
 **Phase:** Live on Vercel. Forms await a database.
 **Production:** https://tour-india-pi.vercel.app
-**Branch:** `rebuild/nextjs`. Changes are not yet committed or pushed. `master` and the GitHub Pages site are untouched.
+**Branch:** `rebuild/nextjs`. Changes are committed locally but not pushed. `master` and the GitHub Pages site are untouched.
+
+## Latest additions (deployed and committed 2026-11-16, not pushed)
+
+The site video (re-encoded to a 10 MB 720p WebM), slider caption moved to the upper right, live date and time bar, holiday calendar, plan notes, cookie consent with signed session cookies, and the Yatri assistant with chat and terminal. Locally: 174 of 174 unit and API tests and 70 of 70 browser tests passed. Live: all 188 sitemap pages and internal links, the assistant, consent and video endpoints, and the new browser flows passed. Two live test runs were interrupted by local connection resets and passed when re-run.
+
+**Yatri has not yet been run against the live Claude API**, because no API key is set. Its agent loop was tested with a stand-in client. Until `ANTHROPIC_API_KEY` is added, it answers from the site's guides.
 
 ## Next exact action
 
-1. Commit `rebuild/nextjs` and push it, then connect the repository in Vercel with `rebuild/nextjs` as the production branch
+1. Push `rebuild/nextjs`, then connect the repository in Vercel with `rebuild/nextjs` as the production branch
 2. Create a MongoDB Atlas database and add `MONGODB_URI` and `MONGODB_DB` to Vercel, following `setup.md`
 3. A person reviews the items marked "Could not confirm" in `FACT_CHECK.md`
 

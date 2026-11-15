@@ -55,7 +55,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
     <section
       aria-roledescription="carousel"
       aria-label="Destinations across India"
-      className="relative isolate flex min-h-[calc(100svh-4.5rem)] flex-col justify-center overflow-hidden bg-[#0e3c46] py-12"
+      className="relative isolate flex min-h-[calc(100svh-6.5rem)] flex-col justify-center overflow-hidden bg-[#0e3c46] pt-20 pb-20"
       onPointerEnter={(event) => event.pointerType === "mouse" && setHovering(true)}
       onPointerLeave={() => setHovering(false)}
     >
@@ -104,14 +104,19 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       </div>
 
       {current && (
-        <div className="container-x absolute inset-x-0 bottom-4 flex flex-wrap items-end justify-between gap-3 text-white">
-          <div aria-live={paused ? "polite" : "off"} className="min-w-0">
+        <div className="container-x absolute inset-x-0 top-3 flex justify-end text-white">
+          <div aria-live={paused ? "polite" : "off"} className="max-w-[80%] rounded-[var(--radius-md)] bg-black/45 px-3 py-1.5 text-right sm:max-w-md">
             <Link href={current.href} className="link-u font-semibold">
               {current.place}
             </Link>
-            <span className="text-white/80">, {current.region}</span>
-            <p className="max-w-md truncate text-xs text-white/70">Photo: {current.credit}</p>
+            <span className="text-white/85">, {current.region}</span>
+            <p className="truncate text-xs text-white/80">Photo: {current.credit}</p>
           </div>
+        </div>
+      )}
+
+      {current && (
+        <div className="container-x absolute inset-x-0 bottom-4 flex text-white">
           <div className="flex items-center gap-1">
             <button type="button" className="icon-btn !text-white hover:!bg-white/20" aria-label="Previous photo" onClick={() => go(-1)}>
               <ChevronLeft className="size-6" aria-hidden />

@@ -22,6 +22,8 @@ export default function DisclaimerPage() {
           </>
         ) },
         { id: "bookings", heading: "External bookings", body: <p>{site.name} does not take bookings or payments. Links to booking and government sites take you to independent services with their own terms. We receive no commission from them. See <Link className="link-text" href="/bookings">where to book</Link>.</p> },
+        { heading: "Yatri, the AI assistant", body: <p>Yatri is an automated assistant. It works from this site&apos;s guides, but its replies can be incomplete or wrong. It can&apos;t make bookings. Check anything important, especially permits, safety and health, with an official source.</p> },
+        { heading: "Holiday calendar", body: <p>The calendar lists fixed national holidays and days from Government of India lists. States add their own holidays, and dates that depend on the moon can change.</p> },
         { heading: "Maps", body: <p>Maps are for navigation only and are not an authoritative depiction of India&apos;s external boundaries.</p> },
         { heading: "Trade marks", body: <p>Names and marks of third parties belong to their owners. Mentioning them does not imply any affiliation. {site.name} is not affiliated with the Government of India or any state tourism department.</p> },
         { heading: "Safety", body: <p>Check current official advice before travelling, especially to border areas, high altitudes or regions with security advisories.</p> },

@@ -2,6 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { Laptop, Moon, Sun } from "lucide-react";
+import { hasPreferenceConsent } from "@/lib/consent";
 
 type ThemeChoice = "system" | "light" | "dark";
 const KEY = "ti-theme";
@@ -9,6 +10,7 @@ const ORDER: ThemeChoice[] = ["system", "light", "dark"];
 const listeners = new Set<() => void>();
 
 function readChoice(): ThemeChoice {
+  if (sessionChoice) return sessionChoice;
   try {
     const stored = window.localStorage.getItem(KEY);
     return stored === "light" || stored === "dark" ? stored : "system";
@@ -25,6 +27,24 @@ function apply(choice: ThemeChoice) {
 function subscribe(listener: () => void) {
   listeners.add(listener);
   return () => listeners.delete(listener);
+}
+
+// The choice applies either way; it is only remembered with consent.
+let sessionChoice: ThemeChoice | null = null;
+
+/** Also used by the Yatri terminal's theme command. */
+export function setThemeChoice(next: ThemeChoice) {
+  sessionChoice = next;
+  try {
+    if (hasPreferenceConsent()) window.localStorage.setItem(KEY, next);
+  } catch {
+    // The choice still applies for this page view.
+  }
+  const root = document.documentElement;
+  root.classList.add("theme-transition");
+  apply(next);
+  window.setTimeout(() => root.classList.remove("theme-transition"), 300);
+  listeners.forEach((listener) => listener());
 }
 
 export function ThemeToggle() {
@@ -48,18 +68,7 @@ export function ThemeToggle() {
       className="icon-btn"
       aria-label={`Theme: ${choice}. Switch to ${next}.`}
       title={`Theme: ${choice}`}
-      onClick={() => {
-        try {
-          window.localStorage.setItem(KEY, next);
-        } catch {
-          // The choice still applies for this page view.
-        }
-        const root = document.documentElement;
-        root.classList.add("theme-transition");
-        apply(next);
-        window.setTimeout(() => root.classList.remove("theme-transition"), 300);
-        listeners.forEach((listener) => listener());
-      }}
+      onClick={() => setThemeChoice(next)}
     >
       <Icon className="size-5" aria-hidden />
     </button>

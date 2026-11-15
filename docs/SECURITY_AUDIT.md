@@ -27,6 +27,19 @@ No accounts, no sessions, no file uploads, no payments and no admin interface. P
 | Secrets | Environment variables only, server-only modules, `.env*` ignored by Git | |
 | Privacy | Fragment-based share links never reach the server. Newsletter responses don't reveal whether an address exists | `share.ts`, `api/newsletter` |
 
+## Assistant and cookies
+
+| Risk | Protection | Where |
+|---|---|---|
+| Runaway AI cost | Limits per address (40 an hour) and per session (25 an hour), a site-wide daily cap (`ASSISTANT_DAILY_LIMIT`, default 500), 8,000 output tokens per reply, 6 tool rounds, and strict message limits. Set a spend limit in the Anthropic Console too | `api/assistant` |
+| Prompt injection | Tools only read this site's own content, and none can write, browse or send anything. The prompt treats tool text as data | `features/assistant/agent.ts` |
+| Malicious links or markup in replies | Replies render as React text. Only same-site links and bold are recognised | `RichText.tsx` |
+| Secret exposure | The Anthropic key stays on the server | `agent.ts` |
+| Session forgery | HMAC-signed session with expiry and constant-time comparison. `__Host-` prefix, HttpOnly, Secure, SameSite=Strict | `lib/security/session.ts` |
+| Consent | Versioned `ti_consent` cookie, set by a same-origin, validated endpoint. Refusing deletes optional storage | `api/consent`, `lib/consent.ts` |
+
+The in-memory rate limiter is per server instance. Until a database is connected, the assistant's limits are approximate on Vercel, so keep an Anthropic spend limit in place.
+
 ## Tests performed
 
 | Test | Result |

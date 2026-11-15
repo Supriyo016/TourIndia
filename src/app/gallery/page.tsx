@@ -6,6 +6,8 @@ import { ExternalLink, PageIntro } from "@/components/ui/primitives";
 import { destinations, getState, states } from "@/data";
 import { festivals } from "@/data/festivals";
 import videos from "@/data/generated/videos.json";
+import { tourVideo } from "@/data/tour-video";
+import { TourVideo } from "@/components/ui/TourVideo";
 import { allImages } from "@/lib/images";
 import type { CategoryId } from "@/types/content";
 
@@ -67,6 +69,13 @@ export default function GalleryPage() {
         <section className="mt-14" aria-labelledby="videos">
           <h2 id="videos" className="mb-5">Travel videos</h2>
           <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <li className="card overflow-hidden">
+              <TourVideo className="aspect-video w-full bg-black object-cover" />
+              <div className="p-4">
+                <h3 className="text-lg">{tourVideo.title}</h3>
+                <p className="mt-1 text-xs text-muted">From Tour India</p>
+              </div>
+            </li>
             {videos.map((video) => (
               <li key={video.slug} className="card overflow-hidden">
                 <video controls preload="none" poster={video.poster} className="aspect-video w-full bg-black object-cover">

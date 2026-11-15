@@ -8,6 +8,7 @@ const KEY_PAGES = [
   "/discover",
   "/destinations/hampi",
   "/planner",
+  "/calendar",
   "/compare",
   "/quiz",
   "/bookings",
@@ -163,6 +164,178 @@ test.describe("accessibility (axe, WCAG 2.1 AA)", () => {
       expect(failures).toEqual([]);
     });
   }
+});
+
+test.describe("date, calendar and notes", () => {
+  test("the top bar shows a ticking clock in IST", async ({ page }) => {
+    await page.goto("/about");
+    const clock = page.getByTestId("india-clock");
+    await expect(clock).toContainText("IST");
+    const first = await clock.textContent();
+    await expect(clock).not.toHaveText(first!, { timeout: 4000 });
+  });
+
+  test("the calendar shows holidays and moves between months", async ({ page }) => {
+    await page.goto("/calendar");
+    const heading = page.getByRole("heading", { level: 2, name: /^[A-Z][a-z]+ 20\d\d$/ });
+    await expect(heading).toBeVisible();
+    const month = await heading.textContent();
+    await page.getByRole("button", { name: "Next month" }).click();
+    await expect(heading).not.toHaveText(month!);
+    await page.getByRole("button", { name: "Today" }).click();
+    await expect(heading).toHaveText(month!);
+    await expect(page.getByText("Diwali").first()).toBeVisible();
+  });
+
+  test("a note can be written, dated, edited, deleted and restored", async ({ page }) => {
+    await page.goto("/calendar");
+    await page.getByRole("button", { name: /^(Saturday|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday),? 15 / }).click();
+    await page.getByLabel("Plan title").fill("Kerala in December");
+    await page.getByLabel("Plan details").fill("Book the houseboat");
+    await page.getByRole("button", { name: "Add note" }).click();
+    await expect(page.getByLabel("Note title")).toHaveValue("Kerala in December");
+
+    await page.reload();
+    await expect(page.getByLabel("Note title")).toHaveValue("Kerala in December");
+    await page.getByRole("button", { name: /Delete note/ }).click();
+    await expect(page.getByLabel("Note title")).toHaveCount(0);
+    await page.getByRole("button", { name: "Undo" }).click();
+    await expect(page.getByLabel("Note title")).toHaveValue("Kerala in December");
+  });
+
+  test("an empty note is refused", async ({ page }) => {
+    await page.goto("/calendar");
+    await page.getByRole("button", { name: "Add note" }).click();
+    await expect(page.getByText("Write a title or some plan details first.")).toBeVisible();
+  });
+});
+
+test.describe("home page additions", () => {
+  test("the slider caption sits in the upper right", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
+    const caption = page.getByRole("region", { name: "Destinations across India" }).locator("a.link-u");
+    const box = (await caption.boundingBox())!;
+    const hero = (await page.getByRole("region", { name: "Destinations across India" }).boundingBox())!;
+    expect(box.y - hero.y).toBeLessThan(80);
+    expect(box.x).toBeGreaterThan(hero.width / 2);
+  });
+
+  test("the site video is on the home page and doesn't preload", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { name: "See India in motion" })).toBeVisible();
+    const video = page.locator('video[aria-label="A video tour of India"]');
+    await expect(video).toHaveAttribute("preload", "none");
+    await expect(video).toHaveAttribute("poster", "/videos/tour-india-poster.webp");
+    expect((await page.request.get("/videos/tour-india-poster.webp")).status()).toBe(200);
+  });
+});
+
+test.describe("cookies", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test("asks first, and refusing is as easy as accepting", async ({ page }) => {
+    await page.goto("/about");
+    const banner = page.getByRole("region", { name: "Cookie choices" });
+    await expect(banner).toBeVisible();
+    await expect(banner.getByRole("button", { name: "Accept all" })).toBeVisible();
+    await banner.getByRole("button", { name: "Essential only" }).click();
+    await expect(banner).toHaveCount(0);
+    const cookies = await page.context().cookies();
+    expect(cookies.find((cookie) => cookie.name === "ti_consent")?.value).toMatch(/^1\.0\./);
+    await page.reload();
+    await expect(banner).toHaveCount(0);
+  });
+
+  test("without consent, preferences aren't remembered", async ({ page }) => {
+    await page.goto("/about");
+    await page.getByRole("button", { name: "Essential only" }).click();
+    await expect(page.getByRole("region", { name: "Cookie choices" })).toHaveCount(0);
+    await page.getByRole("button", { name: /Theme:/ }).click();
+    expect(await page.evaluate(() => localStorage.getItem("ti-theme"))).toBeNull();
+    await page.goto("/destinations/hampi");
+    expect(await page.evaluate(() => localStorage.getItem("ti-recent"))).toBeNull();
+  });
+
+  test("consent can be changed from the footer, which clears stored preferences", async ({ page }) => {
+    await page.goto("/about");
+    await page.getByRole("button", { name: "Accept all" }).click();
+    // The choice is saved by a request; wait for it before relying on it.
+    await expect(page.getByRole("region", { name: "Cookie choices" })).toHaveCount(0);
+    await page.getByRole("button", { name: /Theme:/ }).click();
+    expect(await page.evaluate(() => localStorage.getItem("ti-theme"))).not.toBeNull();
+    await page.getByRole("button", { name: "Cookie settings" }).click();
+    await page.getByLabel(/Preferences/).uncheck();
+    await page.getByRole("button", { name: "Save choices" }).click();
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("ti-theme"))).toBeNull();
+  });
+});
+
+test.describe("Yatri", () => {
+  const open = async (page: Page) => {
+    await page.goto("/about");
+    await page.getByRole("button", { name: /Ask Yatri/ }).click();
+    await expect(page.getByRole("dialog", { name: /Yatri/ })).toBeVisible();
+  };
+
+  test("answers a question and links to the guide", async ({ page }) => {
+    await open(page);
+    await page.getByLabel("Message Yatri").fill("Tell me about Hampi");
+    await page.getByRole("button", { name: "Send message" }).click();
+    await expect(page.getByRole("dialog").getByRole("link", { name: /guide/i })).toHaveAttribute("href", "/destinations/hampi", { timeout: 30_000 });
+  });
+
+  test("the terminal runs commands, recalls history and completes", async ({ page }) => {
+    await open(page);
+    await page.getByRole("tab", { name: "Terminal" }).click();
+    const input = page.getByLabel("Terminal command");
+    await expect(input).toBeFocused();
+    await input.pressSequentially("gui");
+    await input.press("Tab");
+    await expect(input).toHaveValue("guide ");
+    await input.pressSequentially("hamp");
+    await input.press("Tab");
+    await input.press("Enter");
+    const log = page.getByRole("log", { name: "Terminal output" });
+    await expect(log).toContainText("Typical stay", { timeout: 15_000 });
+    await input.press("ArrowUp");
+    await expect(input).toHaveValue("guide hampi");
+    await input.fill("clear");
+    await input.press("Enter");
+    await expect(log).not.toContainText("Typical stay");
+  });
+
+  test("terminal commands can navigate and set the theme", async ({ page }) => {
+    await open(page);
+    await page.getByRole("tab", { name: "Terminal" }).click();
+    const input = page.getByLabel("Terminal command");
+    await page.getByRole("log", { name: "Terminal output" }).waitFor();
+    await expect.poll(async () => {
+      await input.fill("help");
+      await input.press("Enter");
+      return page.getByRole("log", { name: "Terminal output" }).textContent();
+    }).toContain("ask <question>");
+    await input.fill("theme dark");
+    await input.press("Enter");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await input.fill("open gallery");
+    await input.press("Enter");
+    await expect(page).toHaveURL(/\/gallery$/);
+  });
+
+  test("closes with Escape and returns focus", async ({ page }) => {
+    await open(page);
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: /Yatri/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /Ask Yatri/ })).toBeFocused();
+  });
+
+  test("the assistant passes an accessibility check", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await open(page);
+    const results = await new AxeBuilder({ page }).include('[role="dialog"]').withTags(["wcag2a", "wcag2aa"]).analyze();
+    expect(results.violations.map((violation) => violation.id)).toEqual([]);
+  });
 });
 
 test.describe("without JavaScript", () => {
@@ -399,9 +572,11 @@ test.describe("other tools", () => {
 
   test("gallery videos load and are credited", async ({ page }) => {
     await page.goto("/gallery");
-    await expect(page.locator("video")).toHaveCount(5);
+    await expect(page.locator("video")).toHaveCount(6);
     const src = await page.locator("video source").first().getAttribute("src");
-    expect((await page.request.get(src!)).status()).toBe(200);
+    expect(src).toBe("/videos/tour-india.webm");
+    expect((await page.request.head(src!)).status()).toBe(200);
+    await expect(page.locator("video").first()).toHaveAttribute("preload", "none");
     await page.goto("/credits");
     await expect(page.getByRole("heading", { name: "Videos" })).toBeVisible();
   });
