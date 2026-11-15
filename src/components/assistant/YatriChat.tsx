@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Send, Square, Trash2 } from "lucide-react";
+import { Cpu, Loader2, Search, Send, Square, Trash2 } from "lucide-react";
 import { isChatHistory, STORAGE_KEYS } from "@/hooks/use-stored-value";
 import { hasPreferenceConsent } from "@/lib/consent";
 import { askYatri, type AskMode, type ChatMessage } from "./ask";
+import { answerOnDevice, googleSearchUrl, hasWebGpu, loadLocalModel, LOCAL_MODEL_SIZE } from "./local-model";
 import { RichText } from "./RichText";
+
+type LocalState = { state: "off" | "ready" | "error" } | { state: "loading"; progress: number };
 
 const SUGGESTIONS = ["Where should I go in January?", "Plan 5 days in Kerala from Mumbai", "Do I need a permit for Tawang?", "When is Holi next year?"];
 const MAX_HISTORY = 15;
@@ -41,6 +44,29 @@ export function YatriChat({ onNavigate }: { onNavigate: () => void }) {
   const [mode, setMode] = useState<AskMode | null>(null);
   const [problem, setProblem] = useState("");
   const abort = useRef<AbortController | null>(null);
+  const [local, setLocal] = useState<LocalState>({ state: "off" });
+  const [canRunLocal, setCanRunLocal] = useState(false);
+
+  useEffect(() => {
+    const handle = window.setTimeout(() => setCanRunLocal(hasWebGpu()), 0);
+    return () => window.clearTimeout(handle);
+  }, []);
+
+  const turnOnLocal = async () => {
+    setLocal({ state: "loading", progress: 0 });
+    try {
+      await loadLocalModel((progress) => setLocal({ state: "loading", progress }));
+      setLocal({ state: "ready" });
+    } catch {
+      setLocal({ state: "error" });
+    }
+  };
+
+  const appendText = (chunk: string) =>
+    setMessages((current) => {
+      const last = current[current.length - 1]!;
+      return [...current.slice(0, -1), { ...last, content: last.content + chunk }];
+    });
   const log = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -67,18 +93,38 @@ export function YatriChat({ onNavigate }: { onNavigate: () => void }) {
     const controller = new AbortController();
     abort.current = controller;
     try {
-      const result = await askYatri(history, {
-        signal: controller.signal,
-        onTool: (name) => setStatus(TOOL_LABELS[name] ?? "Working"),
-        onText: (chunk) => {
-          setStatus("");
-          setMessages((current) => {
-            const last = current[current.length - 1]!;
-            return [...current.slice(0, -1), { ...last, content: last.content + chunk }];
-          });
-        },
-      });
-      setMode(result);
+      if (local.state === "ready") {
+        // The site's own answer becomes the context the on-device model rewrites.
+        let context = "";
+        const result = await askYatri(history, { signal: controller.signal, onTool: (name) => setStatus(TOOL_LABELS[name] ?? "Working"), onText: (chunk) => (context += chunk) });
+        setMode(result);
+        if (result === "ai") {
+          appendText(context);
+        } else {
+          setStatus("Writing on your device");
+          try {
+            const model = await loadLocalModel(() => undefined);
+            let first = true;
+            await answerOnDevice(model, history, context, (chunk) => {
+              if (first) setStatus("");
+              first = false;
+              appendText(chunk);
+            }, controller.signal);
+          } catch {
+            appendText(context);
+          }
+        }
+      } else {
+        const result = await askYatri(history, {
+          signal: controller.signal,
+          onTool: (name) => setStatus(TOOL_LABELS[name] ?? "Working"),
+          onText: (chunk) => {
+            setStatus("");
+            appendText(chunk);
+          },
+        });
+        setMode(result);
+      }
     } catch (error) {
       if (!controller.signal.aborted) setProblem(error instanceof Error ? error.message : "Something went wrong.");
     } finally {
@@ -126,6 +172,11 @@ export function YatriChat({ onNavigate }: { onNavigate: () => void }) {
           </p>
         )}
         {problem && <p role="alert" className="field-error">{problem}</p>}
+        {!busy && messages.length > 0 && messages[messages.length - 1]?.role === "assistant" && (
+          <a href={googleSearchUrl([...messages].reverse().find((message) => message.role === "user")?.content ?? "")} target="_blank" rel="noopener noreferrer" className="chip !min-h-9 text-sm">
+            <Search className="size-3.5" aria-hidden /> Search Google for more
+          </a>
+        )}
       </div>
 
       <form
@@ -158,9 +209,28 @@ export function YatriChat({ onNavigate }: { onNavigate: () => void }) {
             <button type="submit" className="btn btn-primary !px-3" aria-label="Send message" disabled={!input.trim()}><Send className="size-4" aria-hidden /></button>
           )}
         </div>
+        {canRunLocal && mode !== "ai" && (
+          <div className="mt-1.5 px-1 text-xs">
+            {local.state === "off" && (
+              <button type="button" className="inline-flex items-center gap-1 font-semibold text-brand underline" onClick={turnOnLocal}>
+                <Cpu className="size-3.5" aria-hidden /> Use free on-device AI (one-time download, {LOCAL_MODEL_SIZE})
+              </button>
+            )}
+            {local.state === "loading" && (
+              <div role="status" aria-live="polite">
+                Downloading the on-device model… {Math.round(local.progress * 100)}%
+                <div className="mt-1 h-1 overflow-hidden rounded-full bg-surface-2" aria-hidden>
+                  <div className="h-full bg-brand transition-[width]" style={{ width: `${Math.round(local.progress * 100)}%` }} />
+                </div>
+              </div>
+            )}
+            {local.state === "ready" && <span className="font-semibold text-forest">On-device AI is on. Your questions are answered on this device.</span>}
+            {local.state === "error" && <span className="text-danger">The on-device model couldn&apos;t start on this device. Yatri still answers from the guides.</span>}
+          </div>
+        )}
         <div className="mt-1 flex items-center justify-between gap-2 px-1 text-xs text-muted">
           <span>
-            {mode === "guide" ? "Answering from site guides. " : ""}
+            {mode === "guide" && local.state !== "ready" ? "Answering from site guides. " : ""}
             Yatri can make mistakes. Don&apos;t share personal details.
           </span>
           {messages.length > 0 && !busy && (

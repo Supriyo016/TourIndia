@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Flag, Heart, Link2, MessageCircleQuestion, Reply, Share2, Star, ThumbsUp, Trash2 } from "lucide-react";
 import { postJson, useAuth } from "@/components/auth/AuthProvider";
 import { COMMENT_KINDS, TARGET_LABELS, type CommentKind, type Target } from "@/features/community/targets";
+import { site } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 interface Comment {
@@ -26,7 +27,8 @@ const when = (iso: string) => new Date(iso).toLocaleDateString("en-IN", { day: "
 
 function ShareButtons({ title, path }: { title: string; path: string }) {
   const [copied, setCopied] = useState(false);
-  const url = typeof window === "undefined" ? path : new URL(path, window.location.origin).toString();
+  // The public address, not window.location, so server and browser render the same links.
+  const url = new URL(path, site.url).toString();
   const text = `${title} on Tour India`;
   const links = [
     ["WhatsApp", `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`],

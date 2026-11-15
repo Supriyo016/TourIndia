@@ -64,7 +64,7 @@ Each phase has a test gate: typecheck, lint, unit tests, Playwright and a build.
 - [x] **P9. Calendar.** Done 2026-11-16.
   - All national holidays, plus major festivals of every religion and region, nature events (monsoon, bird migration, blooms) and fairs, each with details and a source.
   - Month, list and year views, filters, and .ics export.
-- [ ] **P10. Assistant.** Yatri is upgraded on the model the owner chooses. It answers about this site only, never disparages other sites, and can add web results if a search key is supplied.
+- [x] **P10. Assistant.** Done 2026-11-16: opt-in WebLLM (Qwen2.5 0.5B) grounded on the guide answer, plus a Google search link. Yatri is upgraded on the model the owner chooses. It answers about this site only, never disparages other sites, and can add web results if a search key is supplied.
 - [ ] **P11. SEO and quality.**
   - JSON-LD for TouristDestination, Event, Article and BreadcrumbList.
   - Open Graph images, a sitemap split by section, and Search Console verification.

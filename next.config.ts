@@ -8,11 +8,13 @@ const isDev = process.env.NODE_ENV !== "production";
  */
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  // wasm-unsafe-eval lets the opt-in on-device model compile WebAssembly; it does not allow eval().
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://tile.openstreetmap.org",
   "font-src 'self'",
-  `connect-src 'self'${isDev ? " ws:" : ""}`,
+  // The on-device model downloads its weights from Hugging Face and its runtime from GitHub.
+  `connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com${isDev ? " ws:" : ""}`,
   "media-src 'self'",
   "object-src 'none'",
   // Only the planner's click-to-load Google map may be framed.
