@@ -76,3 +76,20 @@ The in-memory rate limiter is per server instance. Until a database is connected
 - A random `RATE_LIMIT_SALT` of 32 or more characters
 - Enable GitHub secret scanning and Dependabot on the repository
 - Rotate the database password if it is ever exposed
+
+## Review of accounts and community code (2026-11-16)
+
+An independent review covered the new store, auth, account, community, admin and booking code. It checked against the OWASP Top 10 with each finding traced in code. There were no critical findings. All eight findings are fixed, with tests:
+
+| # | Finding | Severity | Fix |
+|---|---|---|---|
+| 1 | Open redirect via a tab, newline or backslash in `next` | Medium-high | One `safePath()` (src/lib/safe-path.ts) used by Google sign-in, the account page and Yatri links. Unit-tested |
+| 2 | Off Vercel, every visitor shares one rate-limit bucket | Medium | A loud production error until `TRUSTED_PROXY_HOPS` is set |
+| 3 | Slow code guessing by reissuing codes | Low-medium | Daily cap on code attempts per address: 20, or 10 for admin |
+| 4 | Response time revealed admin addresses | Low | The email is sent after the response (`after()`) |
+| 5 | Inherited keys such as `constructor` passed the editable-field check | Low | `Object.hasOwn` checks |
+| 6 | Comment counter race | Low | Conditional status update, so the count only changes when the update applies |
+| 7 | Account deletion left bookings, reports and suggestions, and stale totals | Low | All removed or anonymised, and totals corrected |
+| 8 | Behind a TLS proxy, cookies could lack Secure, and the non-`__Host-` cookie was accepted | Low | In production, HTTPS and the Google origin come from the public address, and only `__Host-ti_auth` is read |
+
+Checked and fine: NoSQL operator injection (every filter value is validated), mass assignment, IDOR, admin escalation, CSRF on every state-changing route, OTP storage and comparison, session tokens, Google ID-token claims, XSS (React text only), PII in responses, and behaviour when settings are missing.

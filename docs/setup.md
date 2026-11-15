@@ -93,3 +93,16 @@ In Atlas, open `story_submissions`. Set `status` to `approved` to publish or `re
 ## Backups
 
 Atlas paid tiers offer continuous backup. On the free tier, schedule `mongodump` and keep the output somewhere private, since it contains personal data.
+
+## Switching on accounts, email codes, Google sign-in and admin
+
+Add these in Vercel (Project → Settings → Environment Variables), then redeploy. All are described in `.env.example`.
+
+1. `MONGODB_URI` and `MONGODB_DB`, then run `npm run db:setup` once to create collections, validators and indexes.
+2. `AUTH_SECRET`: 32 or more random characters.
+3. Email codes: create a Resend account, verify your domain, then set `RESEND_API_KEY` and `EMAIL_FROM`.
+4. Google: in Google Cloud Console create an OAuth client (Web application) with the redirect URI `https://<your-site>/api/auth/google/callback`, then set `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
+5. Admin: set `ADMIN_EMAILS` to your address, then sign in at `/admin/login`.
+6. Search Console: add the site, choose the HTML-tag method, put the code in `GOOGLE_SITE_VERIFICATION`, redeploy, click Verify, then submit `/sitemap.xml`.
+
+In development none of this is needed: codes print to the server log, data is kept in memory, and admin addresses can be set in `.env.development.local`.

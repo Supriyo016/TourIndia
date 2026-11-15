@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
 import { requestCodeSchema } from "@/features/auth/schemas";
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { isEmailConfigured, sendCodeEmail } from "@/lib/auth/email";
@@ -9,6 +9,16 @@ import { isAllowed } from "@/lib/security/rate-limit";
 
 // The same reply whether or not the address has an account, so the form can't be used to find out.
 const SENT = { ok: true, message: "If that address can receive email, a 6-digit code is on its way. It expires in 10 minutes." };
+
+function runAfterResponse(task: () => Promise<unknown>) {
+  const logged = () => task().then((ok) => ok || console.error("[auth] a sign-in email could not be sent"));
+  try {
+    after(logged);
+  } catch {
+    // Outside a request (tests), run now.
+    void logged();
+  }
+}
 
 export async function POST(request: NextRequest) {
   if (!isStoreAvailable() || !isAuthConfigured() || !isEmailConfigured()) return unavailable();
@@ -23,9 +33,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const code = await issueCode(body.email, body.purpose);
-    if (code && !(await sendCodeEmail(body.email, code, body.purpose))) {
-      return fail(503, "We couldn't send the email just now. Please try again in a few minutes.");
-    }
+    // Sent after the reply, so response time doesn't reveal which addresses get a code.
+    if (code) runAfterResponse(() => sendCodeEmail(body.email, code, body.purpose));
   } catch {
     return unavailable();
   }

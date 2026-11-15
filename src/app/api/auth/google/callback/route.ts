@@ -1,10 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { site } from "@/config/site";
+
 import { checkIdTokenClaims, exchangeCode, GOOGLE_STATE_COOKIE, isGoogleConfigured, readStateCookie } from "@/lib/auth/google";
 import { createSession, setSessionCookie } from "@/lib/auth/session";
 import { signInUser } from "@/lib/auth/users";
 
+// Google must send people back to the registered public address, not an internal proxy origin.
+const publicOrigin = (request: NextRequest) => (process.env.NODE_ENV === "production" ? new URL(site.url).origin : request.nextUrl.origin);
+
 export async function GET(request: NextRequest) {
-  const origin = request.nextUrl.origin;
+  const origin = publicOrigin(request);
   const params = request.nextUrl.searchParams;
   const saved = readStateCookie(request.cookies.get(GOOGLE_STATE_COOKIE)?.value, params.get("state"));
   const code = params.get("code");

@@ -2,6 +2,7 @@ import "server-only";
 import { createHash, createHmac, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import type { NextRequest, NextResponse } from "next/server";
+import { site } from "@/config/site";
 import { getStore, STORE_COLLECTIONS, type Doc } from "@/lib/database/store";
 
 export type Role = "user" | "admin";
@@ -100,7 +101,8 @@ export async function createSession(userId: string, role: Role): Promise<{ token
   return { token, maxAge };
 }
 
-const isHttps = (request: NextRequest) => request.nextUrl.protocol === "https:";
+// Behind a proxy the request may look like plain HTTP; production always serves the public HTTPS address.
+const isHttps = (request: NextRequest) => (process.env.NODE_ENV === "production" ? site.url.startsWith("https:") : request.nextUrl.protocol === "https:");
 
 export function setSessionCookie(response: NextResponse, request: NextRequest, session: { token: string; maxAge: number }) {
   // Lax, not Strict, so the cookie survives the redirect back from Google sign-in.
@@ -131,7 +133,8 @@ async function resolve(token: string | undefined): Promise<{ user: UserDoc; role
   return { user, role, sessionId };
 }
 
-const tokenFrom = (read: (name: string) => string | undefined) => read(COOKIE_HOST) ?? read(COOKIE_DEV);
+// Production reads only the __Host- cookie, which a subdomain can't set.
+const tokenFrom = (read: (name: string) => string | undefined) => (process.env.NODE_ENV === "production" ? read(COOKIE_HOST) : (read(COOKIE_HOST) ?? read(COOKIE_DEV)));
 
 /** For route handlers. */
 export function sessionFromRequest(request: NextRequest) {

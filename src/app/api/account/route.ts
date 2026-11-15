@@ -3,7 +3,7 @@ import { z } from "zod";
 import { profileSchema } from "@/features/auth/schemas";
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { clearSessionCookie, endAllSessions, sessionFromRequest, toPublicUser, type UserDoc } from "@/lib/auth/session";
-import { getStore, STORE_COLLECTIONS } from "@/lib/database/store";
+import { getStore, STORE_COLLECTIONS, type Doc } from "@/lib/database/store";
 
 export const dynamic = "force-dynamic";
 
@@ -47,8 +47,22 @@ export async function DELETE(request: NextRequest) {
   for (const comment of await comments.find({ userId: id }).toArray()) {
     await comments.updateOne({ _id: comment._id }, { $set: { userId: null, authorName: "Former member" } });
   }
+  // Take loves and ratings back out of the published totals before deleting them.
+  const stats = store.collection(STORE_COLLECTIONS.stats);
+  for (const reaction of await store.collection<Doc & { target: string; kind: string }>(STORE_COLLECTIONS.reactions).find({ userId: id }).toArray()) {
+    if (reaction.kind === "love") await stats.updateOne({ _id: reaction.target }, { $inc: { loves: -1 } });
+  }
+  for (const rating of await store.collection<Doc & { target: string; stars: number }>(STORE_COLLECTIONS.ratings).find({ userId: id }).toArray()) {
+    await stats.updateOne({ _id: rating.target }, { $inc: { ratingCount: -1, ratingSum: -rating.stars } });
+  }
   await store.collection(STORE_COLLECTIONS.reactions).deleteMany({ userId: id });
   await store.collection(STORE_COLLECTIONS.ratings).deleteMany({ userId: id });
+  await store.collection(STORE_COLLECTIONS.reports).deleteMany({ userId: id });
+  await store.collection(STORE_COLLECTIONS.bookings).deleteMany({ userId: id });
+  const edits = store.collection(STORE_COLLECTIONS.edits);
+  for (const edit of await edits.find({ userId: id }).toArray()) {
+    await edits.updateOne({ _id: edit._id }, { $set: { userId: "deleted", authorName: "Former member" } });
+  }
   await store.collection(STORE_COLLECTIONS.users).deleteOne({ _id: id });
   await endAllSessions(id);
   const response = NextResponse.json({ ok: true });

@@ -221,14 +221,16 @@ export async function report(commentId: string, user: UserDoc, reason: string) {
 
 async function setCommentStatus(db: Store, comment: CommentDoc, status: CommentStatus, note?: string) {
   if (comment.status === status) return;
-  await db.collection(STORE_COLLECTIONS.comments).updateOne({ _id: comment._id }, { $set: { status, ...(note ? { reviewNote: note } : {}) } });
+  const result = await db.collection(STORE_COLLECTIONS.comments).updateOne({ _id: comment._id, status: comment.status }, { $set: { status, ...(note ? { reviewNote: note } : {}) } });
+  if (result.matchedCount !== 1) return; // Someone else changed it first.
   const delta = (status === "visible" ? 1 : 0) - (comment.status === "visible" ? 1 : 0);
   if (delta) await db.collection(STORE_COLLECTIONS.stats).updateOne({ _id: comment.target }, { $inc: { comments: delta } }, { upsert: true });
 }
 
 export async function proposeEdit(target: Target, user: UserDoc, input: { field: string; text: string; reason: string }) {
   const content = requireTarget(target);
-  const field = EDITABLE_FIELDS[target.type]?.[input.field];
+  const fields = EDITABLE_FIELDS[target.type] ?? {};
+  const field = Object.hasOwn(fields, input.field) ? fields[input.field] : undefined;
   if (!field) throw new CommunityError("That part of the page can't be edited.", 400);
   if (!user.profileComplete) throw new CommunityError("Add your name to your profile before suggesting changes.", 403);
   for (const text of [input.text, input.reason]) {

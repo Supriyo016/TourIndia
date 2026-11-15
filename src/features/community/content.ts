@@ -39,6 +39,6 @@ export function contentFor(target: Target): { title: string; path: string; sourc
 export function currentFieldValue(target: Target, field: string): unknown {
   const fields = EDITABLE_FIELDS[target.type];
   const content = contentFor(target);
-  if (!fields?.[field] || !content) return undefined;
+  if (!fields || !Object.hasOwn(fields, field) || !content) return undefined;
   return readField(content.source, field);
 }

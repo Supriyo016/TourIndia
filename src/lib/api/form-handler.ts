@@ -33,8 +33,13 @@ export function clientAddress(request: NextRequest): string {
     const address = chain[chain.length - hops];
     if (address) return normaliseAddress(address);
   }
+  if (process.env.NODE_ENV === "production" && !warnedNoAddress) {
+    warnedNoAddress = true;
+    console.error("[security] No trusted client address: set TRUSTED_PROXY_HOPS when not on Vercel, or every visitor shares one rate limit.");
+  }
   return "unknown";
 }
+let warnedNoAddress = false;
 
 /** Stops reading as soon as the limit is passed, so a huge body is never held in memory. */
 async function readBody(request: NextRequest): Promise<string | null> {

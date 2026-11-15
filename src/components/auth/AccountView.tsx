@@ -3,10 +3,11 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BOOKING_KINDS, type BookingKind } from "@/features/bookings/schema";
+import { safePath } from "@/lib/safe-path";
 import { postJson, useAuth } from "./AuthProvider";
 import { ProfileForm } from "./ProfileForm";
 
-const safeNext = (value: string | null) => (value && value.startsWith("/") && !value.startsWith("//") ? value : null);
+const safeNext = (value: string | null) => (value ? safePath(value) : null);
 
 interface RequestRow {
   reference: string;

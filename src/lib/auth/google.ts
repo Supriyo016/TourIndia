@@ -1,5 +1,6 @@
 import "server-only";
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
+import { safePath } from "@/lib/safe-path";
 import { hmac } from "./session";
 
 /**
@@ -60,10 +61,7 @@ export function readStateCookie(value: string | undefined, state: string | null)
 }
 
 /** Only same-site paths, so sign-in can't be used to redirect people elsewhere. */
-export function safeReturnPath(value: string | null | undefined): string {
-  if (!value || !value.startsWith("/") || value.startsWith("//") || value.startsWith("/\\")) return "/";
-  return value.slice(0, 200);
-}
+export const safeReturnPath = safePath;
 
 export interface GoogleProfile {
   sub: string;

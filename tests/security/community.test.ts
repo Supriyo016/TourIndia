@@ -213,7 +213,8 @@ describe("community", () => {
     expect((await routes.account.DELETE(call("/api/account", { confirm: "DELETE" }, { cookie, method: "DELETE" }))).status).toBe(200);
     const thread = await (await routes.community.GET(get("/api/community?type=place&id=hampi"))).json();
     expect(thread.comments[0].authorName).toBe("Former member");
-    expect(thread.stats.loves).toBe(1);
+    // The deleted person's love no longer counts.
+    expect(thread.stats.loves).toBe(0);
     expect((await routes.account.GET(get("/api/account", cookie))).status).toBe(401);
   });
 });
