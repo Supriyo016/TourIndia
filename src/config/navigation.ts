@@ -79,6 +79,7 @@ export const navigation: NavItem[] = [
 /** Shown under "More" on wide screens, and in full in the mobile menu. Keep the bar itself to 7 items. */
 export const moreNavigation: NavLink[] = [
   { label: "Calendar and notes", href: "/calendar", description: "Holidays, festivals and your plan notes." },
+  { label: "Encyclopedia", href: "/encyclopedia", description: "Every place and state, with traveller corrections." },
   { label: "Gallery", href: "/gallery", description: "Photos and the video tour." },
   { label: "Services", href: "/services", description: "Guides, transport and stays." },
   { label: "Compare destinations", href: "/compare", description: "Season, budget and duration side by side." },
@@ -97,6 +98,7 @@ export const footerLinks: { title: string; links: NavLink[] }[] = [
       { label: "Festival calendar", href: "/culture/festivals" },
       { label: "Food explorer", href: "/culture/food" },
       { label: "Heritage explorer", href: "/culture/heritage" },
+      { label: "Encyclopedia", href: "/encyclopedia" },
       { label: "Gallery", href: "/gallery" },
     ],
   },

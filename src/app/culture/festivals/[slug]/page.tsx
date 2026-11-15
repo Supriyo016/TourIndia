@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CommunityPanel } from "@/components/community/CommunityPanel";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ShareBar } from "@/components/destinations/ClientWidgets";
@@ -110,6 +111,7 @@ export default async function FestivalPage({ params }: PageProps<"/culture/festi
             ))}
           </p>
         )}
+        <CommunityPanel target={{ type: "festival", id: festival.slug }} title={festival.name} path={`/culture/festivals/${festival.slug}`} />
       </div>
     </article>
   );

@@ -32,12 +32,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/disclaimer",
     "/content-policy",
     "/credits",
+    "/encyclopedia",
     ...states.map(({ slug }) => `/explore/${slug}`),
     ...destinations.map(({ slug }) => `/destinations/${slug}`),
     ...categories.map(({ id }) => `/discover/${id}`),
     ...festivals.map(({ slug }) => `/culture/festivals/${slug}`),
     ...foods.map(({ slug }) => `/culture/food/${slug}`),
     ...stories.map(({ slug }) => `/stories/${slug}`),
+    ...destinations.map(({ slug }) => `/encyclopedia/${slug}`),
+    ...states.map(({ slug }) => `/encyclopedia/states/${slug}`),
   ];
   return paths.map((path) => ({ url: `${site.url}${path}` }));
 }

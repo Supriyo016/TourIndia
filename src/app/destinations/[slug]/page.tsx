@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CommunityPanel } from "@/components/community/CommunityPanel";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AlertTriangle, ArrowRight, Bus, CalendarDays, Clock, Hotel, Plane, Sparkles, TrainFront, Wallet } from "lucide-react";
@@ -405,6 +406,12 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
           </ul>
         </div>
       </section>
+      <div className="container-x pb-12">
+        <p className="mt-8 text-sm">
+          Spotted something out of date? <Link href={`/encyclopedia/${item.slug}`} className="link-text">Suggest a correction in the encyclopedia</Link>.
+        </p>
+        <CommunityPanel target={{ type: "place", id: item.slug }} title={item.name} path={`/destinations/${item.slug}`} />
+      </div>
     </article>
   );
 }

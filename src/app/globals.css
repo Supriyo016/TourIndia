@@ -713,6 +713,72 @@
   background: rgb(8 20 26 / 0.7);
 }
 
+/* Sign-in dialog: a glass card that swings in over slowly orbiting 3D light. */
+.auth-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  perspective: 900px;
+  pointer-events: none;
+  overflow: hidden;
+}
+.auth-orbs span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34rem;
+  height: 34rem;
+  margin: -17rem 0 0 -17rem;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  background: radial-gradient(circle at 30% 30%, rgb(242 163 60 / 0.45), transparent 60%);
+  filter: blur(2px);
+  transform-style: preserve-3d;
+  animation: orbit 18s linear infinite;
+}
+.auth-orbs span:nth-child(2) {
+  width: 26rem;
+  height: 26rem;
+  margin: -13rem 0 0 -13rem;
+  background: radial-gradient(circle at 70% 40%, rgb(117 198 212 / 0.5), transparent 60%);
+  animation-duration: 24s;
+  animation-direction: reverse;
+}
+.auth-orbs span:nth-child(3) {
+  width: 44rem;
+  height: 44rem;
+  margin: -22rem 0 0 -22rem;
+  background: radial-gradient(circle at 50% 80%, rgb(231 123 187 / 0.35), transparent 60%);
+  animation-duration: 32s;
+}
+@keyframes orbit {
+  from {
+    transform: rotateX(62deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(62deg) rotateZ(360deg);
+  }
+}
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(-14deg) translateY(24px) scale(0.97);
+  }
+}
+.auth-card {
+  animation: card-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transform-origin: 50% 0;
+}
+/* One real input, so paste, autofill and screen readers just work. */
+.otp-input {
+  height: 3.5rem;
+  padding-left: 1.05rem;
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.6em;
+  font-family: ui-monospace, monospace;
+}
+
 /* Shown instead of the WebGL globe on low-power devices and with reduced motion. */
 .globe-fallback {
   background:

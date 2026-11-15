@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CommunityPanel } from "@/components/community/CommunityPanel";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ShareBar } from "@/components/destinations/ClientWidgets";
@@ -84,6 +85,7 @@ export default async function StoryPage({ params }: PageProps<"/stories/[slug]">
           ))}
         </p>
       )}
+      <CommunityPanel target={{ type: "story", id: story.slug }} title={story.title} path={`/stories/${story.slug}`} />
     </article>
   );
 }

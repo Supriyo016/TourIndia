@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { states } from "@/data/states";
+import { STATE_NAMES } from "@/data/state-names";
 
 export const INTERESTS = ["Heritage", "Nature", "Mountains", "Beaches", "Food", "Festivals", "Spiritual", "Wildlife", "Adventure", "Art and craft", "Photography", "Road trips"] as const;
 export const TRAVEL_STYLES = ["Budget", "Comfort", "Luxury", "Backpacking", "Family", "Solo", "Couple", "Group"] as const;
@@ -22,7 +22,7 @@ export const verifyCodeSchema = z
   })
   .strict();
 
-const stateNames = new Set(states.map((state) => state.name));
+const stateNames = new Set<string>(STATE_NAMES);
 
 /** Only what the site uses: a name to show, and preferences that tailor suggestions. */
 export const profileSchema = z

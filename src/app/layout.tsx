@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Figtree, Fraunces, Rubik_Wet_Paint } from "next/font/google";
 import { YatriLauncher } from "@/components/assistant/YatriLauncher";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -55,9 +56,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={null}>
           <RouteProgress />
         </Suspense>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          <main id="main">{children}</main>
+          <Footer />
+        </AuthProvider>
         <CookieConsent />
         <YatriLauncher />
         <TiltLayer />

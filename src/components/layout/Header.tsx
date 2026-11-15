@@ -7,6 +7,7 @@ import { ChevronDown, Heart, Menu, Search, X } from "lucide-react";
 import { moreNavigation, navigation, type NavItem, type NavLink } from "@/config/navigation";
 import { SearchBox } from "@/components/search/SearchBox";
 import { cn } from "@/lib/utils";
+import { UserMenu } from "@/components/auth/UserMenu";
 import { ThemeToggle } from "./ThemeToggle";
 import { TopBar } from "./TopBar";
 import { Wordmark } from "./Wordmark";
@@ -221,6 +222,7 @@ export function Header() {
             <Heart className="size-5" aria-hidden />
           </Link>
           <ThemeToggle />
+          <UserMenu />
           <button
             type="button"
             className="icon-btn xl:hidden"

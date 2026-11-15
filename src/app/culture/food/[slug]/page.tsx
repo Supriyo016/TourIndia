@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CommunityPanel } from "@/components/community/CommunityPanel";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs, JsonLd, Photo, PhotoCredit } from "@/components/ui/primitives";
@@ -91,6 +92,7 @@ export default async function FoodDetailPage({ params }: PageProps<"/culture/foo
           </div>
         </section>
       )}
+      <CommunityPanel target={{ type: "food", id: food.slug }} title={food.name} path={`/culture/food/${food.slug}`} />
     </article>
   );
 }

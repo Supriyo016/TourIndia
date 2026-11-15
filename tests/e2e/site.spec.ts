@@ -288,6 +288,40 @@ test.describe("home page additions", () => {
   });
 });
 
+test.describe("accounts and community", () => {
+  test("the sign-in dialog opens from the header, and says so honestly when accounts are off", async ({ page }) => {
+    await page.goto("/about");
+    await page.getByRole("button", { name: "Sign in" }).click();
+    const dialog = page.getByRole("dialog", { name: "Sign in or create an account" });
+    await expect(dialog).toBeVisible();
+    // The test server runs without a database, so neither method is switched on.
+    await expect(dialog.getByText(/Accounts aren.t switched on yet/)).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+  });
+
+  test("every place and state has an encyclopedia entry with edit and community sections", async ({ page }) => {
+    await page.goto("/encyclopedia");
+    await page.getByRole("link", { name: "Hampi", exact: true }).click();
+    await expect(page).toHaveURL(/\/encyclopedia\/hampi$/);
+    await expect(page.getByRole("heading", { level: 1, name: "Hampi" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Suggest an edit" }).first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Travellers on Hampi" })).toBeVisible();
+    await page.getByRole("button", { name: "Suggest an edit" }).first().click();
+    await expect(page.getByRole("dialog", { name: "Sign in or create an account" })).toBeVisible();
+    await expect(page.getByText("Sign in to suggest a correction.")).toBeVisible();
+    expect((await page.request.get("/encyclopedia/states/kerala")).status()).toBe(200);
+  });
+
+  test("private pages are kept out of search engines", async ({ page }) => {
+    const robots = await (await page.request.get("/robots.txt")).text();
+    expect(robots).toMatch(/Disallow: \/admin/);
+    expect(robots).toMatch(/Disallow: \/account/);
+    await page.goto("/account");
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  });
+});
+
 test.describe("cookies", () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
