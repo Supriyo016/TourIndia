@@ -8,6 +8,9 @@ import { Notice, PageIntro } from "@/components/ui/primitives";
 import { destinations } from "@/data";
 import map from "@/data/generated/india-map.json";
 import { ESTIMATE_ASSUMPTIONS, type PlannerDestination } from "@/features/itinerary/generate";
+import type { FestivalFact } from "@/features/itinerary/analysis";
+import { festivals } from "@/data/festivals";
+import { states } from "@/data/states";
 
 export const metadata: Metadata = {
   title: "Trip planner",
@@ -16,9 +19,11 @@ export const metadata: Metadata = {
 };
 
 const catalogue: PlannerDestination[] = destinations.map(
-  ({ slug, name, coordinates, categories, attractions, bestMonths, bestTimeNote, recommendedDays, budget, accommodation, cuisine, nearby, permits }) => ({
+  ({ slug, name, stateSlug, region, coordinates, categories, attractions, bestMonths, bestTimeNote, recommendedDays, budget, accommodation, cuisine, nearby, permits }) => ({
     slug,
     name,
+    stateSlug,
+    region,
     coordinates,
     categories,
     attractions,
@@ -32,6 +37,16 @@ const catalogue: PlannerDestination[] = destinations.map(
     permits,
   }),
 );
+
+/** Only confirmed dates, so the analysis never guesses when a lunar festival falls. */
+const festivalFacts: FestivalFact[] = festivals.map(({ name, slug, stateSlugs, panIndian, confirmedDates }) => ({
+  name,
+  slug,
+  stateSlugs,
+  panIndian,
+  dates: confirmedDates.flatMap((date) => (date.isoStart ? [date.isoStart] : [])),
+}));
+const stateLinks = states.map(({ slug, name, tourismUrl }) => ({ slug, name, tourismUrl }));
 
 export default function PlannerPage() {
   return (
@@ -53,6 +68,8 @@ export default function PlannerPage() {
         >
           <TripPlanner
             catalogue={catalogue}
+            festivals={festivalFacts}
+            states={stateLinks}
             mapBase={<IndiaMap className="h-auto w-full" linked={false} />}
             map={{ width: map.width, height: map.height, scale: map.scale, translate: map.translate }}
           />

@@ -15,7 +15,8 @@ const contentSecurityPolicy = [
   `connect-src 'self'${isDev ? " ws:" : ""}`,
   "media-src 'self'",
   "object-src 'none'",
-  "frame-src 'none'",
+  // Only the planner's click-to-load Google map may be framed.
+  "frame-src https://maps.google.com https://www.google.com",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",

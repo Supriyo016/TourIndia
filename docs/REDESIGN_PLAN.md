@@ -42,19 +42,19 @@ Each phase has a test gate: typecheck, lint, unit tests, Playwright and a build.
 - [x] **P3. Video tour.** Done 2026-11-16.
   - Takes one third of the screen height, centred, and autoplays muted with sound on tap.
   - 360p, 480p and 720p renditions, switched automatically from the Network Information API and buffering. A manual quality menu as well.
-- [ ] **P4. Data and backend.**
+- [x] **P4. Data and backend.** Done 2026-11-16.
   - Schemas for users, sessions, OTP codes, comments, reactions, ratings, edit proposals, the audit log and bookings.
   - zod validation, indexes and TTLs.
   - Repository layer and an API with rate limits, CSRF and same-origin checks.
-- [ ] **P5. Auth.**
+- [x] **P5. Auth.** Done 2026-11-16.
   - Glass sign-in modal: email plus 6-digit OTP (hashed, 10-minute expiry, 5 tries) and Google OAuth.
   - Profile completion: name, home state, travel interests and consent. Nothing beyond what the site uses.
   - Admin login with role check and an extra OTP.
-- [ ] **P6. Community.**
+- [x] **P6. Community.** Done 2026-11-16.
   - Each place gets an encyclopedia page, with comments, love reactions, ratings, shares and "help others" answers.
   - Proposed edits go to an admin queue. Diff, approve and reject, all logged.
   - A word filter covering abuse, slurs and religious insults, in English and romanised Hindi, plus a report button.
-- [ ] **P7. Planner.**
+- [x] **P7. Planner.** Done 2026-11-16.
   - Customisation: budget, pace, travel style, transport, accessibility, diet, kids and seniors.
   - Route analysis: distances, travel time, season and festival clashes, holiday crowds, budget split, warnings.
   - Google Maps embed and links, and links to official sites.

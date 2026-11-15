@@ -11,6 +11,8 @@ import {
   type Itinerary,
   type PlannerDestination as Destination,
   type TransportMode,
+  type Pace,
+  type Diet,
   type TripDay,
 } from "@/features/itinerary/generate";
 import { decodeShared, isValidTripDate, shareHash } from "@/features/itinerary/share";
@@ -23,6 +25,8 @@ import { PlanNotes } from "@/components/notes/PlanNotes";
 import { ItineraryDays } from "./ItineraryDays";
 import { RouteOverlay } from "./RouteOverlay";
 import { ExpenseTracker, PackingChecklist } from "./TripExtras";
+import { MapsAndLinks, TripAnalysisPanel } from "./TripAnalysisPanel";
+import type { FestivalFact } from "@/features/itinerary/analysis";
 
 const NO_TRIPS: SavedTrip[] = [];
 
@@ -35,6 +39,11 @@ interface FormState {
   budget: string;
   transport: TransportMode;
   interests: TravelInterest[];
+  pace: Pace;
+  diet: Diet;
+  withChildren: boolean;
+  withSeniors: boolean;
+  stepFree: boolean;
 }
 
 const INITIAL: FormState = {
@@ -46,10 +55,17 @@ const INITIAL: FormState = {
   budget: "",
   transport: "mixed",
   interests: [],
+  pace: "balanced",
+  diet: "any",
+  withChildren: false,
+  withSeniors: false,
+  stepFree: false,
 };
 
 interface PlannerProps {
   catalogue: Destination[];
+  festivals: FestivalFact[];
+  states: { slug: string; name: string; tourismUrl?: string }[];
   mapBase: ReactNode;
   map: { width: number; height: number; scale: number; translate: number[] };
 }
@@ -91,7 +107,7 @@ export function TripPlanner(props: PlannerProps) {
   return <Planner key={`${params.toString()}${hash}`} {...props} initial={readInitialState(params, hash, props.catalogue)} />;
 }
 
-function Planner({ catalogue, mapBase, map, initial }: PlannerProps & { initial: InitialState }) {
+function Planner({ catalogue, festivals, states, mapBase, map, initial }: PlannerProps & { initial: InitialState }) {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(initial.form);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -133,6 +149,11 @@ function Planner({ catalogue, mapBase, map, initial }: PlannerProps & { initial:
         budget,
         transport: form.transport,
         interests: form.interests,
+        pace: form.pace,
+        diet: form.diet,
+        withChildren: form.withChildren,
+        withSeniors: form.withSeniors,
+        stepFree: form.stepFree,
       },
       catalogue,
     );
@@ -243,6 +264,41 @@ function Planner({ catalogue, mapBase, map, initial }: PlannerProps & { initial:
             <option value="flight">Flight</option>
           </select>
         </div>
+
+        <div className="field">
+          <label className="field-label" htmlFor="p-pace">Pace</label>
+          <select id="p-pace" className="input" value={form.pace} onChange={(event) => update("pace", event.target.value as Pace)}>
+            <option value="relaxed">Relaxed (about 5 hours a day)</option>
+            <option value="balanced">Balanced (about 7 hours a day)</option>
+            <option value="packed">Packed (about 9 hours a day)</option>
+          </select>
+        </div>
+
+        <div className="field">
+          <label className="field-label" htmlFor="p-diet">Food</label>
+          <select id="p-diet" className="input" value={form.diet} onChange={(event) => update("diet", event.target.value as Diet)}>
+            <option value="any">Anything</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="jain">Jain</option>
+          </select>
+        </div>
+
+        <fieldset className="field">
+          <legend className="field-label">Who is travelling</legend>
+          <div className="mt-1 grid gap-1.5 text-[0.97rem]">
+            {([
+              ["withChildren", "Children"],
+              ["withSeniors", "Older travellers"],
+              ["stepFree", "Someone who needs step-free access"],
+            ] as const).map(([key, label]) => (
+              <label key={key} className="flex items-center gap-2">
+                <input type="checkbox" className="size-4 accent-[var(--brand)]" checked={form[key]} onChange={(event) => update(key, event.target.checked)} />
+                {label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <fieldset className="lg:col-span-3">
           <legend className="field-label mb-2">What interests you?</legend>
@@ -358,6 +414,8 @@ function Planner({ catalogue, mapBase, map, initial }: PlannerProps & { initial:
             </ul>
           )}
 
+          <TripAnalysisPanel trip={{ ...trip, days }} catalogue={catalogue} festivals={festivals} />
+
           <div className="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
             <ItineraryDays days={days} onChange={setDays} moveItem={moveItem} />
 
@@ -376,6 +434,8 @@ function Planner({ catalogue, mapBase, map, initial }: PlannerProps & { initial:
                   ))}
                 </ol>
               </div>
+
+              <MapsAndLinks trip={trip} states={states.filter((state) => tripDestinations.some((place) => place.stateSlug === state.slug))} />
 
               <div className="card p-4">
                 <div className="mb-2 flex items-center justify-between gap-2">

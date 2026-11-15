@@ -11,6 +11,8 @@ export type PlannerDestination = Pick<
   FullDestination,
   | "slug"
   | "name"
+  | "stateSlug"
+  | "region"
   | "coordinates"
   | "categories"
   | "attractions"
@@ -40,7 +42,18 @@ export interface TripInput {
   interests: TravelInterest[];
   /** Keep the destinations in the order given rather than optimising. */
   keepOrder?: boolean;
+  /** How full each day is. Relaxed plans about 5 hours of sightseeing, packed about 9. */
+  pace?: Pace;
+  /** Used by the trip analysis to tailor advice. */
+  withChildren?: boolean;
+  withSeniors?: boolean;
+  stepFree?: boolean;
+  diet?: Diet;
 }
+
+export type Pace = "relaxed" | "balanced" | "packed";
+export type Diet = "any" | "vegetarian" | "vegan" | "jain";
+export const PACE_HOURS: Record<Pace, number> = { relaxed: 5, balanced: 7, packed: 9 };
 
 export interface TripItem {
   id: string;
@@ -95,7 +108,6 @@ export const ESTIMATE_ASSUMPTIONS = [
 const ISLAND_SLUGS = new Set(["andaman", "lakshadweep"]);
 /** Guides with no railway station within practical reach. */
 const NO_RAIL_SLUGS = new Set(["leh", "spiti-valley", "manali", "tawang", "ziro", "gangtok", "munnar", "coorg", "valley-of-flowers"]);
-const MAX_HOURS_A_DAY = 7;
 
 /** A leg over eight hours takes a day of its own, or more for very long journeys. */
 const travelDaysFor = (leg: TripLeg) => (leg.hours > 8 ? Math.ceil(leg.hours / 24) : 0);
@@ -215,6 +227,7 @@ export function generateItinerary(input: TripInput, catalogue: Destination[]): I
     .filter((item): item is Destination => Boolean(item));
   const ordered = input.keepOrder ? chosen : nearestOrder(input.start, chosen);
   const warnings: string[] = [];
+  const maxHours = PACE_HOURS[input.pace ?? "balanced"];
 
   const legs: TripLeg[] = [];
   let previous = { name: input.startName, point: input.start };
@@ -290,13 +303,13 @@ export function generateItinerary(input: TripInput, catalogue: Destination[]): I
           note: `About ${leg.hours} hours by ${leg.mode}, roughly ${leg.km} km (estimate)`,
           hours: leg.hours,
         });
-        hours = Math.min(leg.hours, MAX_HOURS_A_DAY - 1);
+        hours = Math.min(leg.hours, maxHours - 1);
       }
       const picks: Attraction[] = [];
       for (const attraction of [...remaining]) {
         // A full-day outing counts as one whole day, so it can never block the rest of the stop.
-        const cost = Math.min(attraction.visitHours, MAX_HOURS_A_DAY);
-        if (hours + cost > MAX_HOURS_A_DAY) continue;
+        const cost = Math.min(attraction.visitHours, maxHours);
+        if (hours + cost > maxHours) continue;
         picks.push(attraction);
         remaining.splice(remaining.indexOf(attraction), 1);
         hours += cost;
