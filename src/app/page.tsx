@@ -18,7 +18,7 @@ import { statePreviews } from "@/components/maps/map-data";
 import { GlobeStage } from "@/components/three/GlobeStage";
 import { TourVideo } from "@/components/ui/TourVideo";
 import { JsonLd, Photo, SectionHeading } from "@/components/ui/primitives";
-import { site } from "@/config/site";
+import { publishedSocials, site } from "@/config/site";
 import { destinations, inSeason } from "@/data";
 import { circuits } from "@/data/circuits";
 import { festivals } from "@/data/festivals";
@@ -81,6 +81,17 @@ export default function HomePage() {
           url: site.url,
           description: site.description,
           founder: { "@type": "Person", name: site.owner.name },
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: site.name,
+          url: site.url,
+          logo: `${site.url}/icon.svg`,
+          founder: { "@type": "Person", name: site.owner.name },
+          sameAs: publishedSocials.map((link) => link.url),
         }}
       />
       {slides.length > 0 ? (

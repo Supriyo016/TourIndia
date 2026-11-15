@@ -44,5 +44,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...destinations.map(({ slug }) => `/encyclopedia/${slug}`),
     ...states.map(({ slug }) => `/encyclopedia/states/${slug}`),
   ];
-  return paths.map((path) => ({ url: `${site.url}${path}` }));
+  const reviewed = new Map<string, string>([
+    ...destinations.flatMap(({ slug, lastReviewed }): [string, string][] => [[`/destinations/${slug}`, lastReviewed], [`/encyclopedia/${slug}`, lastReviewed]]),
+    ...states.flatMap(({ slug, lastReviewed }): [string, string][] => [[`/explore/${slug}`, lastReviewed], [`/encyclopedia/states/${slug}`, lastReviewed]]),
+  ]);
+  const TOP_LEVEL = new Set(["/explore", "/planner", "/calendar", "/culture", "/destinations", "/encyclopedia"]);
+  const priority = (path: string) => (path === "" ? 1 : TOP_LEVEL.has(path) ? 0.9 : path.startsWith("/destinations/") || path.startsWith("/explore/") ? 0.8 : 0.6);
+  return paths.map((path) => ({
+    url: `${site.url}${path}`,
+    ...(reviewed.has(path) ? { lastModified: reviewed.get(path) } : {}),
+    changeFrequency: path === "/calendar" ? "weekly" : "monthly",
+    priority: priority(path),
+  }));
 }

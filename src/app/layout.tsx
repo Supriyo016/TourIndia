@@ -31,6 +31,10 @@ export const metadata: Metadata = {
     url: "/",
   },
   twitter: { card: "summary_large_image", title: site.name, description: site.description },
+  keywords: ["India travel", "India tourism", "travel guide India", "trip planner India", "Indian festivals", "Indian holidays calendar", "states of India", "places to visit in India"],
+  category: "travel",
+  // Search Console: set GOOGLE_SITE_VERIFICATION to the code from the "HTML tag" method.
+  ...(process.env.GOOGLE_SITE_VERIFICATION ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } } : {}),
 };
 
 export const viewport: Viewport = {
