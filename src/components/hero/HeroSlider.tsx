@@ -43,7 +43,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [userPaused, setUserPaused] = useState<boolean | null>(null);
   const [hovering, setHovering] = useState(false);
   const [focused, setFocused] = useState(false);
-  const [loadAll, setLoadAll] = useState(false);
+  const [warm, setWarm] = useState(false);
   const swipeStart = useRef<number | null>(null);
   const frame = useRef<number>(0);
   const paused = userPaused ?? reducedMotion;
@@ -51,7 +51,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const running = !paused && !hovering && !focused && slides.length > 1;
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoadAll(true), 1500);
+    const timer = window.setTimeout(() => setWarm(true), 1500);
     const pending = frame;
     return () => {
       window.clearTimeout(timer);
@@ -125,7 +125,9 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
     >
       <div className="hero-scene absolute inset-0 -z-20">
         {slides.map((slide, position) => {
-          if (!(position === 0 || loadAll || position === index)) return null;
+          // Only the photos in play are fetched: the current one, the one leaving, and (once the page has settled) the next.
+          const next = (index + 1) % slides.length;
+          if (!(position === 0 || position === index || position === previous || (warm && position === next))) return null;
           const state = position === index ? "active" : position === previous ? "leaving" : "idle";
           return (
             <div key={slide.src} aria-hidden={state !== "active"} className="hero-slide" data-state={state}>

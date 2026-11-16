@@ -277,11 +277,12 @@ test.describe("home page additions", () => {
     await expect(header).toHaveAttribute("data-overlay", "false");
   });
 
-  test("the globe section lists every region", async ({ page }) => {
+  test("travel styles are shown as photo tiles that open each style", async ({ page }) => {
     await page.goto("/");
-    const section = page.getByRole("region", { name: "Every guide, pinned on the globe" });
-    await expect(section.getByRole("link", { name: /North India/ })).toBeVisible();
-    await expect(page.getByTestId("globe-stage")).toBeAttached();
+    const section = page.getByRole("region", { name: "Travel styles" });
+    await section.getByRole("link", { name: "Lakes", exact: true }).click();
+    await expect(page).toHaveURL(/\/discover\/lakes$/);
+    await expect(page.locator(".page-hero img")).toBeAttached();
   });
 
   test("the site video is on the home page and doesn't preload", async ({ page }) => {
@@ -364,8 +365,9 @@ test.describe("cookies", () => {
     await page.goto("/about");
     await page.getByRole("button", { name: "Essential only" }).click();
     await expect(page.getByRole("region", { name: "Cookie choices" })).toHaveCount(0);
-    await page.getByRole("button", { name: /Theme:/ }).click();
-    await page.getByRole("menuitemradio", { name: "Dark" }).click();
+    // System, then Light, then Dark: one click each.
+    await page.getByRole("button", { name: "Theme: System. Switch to Light" }).click();
+    await page.getByRole("button", { name: "Theme: Light. Switch to Dark" }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     expect(await page.evaluate(() => localStorage.getItem("ti-theme"))).toBeNull();
     await page.goto("/destinations/hampi");
@@ -377,9 +379,8 @@ test.describe("cookies", () => {
     await page.getByRole("button", { name: "Accept all" }).click();
     // The choice is saved by a request; wait for it before relying on it.
     await expect(page.getByRole("region", { name: "Cookie choices" })).toHaveCount(0);
-    await page.getByRole("button", { name: /Theme:/ }).click();
-    await page.getByRole("menuitemradio", { name: "Dark" }).click();
-    expect(await page.evaluate(() => localStorage.getItem("ti-theme"))).not.toBeNull();
+    await page.getByRole("button", { name: /^Theme:/ }).click();
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("ti-theme"))).not.toBeNull();
     await page.getByRole("button", { name: "Cookie settings" }).click();
     await page.getByLabel(/Preferences/).uncheck();
     await page.getByRole("button", { name: "Save choices" }).click();
@@ -388,6 +389,8 @@ test.describe("cookies", () => {
 });
 
 test.describe("Yatri", () => {
+  // The launcher floats; reduced motion holds it still so clicks are deterministic.
+  test.use({ contextOptions: { reducedMotion: "reduce" } });
   const open = async (page: Page) => {
     await page.goto("/about");
     await page.getByRole("button", { name: /Ask Yatri/ }).click();
@@ -473,8 +476,8 @@ test.describe("theme and motion", () => {
     await page.emulateMedia({ colorScheme: "dark" });
     await page.goto("/about");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await page.getByRole("button", { name: /Theme: system/ }).click();
-    await page.getByRole("menuitemradio", { name: "Light" }).click();
+    // One click moves from System to Light.
+    await page.getByRole("button", { name: "Theme: System. Switch to Light" }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
@@ -557,6 +560,8 @@ test.describe("search and discovery", () => {
   });
 
   test("the map selects a state and links to it", async ({ page }) => {
+    // The tilted map sways; reduced motion holds it still for precise pointer moves.
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/explore");
     // The region buttons only exist once the interactive map has replaced the static one.
