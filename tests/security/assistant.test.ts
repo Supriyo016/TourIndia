@@ -43,7 +43,10 @@ describe("assistant endpoint", () => {
     const response = await assistant(post("/api/assistant", ask("Tell me about Hampi")));
     expect(response.status).toBe(200);
     const stream = await events(response);
-    expect(stream.find((event) => event.t === "text")?.v).toContain("/destinations/hampi");
+    // The answer arrives in pieces, followed by the place cards and the end marker.
+    expect(stream.filter((event) => event.t === "text").map((event) => event.v).join("")).toContain("/destinations/hampi");
+    const extras = stream.find((event) => event.t === "extras")?.v as { cards: { slug: string }[] } | undefined;
+    expect(extras?.cards.map((card) => card.slug)).toContain("hampi");
     expect(stream.at(-1)).toEqual({ t: "done", mode: "guide" });
   });
 

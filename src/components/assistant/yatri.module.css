@@ -1,56 +1,73 @@
-/* Yatri's mark: a small planet with a ring and a paper plane in orbit, turning in 3D. */
+/* Yatri's mark: a diya in a round badge. Only the flame moves, gently. */
 .orb {
-  position: relative;
   display: inline-block;
   width: 1.9rem;
   height: 1.9rem;
   flex: none;
-  perspective: 120px;
 }
-.planet {
-  position: absolute;
-  inset: 0.2rem;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 32% 28%, #fff 0 8%, transparent 26%),
-    radial-gradient(circle at 60% 70%, #1f8a74 0 18%, transparent 19%),
-    radial-gradient(circle at 30% 64%, #2e9c62 0 12%, transparent 13%),
-    radial-gradient(circle at 50% 50%, #5cc7d8, #1a6f84 70%, #0c3a46);
-  background-size: 100%, 200% 100%, 200% 100%, 100%;
-  box-shadow: inset -3px -4px 6px rgb(0 0 0 / 0.35), 0 0 10px rgb(120 220 235 / 0.55);
-  animation: spin-land 6s linear infinite;
+.flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flicker 2.4s ease-in-out infinite;
 }
-.ring {
-  position: absolute;
-  inset: -0.05rem -0.3rem;
-  border: 2px solid rgb(255 214 120 / 0.9);
-  border-radius: 50%;
-  transform: rotateX(72deg) rotateZ(0deg);
-  animation: ring 5s linear infinite;
-}
-.plane {
-  position: absolute;
-  inset: 0;
-  animation: orbit 3.2s linear infinite;
-}
-.plane::after {
-  content: "";
-  position: absolute;
-  top: -0.15rem;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-left: 0.38rem solid #fff;
-  border-top: 0.16rem solid transparent;
-  border-bottom: 0.16rem solid transparent;
-  filter: drop-shadow(0 0 2px rgb(255 255 255 / 0.8));
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  40% {
+    transform: scale(0.94, 1.06) rotate(-2deg);
+  }
+  70% {
+    transform: scale(1.04, 0.96) rotate(2deg);
+  }
 }
 .large {
   width: 2.5rem;
   height: 2.5rem;
 }
-/* A slow aurora behind the panel title. */
+/* The concierge panel: a side panel from the bottom-right on larger screens, a full-screen sheet on phones. */
+.panel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  animation: sheet-up 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@media (min-width: 640px) {
+  .panel {
+    inset: auto 1rem 1rem auto;
+    width: 26rem;
+    height: min(44rem, calc(100dvh - 2rem));
+    border: 1px solid var(--line);
+    border-radius: 1.25rem;
+    box-shadow: 0 30px 80px -20px rgb(6 24 30 / 0.45), 0 0 0 1px rgb(255 255 255 / 0.04);
+    animation-name: panel-in;
+  }
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+@keyframes panel-in {
+  from {
+    transform: translateY(16px) scale(0.98);
+    transform-origin: bottom right;
+    opacity: 0;
+  }
+}
+/* Title bar with a slow aurora behind it. */
 .panelHead {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.6rem 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--line);
   background:
     radial-gradient(120% 140% at 0% 0%, color-mix(in oklab, var(--brand) 22%, transparent), transparent 60%),
     radial-gradient(100% 120% at 100% 0%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 60%);
@@ -62,40 +79,167 @@
     background-position: 100% 50%, 0% 50%;
   }
 }
-.launcher {
-  animation: float 4s ease-in-out infinite;
+.liveDot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #2fa36b;
+  box-shadow: 0 0 0 3px color-mix(in oklab, #2fa36b 25%, transparent);
 }
-.launcher:hover .planet {
-  animation-duration: 2s;
+.guideDot {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 25%, transparent);
 }
 
-@keyframes spin-land {
-  to {
-    background-position: 0 0, -200% 0, -200% 0, 0 0;
-  }
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 0.5rem;
 }
-@keyframes ring {
-  to {
-    transform: rotateX(72deg) rotateZ(360deg);
-  }
+.starter {
+  display: flex;
+  height: 100%;
+  min-height: 4.6rem;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: var(--surface-2);
+  padding: 0.75rem;
+  text-align: left;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.25;
+  transition: border-color 150ms ease, transform 150ms ease;
 }
-@keyframes orbit {
-  to {
-    transform: rotate(360deg);
-  }
+.starter:hover {
+  border-color: var(--brand);
+  transform: translateY(-1px);
 }
-@keyframes float {
+.userBubble {
+  max-width: 85%;
+  border-radius: 1.1rem 1.1rem 0.3rem 1.1rem;
+  background: var(--brand);
+  padding: 0.55rem 0.85rem;
+  color: var(--on-brand);
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+}
+.cards {
+  scroll-padding-left: 0;
+}
+.card {
+  width: 12.5rem;
+  flex: none;
+  scroll-snap-align: start;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: var(--surface);
+  box-shadow: 0 6px 18px -10px rgb(0 0 0 / 0.35);
+}
+.source {
+  border-radius: 999px;
+  background: var(--surface-2);
+  padding: 0.15rem 0.55rem;
+  color: var(--ink-2);
+}
+.source:hover {
+  color: var(--brand);
+}
+.followUp {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid color-mix(in oklab, var(--brand) 35%, var(--line));
+  border-radius: 999px;
+  padding: 0 0.8rem;
+  color: var(--brand);
+  font-size: 0.83rem;
+  font-weight: 600;
+}
+.followUp:hover {
+  background: color-mix(in oklab, var(--brand) 10%, transparent);
+}
+.dots {
+  display: inline-flex;
+  gap: 3px;
+}
+.dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand);
+  animation: dot 1s ease-in-out infinite;
+}
+.dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes dot {
   50% {
     transform: translateY(-4px);
+    opacity: 0.5;
   }
 }
-
+.tray {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-top: 1px solid var(--line);
+  background: color-mix(in oklab, var(--accent) 8%, var(--surface));
+  padding: 0.5rem 0.75rem;
+}
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: var(--surface-2);
+  padding: 0.25rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.composer:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 22%, transparent);
+}
+.sendButton {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.85rem;
+  background: var(--brand);
+  color: var(--on-brand);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+.sendButton:disabled {
+  opacity: 0.4;
+}
+.sendButton:not(:disabled):active {
+  transform: scale(0.94);
+}
+.launcher {
+  transition: transform 150ms ease;
+}
+.launcher:hover {
+  transform: translateY(-2px);
+}
 @media (prefers-reduced-motion: reduce) {
-  .planet,
-  .ring,
-  .plane,
+  .flame,
   .panelHead,
-  .launcher {
+  .panel,
+  .dots span {
     animation: none;
   }
 }

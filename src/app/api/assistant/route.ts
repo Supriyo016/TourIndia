@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { isAssistantConnected, runYatri } from "@/features/assistant/agent";
+import { answerExtras } from "@/features/assistant/extras";
 import { answerLocally } from "@/features/assistant/knowledge";
 import { guardJsonPost } from "@/lib/api/form-handler";
 import { isAllowed } from "@/lib/security/rate-limit";
@@ -57,32 +58,23 @@ export async function POST(request: NextRequest) {
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       const send = (event: Record<string, unknown>) => controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
-      let sentText = false;
-
-      const answerFromGuides = () => {
-        send({ t: "text", v: answerLocally(question) });
-        send({ t: "done", mode: "guide" });
+      const finish = (text: string, mode: "ai" | "guide", toolOutput = "") => {
+        // The answer goes out in short pieces so it appears progressively, then the cards and suggestions.
+        for (const piece of text.match(/[\s\S]{1,48}(\s|$)/g) ?? [text]) send({ t: "text", v: piece });
+        send({ t: "extras", v: answerExtras(text, toolOutput) });
+        send({ t: "done", mode });
       };
 
       try {
         if (!connected) {
-          answerFromGuides();
+          finish(answerLocally(question), "guide");
           return;
         }
-        await runYatri({
-          messages,
-          signal: request.signal,
-          onText: (text) => {
-            sentText = true;
-            send({ t: "text", v: text });
-          },
-          onTool: (name) => send({ t: "tool", v: name }),
-        });
-        send({ t: "done", mode: "ai" });
-      } catch {
-        console.error("[assistant] reply failed");
-        if (sentText) send({ t: "error", v: "The rest of this reply couldn't be loaded. Please try again." });
-        else if (!request.signal.aborted) answerFromGuides();
+        const reply = await runYatri({ messages, signal: request.signal, onTool: (name) => send({ t: "tool", v: name }) });
+        finish(reply.text, "ai", reply.toolOutput);
+      } catch (error) {
+        console.error("[assistant] AI reply failed; answering from the guides:", error instanceof Error ? `${error.name}: ${error.message}` : "unknown error");
+        if (!request.signal.aborted) finish(answerLocally(question), "guide");
       } finally {
         controller.close();
       }

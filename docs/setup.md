@@ -60,13 +60,18 @@ GitHub Pages only serves static files, so it can't run the API routes.
 
 ## Connecting Yatri to AI
 
-Yatri answers from the site's guides until it has a key. To connect it:
+Yatri's AI runs on the server. Without a provider it answers from the site's guides.
 
-1. Create an API key in the Anthropic Console and set a monthly spend limit
-2. Add `ANTHROPIC_API_KEY` to the Vercel project's production environment variables
-3. Redeploy, then ask Yatri a question. The note "Answering from site guides" should disappear
+**Groq (recommended, free, no card):**
+1. Sign in at https://console.groq.com and create an API key.
+2. In Vercel → tour-india → Settings → Environment Variables, add `GROQ_API_KEY` for Production and Preview, then redeploy.
+3. Ask Yatri a question; the header should read "Your India travel concierge", not "Answering from the guides".
 
-Optional: `ASSISTANT_MODEL` and `ASSISTANT_DAILY_LIMIT`. Connect the database as well, so rate limits hold across server instances.
+Defaults to `openai/gpt-oss-120b`, then `openai/gpt-oss-20b` if the first is busy. Groq's free plan has per-minute and per-day limits; when they're reached, Yatri answers from the guides until they reset.
+
+**Vercel AI Gateway (alternative):** set `AI_GATEWAY_API_KEY`, or `AI_GATEWAY_OIDC=1` to use the deployment's own token. The gateway refuses requests until a card is saved on the Vercel account, even on the free tier; set a budget so it can't charge.
+
+Optional: `ASSISTANT_MODELS` (comma-separated, tried in order) and `ASSISTANT_DAILY_LIMIT` (default 500 AI replies a day). Connect the database as well, so rate limits hold across server instances.
 
 ## Release checklist
 

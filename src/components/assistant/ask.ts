@@ -1,14 +1,17 @@
+import type { AnswerExtras } from "@/features/assistant/extras";
+
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
 
 export type AskMode = "ai" | "guide";
+export type { AnswerExtras, PlaceCard } from "@/features/assistant/extras";
 
-/** Sends a conversation to the assistant and streams the reply back. */
+/** Sends a conversation to Yatri on the server and streams the reply back. */
 export async function askYatri(
   messages: ChatMessage[],
-  handlers: { onText: (text: string) => void; onTool?: (name: string) => void; signal?: AbortSignal },
+  handlers: { onText: (text: string) => void; onTool?: (name: string) => void; onExtras?: (extras: AnswerExtras) => void; signal?: AbortSignal },
 ): Promise<AskMode> {
   const response = await fetch("/api/assistant", {
     method: "POST",
@@ -32,11 +35,15 @@ export async function askYatri(
     buffer = lines.pop() ?? "";
     for (const line of lines) {
       if (!line.trim()) continue;
-      const event = JSON.parse(line) as { t: string; v?: string; mode?: AskMode };
-      if (event.t === "text" && event.v) handlers.onText(event.v);
-      if (event.t === "tool" && event.v) handlers.onTool?.(event.v);
+      const event = JSON.parse(line) as { t: string; v?: unknown; mode?: AskMode };
+      if (event.t === "text" && typeof event.v === "string") handlers.onText(event.v);
+      if (event.t === "tool" && typeof event.v === "string") handlers.onTool?.(event.v);
+      if (event.t === "extras" && event.v && typeof event.v === "object") handlers.onExtras?.(event.v as AnswerExtras);
       if (event.t === "done" && event.mode) mode = event.mode;
-      if (event.t === "error") throw new Error(event.v ?? "Something went wrong.");
+      if (event.t === "error") throw new Error(typeof event.v === "string" ? event.v : "Something went wrong.");
     }
   }
 }
+
+/** A Google search for the same question, offered after each answer. */
+export const googleSearchUrl = (question: string) => `https://www.google.com/search?${new URLSearchParams({ q: `${question} India travel` })}`;

@@ -177,12 +177,40 @@ export function today() {
   return { date, weekdayAndDate: new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }), nextHoliday: nextHoliday(date) ?? null };
 }
 
+const SEASONS: Record<string, number> = { winter: 12, summer: 5, monsoon: 7, spring: 3, autumn: 10 };
+
+/** A month from a name, "this month", "next month" or a season. */
 function parseMonth(text: string): number | undefined {
-  const index = monthNames.findIndex((name) => mentions(text, name));
-  return index >= 0 ? index + 1 : undefined;
+  const index = monthNames.findIndex((name) => mentions(text, name) || mentions(text, name.slice(0, 3)));
+  if (index >= 0) return index + 1;
+  const now = Number(todayInIndia().slice(5, 7));
+  if (/\b(this month|now|right now|currently|at the moment)\b/.test(text)) return now;
+  if (/\bnext month\b/.test(text)) return (now % 12) + 1;
+  const season = Object.keys(SEASONS).find((name) => mentions(text, name));
+  return season ? SEASONS[season] : undefined;
 }
 
+/** Everyday words people use for a travel style. */
+const STYLE_WORDS: [RegExp, CategoryId][] = [
+  [/\b(beach|beaches|sea|coast|island)\b/, "beaches"],
+  [/\b(hill|hills|hill station|cool place)\b/, "hill-stations"],
+  [/\b(mountain|mountains|snow|himalaya|himalayas)\b/, "mountains"],
+  [/\b(trek|trekking|hike|hiking|rafting|adventure|paragliding)\b/, "adventure"],
+  [/\b(lake|lakes)\b/, "lakes"],
+  [/\b(waterfall|waterfalls)\b/, "waterfalls"],
+  [/\b(temple|temples|pilgrimage|spiritual|holy)\b/, "religious"],
+  [/\b(fort|forts|palace|palaces)\b/, "forts-palaces"],
+  [/\b(wildlife|tiger|safari|animals|birds)\b/, "wildlife"],
+  [/\b(weekend|short trip)\b/, "weekend"],
+  [/\b(quiet|offbeat|hidden|less crowded|unexplored)\b/, "hidden-gems"],
+];
+
+const STOPWORDS = new Set(
+  "a an and are at best can do does for from good how i in india indian is it me my near of on or should show the there to trip visit want what when where which who why with you your".split(" "),
+);
+
 const link = (label: string, href: string) => `[${label}](${href})`;
+const bullets = (lines: string[]) => lines.map((line) => `- ${line}`).join("\n");
 
 const findNamed = <T,>(text: string, items: T[], nameOf: (item: T) => string) =>
   [...items].sort((a, b) => nameOf(b).length - nameOf(a).length).find((item) => mentions(text, nameOf(item)));
@@ -215,23 +243,57 @@ export function answerLocally(question: string): string {
     return `**${festival.name}**: ${festival.summary} ${dates ? `Confirmed: ${dates}.` : `It usually falls in ${formatMonthRange(festival.months)}.`} Read ${link("more about it", `/culture/festivals/${festival.slug}`)}.`;
   }
   if (food) return `**${food.name}**: ${food.description} ${link("See the dish", `/culture/food/${food.slug}`)}.`;
-  if (place && /\b(plan|itinerary|trip)\b/.test(text)) {
-    return `Start a day-by-day plan for ${place.name} in the ${link("trip planner", `/planner?d=${place.slug}`)}. A typical stay is ${place.recommendedDays.min} to ${place.recommendedDays.max} days.`;
+
+  // Questions about one place or state, by what the visitor wants to know.
+  const area = place ? getState(place.stateSlug) : state;
+  if (area && /\b(eat|food|dish|dishes|cuisine|try)\b/.test(text)) {
+    const dishes = foodInfo(area.slug.replace(/-/g, " "));
+    if (dishes.length) return `Dishes to try in **${area.name}**:\n${bullets(dishes.map((item) => `${link(item.name, item.href)}${item.vegetarian ? " (vegetarian)" : ""}`))}`;
+  }
+  if (area && /\bfestivals?\b/.test(text)) {
+    const list = festivalsInfo({ state: area.slug, month }).slice(0, 6);
+    if (list.length) return `Festivals in or near **${area.name}**:\n${bullets(list.map((item) => `${link(item.name, item.href)}, usually ${item.usualMonths}`))}`;
+  }
+  if (place && /\b(plan|itinerary|trip|days?)\b/.test(text)) {
+    const asked = Number(/\b(\d{1,2})\s*days?\b/.exec(text)?.[1]);
+    const days = Math.min(Math.max(asked || place.recommendedDays.max, 1), 30);
+    return `For **${place.name}**, a typical stay is ${place.recommendedDays.min} to ${place.recommendedDays.max} days, best from ${formatMonthRange(place.bestMonths)}. Open a ${link(`${days}-day plan in the trip planner`, `/planner?d=${place.slug}&days=${days}`)} to see it day by day.`;
   }
   if (place) {
     return `**${place.name}**, ${getState(place.stateSlug)?.name}: ${place.tagline} Best months: ${formatMonthRange(place.bestMonths)}. Typical stay: ${place.recommendedDays.min} to ${place.recommendedDays.max} days.${place.permits ? ` Permits: ${place.permits}` : ""} Read the ${link("full guide", `/destinations/${place.slug}`)}.`;
   }
-  if (state) return `**${state.name}**: ${state.tagline} Best months: ${formatMonthRange(state.bestMonths)}. Capital: ${state.capital}. ${link(`Explore ${state.name}`, `/explore/${state.slug}`)}.`;
-  if (month) {
-    const region = regions.find((item) => mentions(text, item.id) || mentions(text, item.name));
-    const list = findDestinations({ month, region: region?.id, limit: 6 });
-    return `Good places to visit in ${monthName(month)}${region ? ` in ${region.name}` : ""}:\n${list.map((item) => `- ${link(item.name, item.href)}, ${item.state}`).join("\n")}`;
+  if (state) {
+    const guides = destinations.filter((item) => item.stateSlug === state.slug).slice(0, 6);
+    const list = guides.length ? `\nPlaces with guides:\n${bullets(guides.map((item) => link(item.name, `/destinations/${item.slug}`)))}` : "";
+    return `**${state.name}**: ${state.tagline} Best months: ${formatMonthRange(state.bestMonths)}.${list}\n${link(`Explore ${state.name}`, `/explore/${state.slug}`)}.`;
   }
-  const category = categories.find((item) => mentions(text, item.name) || mentions(text, item.id.replace(/-/g, " ")));
-  if (category) return `${category.blurb} Browse ${link(category.name.toLowerCase(), `/discover/${category.id}`)}.`;
+
+  // Broad questions: by month, region or travel style, in any combination.
+  const region = regions.find((item) => mentions(text, item.name) || (item.id !== "islands" && mentions(text, `${item.id} india`)));
+  const style = STYLE_WORDS.find(([pattern]) => pattern.test(text))?.[1] ?? categories.find((item) => mentions(text, item.name))?.id;
+  if (month || region || style) {
+    const kind = style ? (categories.find((item) => item.id === style)?.name.toLowerCase() ?? "places") : "places";
+    const where = region ? ` in ${region.name}` : "";
+    const list = findDestinations({ month, region: region?.id, category: style, limit: 6 });
+    if (list.length) {
+      const when = month ? ` for ${monthName(month)}` : "";
+      return `Good ${kind}${where}${when}:\n${bullets(list.map((item) => `${link(item.name, item.href)}, ${item.state} (best ${item.bestMonths})`))}`;
+    }
+    // Nothing fits every condition: drop the month first, and say so, rather than show nothing.
+    const relaxed = month && (style || region) ? findDestinations({ region: region?.id, category: style, limit: 6 }) : [];
+    if (relaxed.length) {
+      return `None of our ${kind}${where} are at their best in ${monthName(month!)}. Here they are with their best months:\n${bullets(relaxed.map((item) => `${link(item.name, item.href)}, ${item.state} (best ${item.bestMonths})`))}`;
+    }
+  }
   if (/\b(eat|food|dish|dishes|recipe|cuisine)\b/.test(text)) return `The ${link("food explorer", "/culture/food")} covers dishes and recipes by region.`;
 
-  const results = searchSite(question, 5);
-  if (results.length) return `Here's what I found on Tour India:\n${results.map((item) => `- ${link(item.title, item.href)} (${item.type})`).join("\n")}`;
-  return `I couldn't find that in Tour India's guides. Try a state, a town, a festival or a month, or ${link("browse every guide", "/discover")}.`;
+  // Search the whole question, then its important words one by one.
+  const words = text.split(" ").filter((word) => word.length > 2 && !STOPWORDS.has(word));
+  const results = [question, ...words].flatMap((query) => searchSite(query, 5));
+  const unique = [...new Map(results.map((item) => [item.href, item])).values()].slice(0, 6);
+  if (unique.length) return `Here's what Tour India has on that:\n${bullets(unique.map((item) => `${link(item.title, item.href)} (${item.type})`))}`;
+
+  const now = Number(todayInIndia().slice(5, 7));
+  const seasonal = findDestinations({ month: now, limit: 4 });
+  return `I don't have a guide that matches that exactly. Try naming a place, state, festival, dish or month. Meanwhile, good places for ${monthName(now)}:\n${bullets(seasonal.map((item) => `${link(item.name, item.href)}, ${item.state}`))}\nOr ${link("browse every guide", "/discover")}.`;
 }
