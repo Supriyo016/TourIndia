@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Suspense } from "react";
 import { ElephantCharacter } from "@/components/characters/Characters";
 import { IndiaMap } from "@/components/maps/IndiaMap";
 import { MapExplorer } from "@/components/maps/MapExplorer";
@@ -25,11 +24,9 @@ export default function ExplorePage() {
         lede="Point to a state for a quick summary, or select it for its culture, food, festivals and destination guides."
       />
       <div className="container-x py-6">
-        <Suspense fallback={<IndiaMap className="mx-auto h-auto w-full max-w-[42rem]" />}>
           <MapExplorer previews={statePreviews()} initialSlug="rajasthan" markers={<DestinationPins />}>
             <IndiaMap className="h-auto w-full" />
           </MapExplorer>
-        </Suspense>
         <div className="mt-4 flex items-center gap-4">
           <ElephantCharacter className="hidden h-16 w-auto shrink-0 sm:block" />
           <p className="max-w-3xl text-sm text-muted">

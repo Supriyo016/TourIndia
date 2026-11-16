@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { ArrowRight, CalendarDays, MapPinned, Sparkles, UtensilsCrossed } from "lucide-react";
 import {
   BackpackerCharacter,
@@ -127,11 +126,9 @@ export default function HomePage() {
               />
               <ElephantCharacter className="mb-6 hidden h-28 w-auto shrink-0 md:block" />
             </div>
-            <Suspense fallback={<IndiaMap className="mx-auto h-auto w-full max-w-[42rem]" />}>
               <MapExplorer previews={statePreviews()} initialSlug="kerala">
                 <IndiaMap className="h-auto w-full" />
               </MapExplorer>
-            </Suspense>
           </div>
         </div>
       </section>
