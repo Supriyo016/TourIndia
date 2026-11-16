@@ -49,7 +49,7 @@ const places: BookingPlace[] = destinations
 export default function BookingsPage() {
   return (
     <>
-      <PageIntro crumbs={[{ label: "Bookings" }]} eyebrow="Bookings" title="Where to book" lede="We don't sell tickets, rooms or tours. This page points you to the official places to book for yourself." />
+      <PageIntro imageKey="unesco:chhatrapati-shivaji-terminus-formerly-victoria-terminus" crumbs={[{ label: "Bookings" }]} eyebrow="Bookings" title="Where to book" lede="We don't sell tickets, rooms or tours. This page points you to the official places to book for yourself." />
       <div className="container-x space-y-8 py-10">
         <Notice title="Tour India is not a travel agent" tone="warn">
           We are not a registered travel agent, tour operator, booking provider or payment processor. We never ask for card details, and we can&apos;t change or refund a booking made elsewhere. Links below leave this site, and we earn no commission from them.

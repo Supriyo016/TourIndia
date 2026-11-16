@@ -51,7 +51,7 @@ const stateLinks = states.map(({ slug, name, tourismUrl }) => ({ slug, name, tou
 export default function PlannerPage() {
   return (
     <>
-      <PageIntro
+      <PageIntro imageKey="hero:northeast"
         crumbs={[{ label: "Trip planner" }]}
         eyebrow="Plan your trip"
         title="Build an itinerary"

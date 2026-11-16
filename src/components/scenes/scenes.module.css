@@ -1,0 +1,272 @@
+/* Site-wide sky: sprites float up and across at different depths of one 3D stage. */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 900px;
+  color: var(--brand);
+  opacity: 0.32;
+  contain: strict;
+}
+:global([data-theme="dark"]) .ambient {
+  opacity: 0.26;
+  color: #9fd3dc;
+}
+.sprite {
+  position: absolute;
+  top: 100%;
+  display: block;
+  will-change: transform;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.kite {
+  width: 46px;
+  height: 84px;
+  animation-name: kite;
+}
+.lantern {
+  width: 26px;
+  height: 36px;
+  animation-name: rise;
+  filter: drop-shadow(0 0 10px rgb(255 190 90 / 0.8));
+}
+.bird {
+  top: 14%;
+  left: -8% !important;
+  width: 46px;
+  height: 18px;
+  animation-name: fly;
+}
+.petal {
+  top: -6%;
+  width: 14px;
+  height: 20px;
+  animation-name: fall;
+}
+.wing {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: flap 0.9s ease-in-out infinite;
+}
+
+@keyframes kite {
+  0% {
+    transform: translate3d(0, 0, var(--z)) rotate(-8deg);
+  }
+  25% {
+    transform: translate3d(6vw, -40vh, var(--z)) rotate(10deg);
+  }
+  50% {
+    transform: translate3d(-4vw, -75vh, var(--z)) rotate(-12deg);
+  }
+  75% {
+    transform: translate3d(5vw, -105vh, var(--z)) rotate(8deg);
+  }
+  100% {
+    transform: translate3d(0, -135vh, var(--z)) rotate(-8deg);
+  }
+}
+@keyframes rise {
+  from {
+    transform: translate3d(0, 0, var(--z)) rotateY(0deg);
+  }
+  to {
+    transform: translate3d(3vw, -130vh, var(--z)) rotateY(360deg);
+  }
+}
+@keyframes fly {
+  from {
+    transform: translate3d(0, 0, var(--z));
+  }
+  50% {
+    transform: translate3d(60vw, 6vh, var(--z));
+  }
+  to {
+    transform: translate3d(125vw, -4vh, var(--z));
+  }
+}
+@keyframes fall {
+  from {
+    transform: translate3d(0, 0, var(--z)) rotateX(0deg) rotateZ(0deg);
+  }
+  to {
+    transform: translate3d(-8vw, 118vh, var(--z)) rotateX(720deg) rotateZ(220deg);
+  }
+}
+@keyframes flap {
+  50% {
+    transform: scaleY(0.4);
+  }
+}
+
+/* Fewer sprites on small screens. */
+@media (max-width: 767px) {
+  .wide {
+    display: none;
+  }
+  .ambient {
+    opacity: 0.22;
+  }
+}
+
+/* Footer landscape. */
+.footerScene {
+  position: relative;
+  height: 9.5rem;
+  overflow: hidden;
+  perspective: 600px;
+  background: linear-gradient(180deg, #0b2f37 0%, #12434c 70%, #0e3c46 100%);
+  border-bottom: 1px solid rgb(255 255 255 / 0.15);
+}
+:global([data-theme="dark"]) .footerScene {
+  background: linear-gradient(180deg, #06131a 0%, #0c2730 70%, #0a161b 100%);
+}
+.sun {
+  position: absolute;
+  top: 1.2rem;
+  right: 14%;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffe7a3 0%, #f6b54b 55%, transparent 72%);
+  box-shadow: 0 0 60px 18px rgb(246 181 75 / 0.25);
+  animation: glow 6s ease-in-out infinite;
+}
+.layer {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 2.6rem;
+  display: flex;
+  width: 200%;
+  will-change: transform;
+  animation: pan linear infinite;
+}
+.layer svg {
+  width: 50%;
+  height: 100%;
+  flex: none;
+}
+.far {
+  height: 5.6rem;
+  transform-origin: bottom;
+  animation-duration: 90s;
+  opacity: 0.9;
+}
+.mid {
+  height: 3.6rem;
+  animation-duration: 48s;
+}
+.bridge {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 2.6rem;
+  height: 0.35rem;
+  background: repeating-linear-gradient(90deg, #2b6b77 0 26px, transparent 26px 32px), #1f5864;
+}
+.train {
+  position: absolute;
+  bottom: 0.3rem;
+  left: 0;
+  animation: cross 22s linear infinite;
+}
+.river {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2.6rem;
+  background:
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.12) 0 18px, transparent 18px 60px) 0 70% / 120px 2px no-repeat repeat-x,
+    linear-gradient(180deg, #1b5d69, #0f4550);
+  background-repeat: repeat-x, no-repeat;
+  animation: ripple 6s linear infinite;
+}
+.boat {
+  position: absolute;
+  bottom: 0.4rem;
+  animation:
+    sail linear infinite,
+    rock 3.2s ease-in-out infinite;
+}
+.boatOne {
+  animation-duration: 40s, 3.2s;
+}
+.boatTwo {
+  bottom: 1.2rem;
+  opacity: 0.75;
+  animation-duration: 64s, 4s;
+  animation-delay: -30s, -1s;
+}
+.rising {
+  position: absolute;
+  bottom: 0;
+  width: 0.55rem;
+  height: 0.75rem;
+  border-radius: 0.2rem 0.2rem 0.35rem 0.35rem;
+  background: radial-gradient(circle at 50% 70%, #fff3c4, #f6a93b 60%, #d9622b);
+  box-shadow: 0 0 12px rgb(255 190 90 / 0.8);
+  animation: lantern-up 14s linear infinite;
+}
+
+@keyframes pan {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes cross {
+  from {
+    transform: translateX(-12rem);
+  }
+  to {
+    transform: translateX(calc(100vw + 2rem));
+  }
+}
+@keyframes sail {
+  from {
+    left: 105%;
+  }
+  to {
+    left: -12%;
+  }
+}
+@keyframes rock {
+  50% {
+    transform: rotate(-4deg) translateY(-2px);
+  }
+}
+@keyframes ripple {
+  to {
+    background-position: 120px 70%, 0 0;
+  }
+}
+@keyframes glow {
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+}
+@keyframes lantern-up {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(1.5rem, -9rem, -200px) scale(0.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient {
+    display: none;
+  }
+  .footerScene *,
+  .wing {
+    animation: none !important;
+  }
+}

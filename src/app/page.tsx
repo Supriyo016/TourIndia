@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowRight, Backpack, CalendarDays, Landmark, MapPinned, Mountain, Palmtree, Sparkles, Trees, UtensilsCrossed, Waves } from "lucide-react";
+import { ArrowRight, CalendarDays, MapPinned, Sparkles, UtensilsCrossed } from "lucide-react";
 import {
   BackpackerCharacter,
   CameraCharacter,
@@ -15,7 +15,6 @@ import { HeroSlider, type HeroSlide } from "@/components/hero/HeroSlider";
 import { IndiaMap } from "@/components/maps/IndiaMap";
 import { MapExplorer } from "@/components/maps/MapExplorer";
 import { statePreviews } from "@/components/maps/map-data";
-import { GlobeStage } from "@/components/three/GlobeStage";
 import { TourVideo } from "@/components/ui/TourVideo";
 import { JsonLd, Photo, SectionHeading } from "@/components/ui/primitives";
 import { publishedSocials, site } from "@/config/site";
@@ -24,7 +23,8 @@ import { circuits } from "@/data/circuits";
 import { festivals } from "@/data/festivals";
 import { foods } from "@/data/food";
 import { stories } from "@/data/stories";
-import { categories, formatMonthRange, monthName, regions } from "@/data/taxonomy";
+import { categories, formatMonthRange, monthName } from "@/data/taxonomy";
+import { categoryImage } from "@/config/category-images";
 import { getImage, type ImageKey } from "@/lib/images";
 
 /** Image, place, region, guide link, then the tagline shown with that slide. */
@@ -39,14 +39,6 @@ const heroSlides: [ImageKey, string, string, string, string][] = [
   ["hero:ladakh", "Nubra Valley", "Ladakh", "/destinations/leh", "High desert under wide open skies"],
 ];
 
-const interestLinks = [
-  ["hill-stations", "Hill stations", Trees],
-  ["beaches", "Beaches", Palmtree],
-  ["mountains", "Mountains", Mountain],
-  ["forts-palaces", "Forts and palaces", Landmark],
-  ["adventure", "Adventure", Backpack],
-  ["lakes", "Lakes", Waves],
-] as const;
 
 const tips = [
   ["Book long trains early", "Popular overnight routes fill up weeks ahead. Reservations open well before departure.", "/stories/how-to-book-and-read-indian-train-tickets"],
@@ -63,6 +55,7 @@ export default function HomePage() {
   const month = new Date().getMonth() + 1;
   const seasonal = inSeason(month).filter((item) => item.popular).slice(0, 4);
   const popular = destinations.filter((item) => item.popular).slice(0, 8);
+  const featuredStyles = categories.filter((category) => categoryImage[category.id]);
   const gems = destinations.filter((item) => item.hiddenGem).slice(0, 4);
   const upcomingFestivals = festivals
     .filter((festival) => festival.months.some((value) => value === month || value === (month % 12) + 1))
@@ -102,25 +95,20 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="section overflow-hidden bg-[radial-gradient(ellipse_at_70%_50%,color-mix(in_oklab,var(--brand)_22%,var(--bg)),var(--bg)_65%)]" aria-labelledby="globe-title">
-        <div className="container-x grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
-          <div className="reveal">
-            <h2 id="globe-title">Every guide, pinned on the globe</h2>
-            <p className="mt-3 max-w-prose text-lg text-ink-2">
-              Each light is one of our {destinations.length} destination guides. Drag the globe to look around, or pick a region.
-            </p>
-            <ul className="mt-6 grid gap-2 sm:grid-cols-2">
-              {regions.map((region) => (
-                <li key={region.id}>
-                  <Link href={`/explore?region=${region.id}`} data-tilt className="card card-hover flex min-h-12 items-center justify-between gap-3 px-4 py-2.5">
-                    <span className="font-semibold">{region.name}</span>
-                    <span className="text-sm text-muted tabular-nums">{destinations.filter((item) => item.region === region.id).length} guides</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <GlobeStage pins={destinations.map((item) => item.coordinates)} className="aspect-square w-full max-w-[34rem] justify-self-center" />
+      <section className="pt-10 pb-2" aria-label="Travel styles">
+        <div className="container-x">
+          <SectionHeading eyebrow="Discover" title="Choose how you like to travel" action={<Link href="/discover" className="btn btn-outline">All {categories.length} styles <ArrowRight className="nudge size-4" aria-hidden /></Link>} />
+          <ul className="rail -mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-3">
+            {featuredStyles.map((category) => (
+              <li key={category.id} data-tilt className="zoom-media relative aspect-[3/4] w-40 shrink-0 snap-start overflow-hidden rounded-[var(--radius-md)] sm:w-48">
+                <Photo imageKey={categoryImage[category.id]} sizes="12rem" />
+                <div aria-hidden className="photo-scrim absolute inset-0" />
+                <Link href={`/discover/${category.id}`} className="absolute inset-0 flex items-end p-3 text-[1.05rem] font-semibold text-white">
+                  {category.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -159,41 +147,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" aria-label="Lesser-known places and regions">
-        <div className="container-x grid gap-12 lg:grid-cols-[3fr_2fr]">
-          <div>
-            <SectionHeading eyebrow="Quieter" title="Lesser-known places" lede="Fewer crowds, usually with more effort to reach." />
-            <ul className="grid gap-5 sm:grid-cols-2">
-              {gems.map((item, index) => (
-                <li key={item.slug} className={index >= 2 ? "reveal max-sm:hidden" : "reveal"}><DestinationCard destination={item} /></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <SectionHeading eyebrow="Regions" title="Explore by region" />
-            <ul className="divide-y divide-line border-y border-line">
-              {regions.map((region) => (
-                <li key={region.id}>
-                  <Link href={`/explore?region=${region.id}`} className="group flex items-center justify-between gap-4 py-3.5">
-                    <span>
-                      <span className="block font-semibold group-hover:text-brand">{region.name}</span>
-                      <span className="block text-[0.95rem] leading-snug text-muted">{region.blurb}</span>
-                    </span>
-                    <ArrowRight className="size-5 shrink-0 text-muted transition-transform group-hover:translate-x-1 group-hover:text-brand" aria-hidden />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <h3 className="mt-8 mb-3">Or by interest</h3>
-            <ul className="flex flex-wrap gap-2">
-              {interestLinks.map(([id, label, Icon]) => (
-                <li key={id}>
-                  <Link href={`/discover/${id}`} className="chip"><Icon className="size-4" aria-hidden /> {label}</Link>
-                </li>
-              ))}
-              <li><Link href="/discover" className="chip">All {categories.length} styles</Link></li>
-            </ul>
-          </div>
+      <section className="section" aria-label="Lesser-known places">
+        <div className="container-x">
+          <SectionHeading eyebrow="Quieter" title="Lesser-known places" lede="Fewer crowds, usually with more effort to reach." action={<Link href="/discover/hidden-gems" className="btn btn-outline">More quiet places</Link>} />
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {gems.map((item, index) => (
+              <li key={item.slug} className={index >= 2 ? "reveal max-sm:hidden" : "reveal"}><DestinationCard destination={item} /></li>
+            ))}
+          </ul>
         </div>
       </section>
 

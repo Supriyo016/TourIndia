@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function FoodPage() {
   return (
     <>
-      <PageIntro crumbs={[{ label: "Culture", href: "/culture" }, { label: "Food" }]} eyebrow="Food explorer" title="Eat across India" lede="There is no single Indian cuisine. Each region's food follows its crops, coasts, faiths and history." />
+      <PageIntro imageKey="food:masala-dosa" crumbs={[{ label: "Culture", href: "/culture" }, { label: "Food" }]} eyebrow="Food explorer" title="Eat across India" lede="There is no single Indian cuisine. Each region's food follows its crops, coasts, faiths and history." />
       <div className="container-x py-10">
         <div className="space-y-14">
           {regionalCuisines.map((cuisine, index) => {

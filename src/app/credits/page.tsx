@@ -15,7 +15,7 @@ export default function CreditsPage() {
   const images = allImages().sort((a, b) => a.key.localeCompare(b.key));
   return (
     <>
-      <PageIntro crumbs={[{ label: "Credits" }]} title="Photo and data credits" lede="Tour India depends on the generosity of photographers and open-data communities." />
+      <PageIntro imageKey="destination:jaipur" crumbs={[{ label: "Credits" }]} title="Photo and data credits" lede="Tour India depends on the generosity of photographers and open-data communities." />
       <div className="container-x space-y-12 py-10">
         <section id="map-data" aria-labelledby="map-title">
           <h2 id="map-title" className="mb-3">Maps and data</h2>

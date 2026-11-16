@@ -42,7 +42,7 @@ export default function AboutPage() {
           },
         }}
       />
-      <PageIntro crumbs={[{ label: "About Us" }]} eyebrow="About Us" title="A clearer way to find your way around India" />
+      <PageIntro imageKey="hero:taj-mahal" crumbs={[{ label: "About Us" }]} eyebrow="About Us" title="A clearer way to find your way around India" />
       <div className="container-x py-10">
         <div className="grid gap-10 lg:grid-cols-[3fr_2fr]">
           <section aria-labelledby="story">

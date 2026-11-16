@@ -2,7 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MessageCircle } from "lucide-react";
+import styles from "./yatri.module.css";
+import { YatriOrb } from "./YatriOrb";
 
 // The assistant's code is only downloaded when someone opens it.
 const YatriPanel = dynamic(() => import("./YatriPanel"), { ssr: false });
@@ -35,12 +36,13 @@ export function YatriLauncher() {
           type="button"
           aria-label="Ask Yatri, the Tour India assistant (Alt+Y)"
           onClick={() => setOpen(true)}
-          className="no-print fixed right-4 bottom-4 z-40 inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand shadow-lg transition-transform hover:-translate-y-0.5"
+          className={`no-print fixed right-4 bottom-4 z-40 inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-brand pr-4 pl-2.5 font-semibold text-on-brand shadow-lg ${styles.launcher}`}
         >
-          <MessageCircle className="size-5" aria-hidden /> Ask Yatri
+          <YatriOrb /> Ask Yatri
         </button>
       )}
       {open && <YatriPanel onClose={close} />}
     </>
   );
 }
+

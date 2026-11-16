@@ -18,7 +18,7 @@ export default function HeritagePage() {
   const sites = [...unescoSites].sort((a, b) => a.yearInscribed - b.yearInscribed || a.name.localeCompare(b.name));
   return (
     <>
-      <PageIntro crumbs={[{ label: "Culture", href: "/culture" }, { label: "Heritage" }]} eyebrow="Heritage explorer" title="India's heritage" lede={`This list has ${sites.length} World Heritage Sites, ordered by year of inscription, followed by museums and historic sites.`} />
+      <PageIntro imageKey="unesco:group-of-monuments-at-hampi" crumbs={[{ label: "Culture", href: "/culture" }, { label: "Heritage" }]} eyebrow="Heritage explorer" title="India's heritage" lede={`This list has ${sites.length} World Heritage Sites, ordered by year of inscription, followed by museums and historic sites.`} />
       <div className="container-x py-10">
         <div className="mb-6 flex items-center gap-5">
           <HistorianCharacter className="hidden h-24 w-auto shrink-0 sm:block" />

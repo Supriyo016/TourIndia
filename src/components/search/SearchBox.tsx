@@ -85,7 +85,7 @@ export function SearchBox({
   return (
     <div className="relative w-full" role="search">
       <div className="relative">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-muted" aria-hidden />
+        <Search className={cn("pointer-events-none absolute left-3.5 top-1/2 z-10 size-5 -translate-y-1/2", variant === "hero" ? "text-white/85" : "text-muted")} aria-hidden />
         <input
           ref={inputRef}
           role="combobox"
@@ -95,7 +95,7 @@ export function SearchBox({
           aria-activedescendant={active >= 0 ? `${id}-${active}` : undefined}
           aria-label="Search Tour India"
           autoComplete="off"
-          className={cn("input pl-11", variant === "hero" && "min-h-14 border-transparent text-[1.05rem] shadow-lg")}
+          className={cn("input pl-11", variant === "hero" && "hero-search min-h-13 text-[1rem]")}
           placeholder={placeholder}
           value={query}
           onFocus={() => {

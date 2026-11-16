@@ -8,6 +8,9 @@ import { StaticCardGrid, toBrowserProps } from "@/components/discovery/discover-
 import { PageIntro } from "@/components/ui/primitives";
 import { destinations } from "@/data";
 import { categories } from "@/data/taxonomy";
+import { categoryImage } from "@/config/category-images";
+
+
 
 const find = (id: string) => categories.find((category) => category.id === id);
 
@@ -45,7 +48,7 @@ export default async function CategoryPage({ params }: PageProps<"/discover/[cat
 
   return (
     <>
-      <PageIntro crumbs={[{ label: "Discover", href: "/discover" }, { label: match.name }]} eyebrow="Travel style" title={`${match.name} in India`} lede={match.blurb}>
+      <PageIntro imageKey={categoryImage[match.id]} crumbs={[{ label: "Discover", href: "/discover" }, { label: match.name }]} eyebrow="Travel style" title={`${match.name} in India`} lede={match.blurb}>
         {Art && <Art className="mt-4 h-20 w-auto" />}
       </PageIntro>
       <div className="container-x py-8">

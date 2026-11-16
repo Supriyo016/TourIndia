@@ -4,20 +4,14 @@ import { footerLinks } from "@/config/navigation";
 import { publishedSocials, site } from "@/config/site";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { ExternalLink } from "@/components/ui/primitives";
-import { TrainCharacter } from "@/components/characters/Characters";
+import { FooterScene } from "@/components/scenes/FooterScene";
 import { CookieSettingsLink } from "./CookieConsent";
 import { Wordmark } from "./Wordmark";
 
 export function Footer() {
   return (
     <footer className="no-print bg-[#0e3c46] text-[#d8e6e6] dark:bg-[#0a161b]">
-      {/* The original site closed with an animated band; this one has a train crossing it. */}
-      <div aria-hidden className="relative h-16 overflow-hidden border-b border-white/15">
-        <div className="absolute inset-x-0 bottom-2 h-px bg-white/30" />
-        <div className="anim-drift absolute bottom-2 left-0">
-          <TrainCharacter className="h-12 w-auto" />
-        </div>
-      </div>
+      <FooterScene />
 
       <div className="container-x grid gap-10 py-12 lg:grid-cols-[1.5fr_3fr]">
         <div>

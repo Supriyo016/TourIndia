@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRef, useState, type ReactNode } from "react";
@@ -17,6 +18,7 @@ export interface StatePreview {
   season: string;
   days: string;
   guides: number;
+  image?: { src: string; alt: string; blur?: string };
 }
 
 interface ExplorerProps {
@@ -29,11 +31,19 @@ interface ExplorerProps {
 /** Keyed on the region, so choosing a region from the menu takes effect on this page too. */
 export function MapExplorer(props: ExplorerProps) {
   const requested = useSearchParams().get("region");
-  const region = regions.some((item) => item.id === requested) ? requested : null;
+  const region = regions.some((item) => item.id === requested)
+    ? requested
+    : null;
   return <Explorer key={region ?? "all"} {...props} initialRegion={region} />;
 }
 
-function Explorer({ previews, children, markers, initialSlug, initialRegion }: ExplorerProps & { initialRegion: string | null }) {
+function Explorer({
+  previews,
+  children,
+  markers,
+  initialSlug,
+  initialRegion,
+}: ExplorerProps & { initialRegion: string | null }) {
   const [region, setRegion] = useState<string | null>(initialRegion);
   const [slug, setSlug] = useState(initialSlug);
   const lastSelected = useRef<Element | null>(null);
@@ -47,7 +57,9 @@ function Explorer({ previews, children, markers, initialSlug, initialRegion }: E
     const label = cursorLabel.current;
     const area = mapArea.current;
     if (!label || !area) return;
-    const name = (event.target as Element).closest("[data-slug]")?.getAttribute("aria-label");
+    const name = (event.target as Element)
+      .closest("[data-slug]")
+      ?.getAttribute("aria-label");
     if (!name) {
       label.style.opacity = "0";
       return;
@@ -70,27 +82,47 @@ function Explorer({ previews, children, markers, initialSlug, initialRegion }: E
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-center gap-2" role="group" aria-label="Highlight a region">
-        <button type="button" className="chip" aria-pressed={region === null} onClick={() => setRegion(null)}>
+      <div
+        className="mb-4 flex flex-wrap items-center gap-2"
+        role="group"
+        aria-label="Highlight a region"
+      >
+        <button
+          type="button"
+          className="chip"
+          aria-pressed={region === null}
+          onClick={() => setRegion(null)}
+        >
           All India
         </button>
         {regions.map((item) => (
-          <button key={item.id} type="button" className="chip" aria-pressed={region === item.id} onClick={() => setRegion(item.id)}>
+          <button
+            key={item.id}
+            type="button"
+            className="chip"
+            aria-pressed={region === item.id}
+            onClick={() => setRegion(item.id)}
+          >
             {item.name}
           </button>
         ))}
         {markers && (
           <label className="ml-auto inline-flex min-h-9 cursor-pointer items-center gap-2 text-sm font-medium text-ink-2">
-            <input type="checkbox" className="size-4 accent-[var(--brand)]" checked={showPins} onChange={(event) => setShowPins(event.target.checked)} />
+            <input
+              type="checkbox"
+              className="size-4 accent-[var(--brand)]"
+              checked={showPins}
+              onChange={(event) => setShowPins(event.target.checked)}
+            />
             Show guides on map
           </label>
         )}
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
+      <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div
           ref={mapArea}
-          className="relative mx-auto w-full max-w-[42rem]"
+          className="map-3d relative mx-auto w-full max-w-[46rem]"
           data-region-filter={region ?? undefined}
           onMouseOver={onHover}
           onFocus={onHover}
@@ -108,38 +140,67 @@ function Explorer({ previews, children, markers, initialSlug, initialRegion }: E
           />
         </div>
 
-        <aside aria-live="polite" className="card sticky top-24 p-5">
+        <aside
+          aria-live="polite"
+          className="card sticky top-24 overflow-hidden"
+        >
           {preview ? (
             <div key={preview.slug} className="anim-pop">
-              <p className="text-sm font-medium text-muted">{preview.kind === "state" ? "State" : "Union Territory"}</p>
-              <h2 className="mt-0.5 !text-[1.45rem]">{preview.name}</h2>
-              <p className="mt-2 text-[0.97rem] text-ink-2">{preview.tagline}</p>
-              <dl className="mt-4 space-y-2 text-[0.95rem]">
-                <div className="flex justify-between gap-4 border-b border-line pb-2">
-                  <dt className="text-muted">Capital</dt>
-                  <dd className="text-right font-medium">{preview.capital}</dd>
+              {preview.image && (
+                <div className="relative aspect-[16/9]">
+                  <Image
+                    src={preview.image.src}
+                    alt={preview.image.alt}
+                    fill
+                    sizes="22rem"
+                    className="object-cover"
+                    placeholder={preview.image.blur ? "blur" : "empty"}
+                    blurDataURL={preview.image.blur}
+                  />
                 </div>
-                <div className="flex justify-between gap-4 border-b border-line pb-2">
-                  <dt className="text-muted">Best months</dt>
-                  <dd className="text-right font-medium">{preview.season}</dd>
-                </div>
-                <div className="flex justify-between gap-4 border-b border-line pb-2">
-                  <dt className="text-muted">Suggested trip</dt>
-                  <dd className="text-right font-medium">{preview.days}</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted">Guides here</dt>
-                  <dd className="flex items-center gap-1 font-medium">
-                    <MapPin className="size-4 text-accent-ink" aria-hidden /> {preview.guides}
-                  </dd>
-                </div>
-              </dl>
-              <Link href={`/explore/${preview.slug}`} className="btn btn-primary mt-4 w-full">
-                Explore {preview.name} <ArrowRight className="nudge size-4" aria-hidden />
-              </Link>
+              )}
+              <div className="p-5">
+                <p className="text-sm font-medium text-muted">
+                  {preview.kind === "state" ? "State" : "Union Territory"}
+                </p>
+                <h2 className="mt-0.5 !text-[1.45rem]">{preview.name}</h2>
+                <p className="mt-2 text-[0.97rem] text-ink-2">
+                  {preview.tagline}
+                </p>
+                <dl className="mt-4 space-y-2 text-[0.95rem]">
+                  <div className="flex justify-between gap-4 border-b border-line pb-2">
+                    <dt className="text-muted">Capital</dt>
+                    <dd className="text-right font-medium">
+                      {preview.capital}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-4 border-b border-line pb-2">
+                    <dt className="text-muted">Best months</dt>
+                    <dd className="text-right font-medium">{preview.season}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4 border-b border-line pb-2">
+                    <dt className="text-muted">Suggested trip</dt>
+                    <dd className="text-right font-medium">{preview.days}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-muted">Guides here</dt>
+                    <dd className="flex items-center gap-1 font-medium">
+                      <MapPin className="size-4 text-accent-ink" aria-hidden />{" "}
+                      {preview.guides}
+                    </dd>
+                  </div>
+                </dl>
+                <Link
+                  href={`/explore/${preview.slug}`}
+                  className="btn btn-primary mt-4 w-full"
+                >
+                  Explore {preview.name}{" "}
+                  <ArrowRight className="nudge size-4" aria-hidden />
+                </Link>
+              </div>
             </div>
           ) : (
-            <p className="text-ink-2">Point to a state to preview it.</p>
+            <p className="p-5 text-ink-2">Point to a state to preview it.</p>
           )}
         </aside>
       </div>

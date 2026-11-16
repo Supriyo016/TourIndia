@@ -147,8 +147,8 @@ export function Header() {
       <TopBar />
       <div aria-hidden className="scroll-progress absolute inset-x-0 -bottom-px h-0.5 bg-accent" />
 
-      <div className="container-x flex h-[4.25rem] items-center justify-between gap-3">
-        <Wordmark className="text-[1.75rem]" onDark={overlay} />
+      <div className="container-x flex h-14 items-center justify-between gap-3">
+        <Wordmark className="text-[1.6rem]" onDark={overlay} live />
 
         <nav ref={navRef} aria-label="Primary" className="hidden xl:block">
           <ul className="flex items-center">

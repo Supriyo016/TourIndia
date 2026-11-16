@@ -15,7 +15,7 @@ export default function ContactPage() {
   const { email, phone, postalAddress } = site.contact;
   return (
     <>
-      <PageIntro crumbs={[{ label: "Contact" }]} eyebrow="Contact" title="Get in touch" lede="Corrections and suggestions are especially welcome." />
+      <PageIntro imageKey="destination:udaipur" crumbs={[{ label: "Contact" }]} eyebrow="Contact" title="Get in touch" lede="Corrections and suggestions are especially welcome." />
       <div className="container-x grid gap-10 py-10 lg:grid-cols-[3fr_2fr]">
         <section className="card p-6" aria-label="Contact form">
           <ContactForm />

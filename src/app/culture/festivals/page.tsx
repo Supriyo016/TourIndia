@@ -35,7 +35,7 @@ export default function FestivalsPage() {
 
   return (
     <>
-      <PageIntro crumbs={[{ label: "Culture", href: "/culture" }, { label: "Festivals" }]} eyebrow="Culture" title="Festival calendar" lede="Filter by the month you can travel and the state you are heading to." />
+      <PageIntro imageKey="festival:holi" crumbs={[{ label: "Culture", href: "/culture" }, { label: "Festivals" }]} eyebrow="Culture" title="Festival calendar" lede="Filter by the month you can travel and the state you are heading to." />
       <div className="container-x space-y-6 py-8">
         <Notice title="About these dates" tone="warn">
           Many Indian festivals follow lunar or lunisolar calendars and move from year to year. Where a 2027 date appears, it comes from an official source named on the festival&apos;s page. Otherwise we list the usual month and how the date is set. Regional dates can differ, so confirm before booking.

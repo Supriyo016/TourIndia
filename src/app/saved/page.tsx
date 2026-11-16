@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function SavedPage() {
   return (
     <>
-      <PageIntro crumbs={[{ label: "Saved" }]} eyebrow="Yours" title="Saved places and passport" lede="Everything here stays in this browser. No account is needed, and clearing your browser data removes it." />
+      <PageIntro imageKey="destination:alappuzha" crumbs={[{ label: "Saved" }]} eyebrow="Yours" title="Saved places and passport" lede="Everything here stays in this browser. No account is needed, and clearing your browser data removes it." />
       <div className="container-x py-10">
         <SavedDashboard
           cards={toBrowserProps(destinations).cards}

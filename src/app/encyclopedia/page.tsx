@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function EncyclopediaIndexPage() {
   return (
     <>
-      <PageIntro
+      <PageIntro imageKey="unesco:archaeological-site-of-nalanda-mahavihara-at-nalanda-bihar"
         crumbs={[{ label: "Encyclopedia" }]}
         title="Encyclopedia"
         lede="An entry for every state, Union Territory and place in our guides. Anyone signed in can suggest a correction; an editor checks each one before it appears."

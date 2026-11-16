@@ -30,7 +30,7 @@ const rows: CompareRow[] = destinations.map((item) => ({
 export default function ComparePage() {
   return (
     <>
-      <PageIntro crumbs={[{ label: "Plan", href: "/planner" }, { label: "Compare" }]} eyebrow="Plan" title="Compare destinations" lede="Put up to three guides side by side." />
+      <PageIntro imageKey="destination:munnar" crumbs={[{ label: "Plan", href: "/planner" }, { label: "Compare" }]} eyebrow="Plan" title="Compare destinations" lede="Put up to three guides side by side." />
       <div className="container-x space-y-6 py-8">
         <Suspense fallback={<p role="status" className="text-ink-2">Loading the comparison. It needs JavaScript to run.</p>}>
           <CompareTool rows={rows} />

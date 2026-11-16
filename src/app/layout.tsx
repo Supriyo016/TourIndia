@@ -1,3 +1,4 @@
+import { AmbientScene } from "@/components/scenes/AmbientScene";
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Figtree, Fraunces, Rubik_Wet_Paint } from "next/font/google";
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <RouteProgress />
         </Suspense>
         <AuthProvider>
+          <AmbientScene />
           <Header />
           <main id="main">{children}</main>
           <Footer />

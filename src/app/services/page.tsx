@@ -26,7 +26,7 @@ const services = [
 export default function ServicesPage() {
   return (
     <>
-      <PageIntro crumbs={[{ label: "Services" }]} eyebrow="Travel assistance" title="Help for the practical side" lede="Tour India is an information service. Here is where to find answers on getting around, staying safe and what to do when something goes wrong." />
+      <PageIntro imageKey="destination:mumbai" crumbs={[{ label: "Services" }]} eyebrow="Travel assistance" title="Help for the practical side" lede="Tour India is an information service. Here is where to find answers on getting around, staying safe and what to do when something goes wrong." />
       <div className="container-x py-10">
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {services.map(({ Icon, title, body, href, cta }) => (

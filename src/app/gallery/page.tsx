@@ -56,7 +56,7 @@ export default function GalleryPage() {
   const used = new Set(items.map((item) => item.stateSlug));
   return (
     <>
-      <PageIntro crumbs={[{ label: "Gallery" }]} eyebrow="Gallery" title="India in pictures" lede="Openly licensed photographs by photographers credited on each image. Select any picture to view it full-screen.">
+      <PageIntro imageKey="destination:hampi" crumbs={[{ label: "Gallery" }]} eyebrow="Gallery" title="India in pictures" lede="Openly licensed photographs by photographers credited on each image. Select any picture to view it full-screen.">
         <CameraCharacter className="mt-4 h-16 w-auto" />
       </PageIntro>
       <div className="container-x py-8">

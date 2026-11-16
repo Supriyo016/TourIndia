@@ -24,7 +24,7 @@ const sections = [
 export default function CulturePage() {
   return (
     <>
-      <PageIntro crumbs={[{ label: "Culture and festivals" }]} eyebrow="Culture" title="Culture and festivals" lede="Knowing what a place celebrates, cooks and makes changes how you travel through it." />
+      <PageIntro imageKey="festival:durga-puja" crumbs={[{ label: "Culture and festivals" }]} eyebrow="Culture" title="Culture and festivals" lede="Knowing what a place celebrates, cooks and makes changes how you travel through it." />
       <div className="container-x py-10">
         <ul className="grid gap-5 md:grid-cols-2">
           {sections.map(({ href, title, body, Art }) => (

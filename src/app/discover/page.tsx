@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function DiscoverPage() {
   return (
     <>
-      <PageIntro
+      <PageIntro imageKey="hero:kerala"
         crumbs={[{ label: "Discover" }]}
         eyebrow="Destination guides"
         title="Discover India"

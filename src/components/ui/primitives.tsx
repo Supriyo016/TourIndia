@@ -76,13 +76,35 @@ export function PageIntro({
   title,
   lede,
   children,
+  imageKey,
 }: {
   crumbs: { label: string; href?: string }[];
   eyebrow?: string;
   title: string;
   lede?: string;
   children?: React.ReactNode;
+  /** A related photo behind the title, so the page is easy to picture. */
+  imageKey?: ImageKey;
 }) {
+  const image = imageKey ? getImage(imageKey) : undefined;
+  if (image) {
+    return (
+      <div data-theme="dark" className="page-hero relative isolate overflow-hidden border-b border-line bg-[#0e3c46] text-ink">
+        <Image src={image.src} alt="" fill priority sizes="100vw" placeholder={image.blur ? "blur" : "empty"} blurDataURL={image.blur} className="page-hero-photo -z-20 object-cover" />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(6_24_30/0.86)_0%,rgb(6_24_30/0.6)_50%,rgb(6_24_30/0.25)_100%)]" />
+        <div className="container-x flex min-h-[17rem] flex-col justify-end py-8 sm:min-h-[20rem] sm:py-10">
+          <Breadcrumbs items={crumbs} />
+          <div className="mt-4 max-w-3xl">
+            {eyebrow && <p className="eyebrow mb-1.5 !text-[#f7c26b]">{eyebrow}</p>}
+            <h1>{title}</h1>
+            {lede && <p className="lede mt-3 !text-white/88">{lede}</p>}
+            {children}
+          </div>
+          <p className="mt-4 text-[0.7rem] text-white/65">Photo: {image.author}, {image.license}</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="border-b border-line bg-surface-2">
       <div className="container-x py-8 sm:py-12">

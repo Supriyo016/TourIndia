@@ -22,8 +22,8 @@ export function TopBar() {
   const upcoming = now ? nextHoliday(todayInIndia(now)) : undefined;
 
   return (
-    <div className="border-b border-line/70 text-[0.82rem] text-ink-2">
-      <div className="container-x flex min-h-8 flex-wrap items-center justify-between gap-x-4 py-1">
+    <div className="border-b border-line/70 text-[0.78rem] text-ink-2">
+      <div className="container-x flex min-h-7 flex-wrap items-center justify-between gap-x-4 py-0.5">
         <p className="min-h-5 tabular-nums" data-testid="india-clock">
           {clock && (
             <>

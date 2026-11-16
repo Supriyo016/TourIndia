@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, SquareTerminal, X } from "lucide-react";
-import { BackpackerCharacter } from "@/components/characters/Characters";
 import { cn } from "@/lib/utils";
+import styles from "./yatri.module.css";
 import { YatriChat } from "./YatriChat";
+import { YatriOrb } from "./YatriOrb";
 import { YatriTerminal } from "./YatriTerminal";
 
 type Tab = "chat" | "terminal";
@@ -35,8 +36,8 @@ export default function YatriPanel({ onClose }: { onClose: () => void }) {
       aria-label="Yatri, the Tour India assistant"
       className="no-print anim-pop fixed inset-x-2 top-2 bottom-2 z-50 flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface shadow-lg outline-none sm:inset-x-auto sm:top-auto sm:right-4 sm:bottom-4 sm:h-[min(38rem,calc(100dvh-2rem))] sm:w-[27rem]"
     >
-      <div className="flex items-center gap-2 border-b border-line p-2 pl-3">
-        <BackpackerCharacter className="h-9 w-auto" animated={false} />
+      <div className={`flex items-center gap-2 border-b border-line p-2 pl-3 ${styles.panelHead}`}>
+        <YatriOrb large />
         <div className="min-w-0 flex-1">
           <p className="font-display text-lg leading-tight">Yatri</p>
           <p className="text-xs text-muted">Your Tour India assistant</p>

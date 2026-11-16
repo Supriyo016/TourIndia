@@ -2,6 +2,7 @@ import Link from "next/link";
 import map from "@/data/generated/india-map.json";
 import { destinations, destinationsInState, states } from "@/data";
 import { formatMonthRange } from "@/data/taxonomy";
+import { getImage } from "@/lib/images";
 import { projectToMap } from "@/lib/utils";
 import type { StatePreview } from "./MapExplorer";
 
@@ -16,6 +17,10 @@ export function statePreviews(): StatePreview[] {
     season: formatMonthRange(state.bestMonths),
     days: `${state.recommendedDays.min}–${state.recommendedDays.max} days`,
     guides: destinationsInState(state.slug).length,
+    image: (() => {
+      const image = getImage(`state:${state.slug}`);
+      return image && { src: image.src, alt: image.alt, blur: image.blur };
+    })(),
   }));
 }
 
