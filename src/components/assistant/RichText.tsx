@@ -30,7 +30,16 @@ function renderInline(text: string, onNavigate?: () => void): ReactNode[] {
  * so nothing in a reply can become markup or a link to another website.
  */
 export function RichText({ text, onNavigate }: { text: string; onNavigate?: () => void }) {
-  const blocks = text.split(/\n{1,}/).filter((line) => line.trim());
+  // Tables and headings can't be shown in the chat: a table row becomes a bullet of its cells,
+  // divider rows and heading marks are dropped.
+  const blocks = text
+    .split(/\n{1,}/)
+    .filter((line) => line.trim() && !/^\s*\|?[\s:|-]+\|[\s:|-]*$/.test(line))
+    .map((line) => {
+      const cells = /^\s*\|(.+)\|\s*$/.exec(line)?.[1]?.split("|").map((cell) => cell.trim()).filter(Boolean);
+      if (cells) return `- ${cells.join(" · ")}`;
+      return line.replace(/^\s*#{1,6}\s+/, "");
+    });
   return (
     <div className="space-y-1.5">
       {blocks.map((line, index) => {

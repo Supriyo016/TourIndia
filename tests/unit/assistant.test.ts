@@ -257,3 +257,13 @@ describe("Yatri stays within free-plan limits", () => {
     expect(toolMessage.content.length).toBeLessThanOrEqual(3020);
   });
 });
+
+describe("reply rendering of tables and headings", () => {
+  it("turns a markdown table into readable lines and drops heading marks", () => {
+    const html = renderToStaticMarkup(createElement(RichText, { text: "### Picks\n| Place | Why |\n|---|---|\n| **Agra** | Taj Mahal |" }));
+    expect(html).not.toContain("|");
+    expect(html).not.toContain("###");
+    expect(html).toContain("Picks");
+    expect(html).toContain("<strong>Agra</strong> · Taj Mahal");
+  });
+});
