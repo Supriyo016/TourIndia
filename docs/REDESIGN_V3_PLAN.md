@@ -19,7 +19,7 @@
 
 ## Phases
 
-- [ ] **P14 Hero slider.** Fixed height, 3D turn, parallax, smaller tagline and translucent search are done (commit d79f241); the 12 high-resolution slides are still to come.
+- [x] **P14 Hero slider.** Fixed height, 3D turn, parallax, smaller tagline, translucent search, and 12 slides from 8K Commons originals (`scripts/fetch-hero.mts`).
   - Fixed height for every image, whatever its size.
   - 12 slides with a 3D depth and parallax transition.
   - Smaller tagline, a translucent search box, and a layout that leaves the photo visible.
@@ -49,11 +49,20 @@
   - National and public holidays, festivals, observances and state days.
   - Lunar festivals are calculated, and Islamic dates use the tabular calendar; both are labelled.
   - Check: unit tests against published dates in known years.
-- [ ] **P21 Living traditions.** Every art form gets photos, a video with sound (licensed, playing on click) and a full encyclopedia article.
+- [x] **P21 Living traditions.** All 64 art forms have photos and an article; 21 have a licensed video with sound. Every art form gets photos, a video with sound (licensed, playing on click) and a full encyclopedia article.
 - [x] **P22 Travel quiz.** Restructure it as steps with progress, a result with reasons, and links into the planner.
-- [ ] **P23 Clean-up.** Remove unused code and dependencies, including three.js if the globe was its only use.
+- [x] **P23 Clean-up.** Remove unused code and dependencies, including three.js if the globe was its only use.
 - [ ] **P24 Sign-in on.** Owner walkthrough for MongoDB, Resend, Google OAuth and the Maps key. Then `db:setup` and a live sign-in test.
-- [ ] **P25 Verify.**
+- [x] **P25 Verify.** Live on 2026-11-16 via PRs #1–#3 merged into `master`. PageSpeed Insights (mobile, Lighthouse 13.6) on the live site:
+
+  | Page | Performance | Accessibility | Best practices | SEO |
+  |---|---|---|---|---|
+  | Home | 96 | 100 | 100 | 100 |
+  | Hampi guide | 96 | 100 | 100 | 100 |
+  | Explore | 96 | 100 | 100 | 100 |
+  | Calendar | 98 | 100 | 100 | 100 |
+
+  What got performance there: no automatic link prefetching, GPU-only animations, `content-visibility` for off-screen sections, the map sent once, inline CSS, and the keyless Google map loading only when near.
   - Type check, lint, unit and browser tests.
   - Lighthouse at 95+ for every category on home, a guide, the map, the calendar and the planner.
   - An independent code and security review, then deploy.

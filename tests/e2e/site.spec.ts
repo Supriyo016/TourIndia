@@ -113,6 +113,23 @@ test.describe("routes and links", () => {
     await expect(bar).toHaveAttribute("data-active", "false");
   });
 
+  test("the open mobile menu holds a steady size", async ({ page }) => {
+    // The menu once fed its own height back into --header-h, so it grew and shrank in a loop.
+    for (const size of [{ width: 375, height: 812 }, { width: 768, height: 1024 }]) {
+      await page.setViewportSize(size);
+      await page.goto("/");
+      await page.getByRole("button", { name: "Open menu" }).click();
+      const menu = page.getByRole("navigation", { name: "Mobile" });
+      await expect(menu).toBeVisible();
+      const heights = new Set<number>();
+      for (let sample = 0; sample < 10; sample += 1) {
+        heights.add(Math.round((await menu.boundingBox())!.height));
+        await page.waitForTimeout(80);
+      }
+      expect([...heights]).toHaveLength(1);
+    }
+  });
+
   test("the mobile menu closes on any navigation and on resize", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 });
     await page.goto("/about");
