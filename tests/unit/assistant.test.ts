@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RichText } from "@/components/assistant/RichText";
-import { runYatri } from "@/features/assistant/agent";
+import { isAssistantConnected, runYatri } from "@/features/assistant/agent";
 import { answerExtras } from "@/features/assistant/extras";
 import { answerLocally, destinationBrief, festivalsInfo, findDestinations, holidaysInfo, planTrip, searchSite } from "@/features/assistant/knowledge";
 import { completeCommand, runCommand, type TerminalData } from "@/features/assistant/terminal";
@@ -139,8 +139,8 @@ describe("reply rendering", () => {
 /** Replays scripted gateway replies in place of the network. */
 function fakeGateway(replies: (Record<string, unknown> | number)[]) {
   const bodies: Record<string, unknown>[] = [];
-  const fetchMock = vi.fn(async (_url: string, init: RequestInit) => {
-    bodies.push(JSON.parse(String(init.body)));
+  const fetchMock = vi.fn(async (url: string, init: RequestInit) => {
+    bodies.push({ ...JSON.parse(String(init.body)), url });
     const next = replies.shift();
     if (typeof next === "number") return new Response("{}", { status: next });
     return Response.json({ choices: [{ message: next }] });
@@ -152,7 +152,10 @@ function fakeGateway(replies: (Record<string, unknown> | number)[]) {
 const call = (name: string, args: unknown) => ({ id: `call-${name}`, type: "function", function: { name, arguments: JSON.stringify(args) } });
 
 describe("Yatri agent (Vercel AI Gateway)", () => {
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    delete process.env.AI_GATEWAY_API_KEY;
+  });
   beforeEach(() => {
     process.env.AI_GATEWAY_API_KEY = "test-key";
   });
@@ -167,7 +170,7 @@ describe("Yatri agent (Vercel AI Gateway)", () => {
     // The tool result goes back to the model, and the system prompt carries the rules.
     expect(JSON.stringify(bodies[1]!.messages)).toContain('"role":"tool"');
     expect(JSON.stringify(bodies[0]!.messages)).toContain("does not sell travel");
-    expect(bodies[0]).toMatchObject({ model: "google/gemini-2.5-flash", max_tokens: 900 });
+    expect(bodies[0]).toMatchObject({ model: "google/gemini-2.5-flash", max_tokens: 1500 });
   });
 
   it("moves to the next model when the first is busy or out of free credit", async () => {
@@ -187,6 +190,26 @@ describe("Yatri agent (Vercel AI Gateway)", () => {
   it("gives up when every model fails, so the caller can answer from the guides", async () => {
     fakeGateway([500, 500]);
     await expect(runYatri({ messages: [{ role: "user", content: "Hi" }], onTool: () => undefined })).rejects.toThrow();
+  });
+});
+
+describe("Yatri agent (Groq)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    delete process.env.GROQ_API_KEY;
+  });
+
+  it("is off with no provider configured, so the guides answer", () => {
+    expect(isAssistantConnected()).toBe(false);
+  });
+
+  it("uses Groq's free models with short reasoning when a Groq key is set", async () => {
+    process.env.GROQ_API_KEY = "test-groq";
+    expect(isAssistantConnected()).toBe(true);
+    const bodies = fakeGateway([{ content: "Namaste" }]);
+    const reply = await runYatri({ messages: [{ role: "user", content: "Hi" }], onTool: () => undefined });
+    expect(reply.text).toBe("Namaste");
+    expect(bodies[0]).toMatchObject({ url: "https://api.groq.com/openai/v1/chat/completions", model: "openai/gpt-oss-120b", reasoning_effort: "low" });
   });
 });
 

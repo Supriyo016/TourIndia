@@ -17,25 +17,36 @@ import {
 } from "./knowledge";
 
 /**
- * Yatri's AI runs on the server through Vercel AI Gateway. On Vercel the gateway is
- * reached with the deployment's own OIDC token, so no API key is needed; elsewhere set
- * AI_GATEWAY_API_KEY. Models are tried in order, so a free model can lead and a second
- * one can step in if the first is busy or out of free credit.
+ * Yatri's AI runs on the server, through any OpenAI-compatible provider:
+ * - Groq (GROQ_API_KEY): a free key, no card, fast open models. The default.
+ * - Vercel AI Gateway (AI_GATEWAY_API_KEY, or AI_GATEWAY_OIDC=1 to use the deployment's
+ *   own token). Needs a card saved on the Vercel account, even for the free tier.
+ * Models are tried in order, so a second one can step in when the first is busy or out
+ * of free allowance. With no provider set, Yatri answers from the guides.
  */
-const GATEWAY = "https://ai-gateway.vercel.sh/v1/chat/completions";
-const MODELS = (process.env.ASSISTANT_MODELS ?? "google/gemini-2.5-flash,nvidia/nemotron-3.5-lightning-free")
-  .split(",")
-  .map((model) => model.trim())
-  .filter(Boolean);
+const PROVIDERS = {
+  groq: { url: "https://api.groq.com/openai/v1/chat/completions", models: "openai/gpt-oss-120b,openai/gpt-oss-20b" },
+  gateway: { url: "https://ai-gateway.vercel.sh/v1/chat/completions", models: "google/gemini-2.5-flash,nvidia/nemotron-3.5-lightning-free" },
+} as const;
+
+const provider = () =>
+  process.env.GROQ_API_KEY ? "groq" : process.env.AI_GATEWAY_API_KEY || process.env.AI_GATEWAY_OIDC === "1" ? "gateway" : null;
+
+const models = (name: keyof typeof PROVIDERS) =>
+  (process.env.ASSISTANT_MODELS ?? PROVIDERS[name].models)
+    .split(",")
+    .map((model) => model.trim())
+    .filter(Boolean);
+
 // A public endpoint, so every reply has a firm ceiling on length and tool use.
-const MAX_TOKENS = 900;
+const MAX_TOKENS = 1500;
 const MAX_TOOL_ROUNDS = 4;
 
-export const isAssistantConnected = () => Boolean(process.env.AI_GATEWAY_API_KEY || process.env.VERCEL);
+export const isAssistantConnected = () => provider() !== null;
 
-async function gatewayToken(): Promise<string> {
-  if (process.env.AI_GATEWAY_API_KEY) return process.env.AI_GATEWAY_API_KEY;
-  return getVercelOidcToken();
+async function providerToken(name: keyof typeof PROVIDERS): Promise<string> {
+  if (name === "groq") return process.env.GROQ_API_KEY!;
+  return process.env.AI_GATEWAY_API_KEY || getVercelOidcToken();
 }
 
 const SYSTEM_PROMPT = `You are Yatri, the travel assistant on Tour India, an independent guide to travelling in India. "Yatri" means traveller.
@@ -169,11 +180,13 @@ function runTool(call: ToolCall): string {
   return JSON.stringify(tool.run(parsed.data as never) ?? null).slice(0, 12_000);
 }
 
-async function complete(model: string, messages: GatewayMessage[], token: string, signal?: AbortSignal) {
-  const response = await fetch(GATEWAY, {
+async function complete(url: string, model: string, messages: GatewayMessage[], token: string, signal?: AbortSignal) {
+  // Reasoning models spend part of the token budget thinking; keep that short so the answer fits.
+  const reasoning = model.includes("gpt-oss") ? { reasoning_effort: "low" } : {};
+  const response = await fetch(url, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model, messages, tools: toolDefinitions, max_tokens: MAX_TOKENS, temperature: 0.4 }),
+    body: JSON.stringify({ model, messages, tools: toolDefinitions, max_tokens: MAX_TOKENS, temperature: 0.4, ...reasoning }),
     signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(25_000)]) : AbortSignal.timeout(25_000),
   });
   if (!response.ok) {
@@ -191,14 +204,17 @@ async function complete(model: string, messages: GatewayMessage[], token: string
  * returned along with every tool result, so the caller can show the places it used.
  */
 export async function runYatri({ messages, onTool, signal }: { messages: ChatTurn[]; onTool: (name: string) => void; signal?: AbortSignal }): Promise<{ text: string; toolOutput: string }> {
-  const token = await gatewayToken();
+  const name = provider();
+  if (!name) throw new Error("No AI provider is configured");
+  const { url } = PROVIDERS[name];
+  const token = await providerToken(name);
   let lastError: unknown;
-  for (const model of MODELS) {
+  for (const model of models(name)) {
     const conversation: GatewayMessage[] = [{ role: "system", content: SYSTEM_PROMPT }, ...messages];
     let toolOutput = "";
     try {
       for (let round = 0; round <= MAX_TOOL_ROUNDS; round += 1) {
-        const reply = await complete(model, conversation, token, signal);
+        const reply = await complete(url, model, conversation, token, signal);
         const calls = reply.tool_calls ?? [];
         if (calls.length === 0 || round === MAX_TOOL_ROUNDS) {
           const text = (reply.content ?? "").trim();

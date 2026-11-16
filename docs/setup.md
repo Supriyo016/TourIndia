@@ -60,12 +60,18 @@ GitHub Pages only serves static files, so it can't run the API routes.
 
 ## Connecting Yatri to AI
 
-Yatri's AI runs on the server through Vercel AI Gateway. On Vercel it needs no key: each deployment authenticates itself with its OIDC token, and the gateway's free monthly credit covers the default models. Check the project's **Settings → Security** has OIDC federation turned on, which is the default.
+Yatri's AI runs on the server. Without a provider it answers from the site's guides.
 
-- Models are tried in order: `ASSISTANT_MODELS` (default `google/gemini-2.5-flash,nvidia/nemotron-3.5-lightning-free`). When one is busy or out of free credit, the next answers; when all fail, Yatri answers from the guides.
-- `ASSISTANT_DAILY_LIMIT` caps AI replies across the site (default 500). Connect the database as well, so rate limits hold across server instances.
-- For local development, create an AI Gateway API key in the Vercel dashboard and set `AI_GATEWAY_API_KEY` in `.env.local`.
-- To stay on the free tier, don't buy AI Gateway credits: buying moves the team to the paid tier, where the monthly free credit no longer applies.
+**Groq (recommended, free, no card):**
+1. Sign in at https://console.groq.com and create an API key.
+2. In Vercel → tour-india → Settings → Environment Variables, add `GROQ_API_KEY` for Production and Preview, then redeploy.
+3. Ask Yatri a question; the header should read "Your India travel concierge", not "Answering from the guides".
+
+Defaults to `openai/gpt-oss-120b`, then `openai/gpt-oss-20b` if the first is busy. Groq's free plan has per-minute and per-day limits; when they're reached, Yatri answers from the guides until they reset.
+
+**Vercel AI Gateway (alternative):** set `AI_GATEWAY_API_KEY`, or `AI_GATEWAY_OIDC=1` to use the deployment's own token. The gateway refuses requests until a card is saved on the Vercel account, even on the free tier; set a budget so it can't charge.
+
+Optional: `ASSISTANT_MODELS` (comma-separated, tried in order) and `ASSISTANT_DAILY_LIMIT` (default 500 AI replies a day). Connect the database as well, so rate limits hold across server instances.
 
 ## Release checklist
 

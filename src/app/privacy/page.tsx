@@ -22,13 +22,13 @@ export default function PrivacyPage() {
           ),
         },
         { heading: "What stays on your device", body: <p>Your wishlist, saved trips, notes, passport stamps, packing list, expenses, and, if you allow it, recently viewed places, theme and Yatri chat are kept in your browser&apos;s local storage. They are not sent to us. Clearing your browser data removes them. See <Link prefetch={false} className="link-text" href="/cookies">cookies and storage</Link>.</p> },
-        { heading: "The Yatri assistant", body: <p>The messages you send to Yatri pass through our server to Vercel AI Gateway, which sends them to an AI model provider (currently Google, or NVIDIA if Google is busy) to write the reply. Those providers process them under their own terms, and free-tier providers may keep them. We do not store your conversations on our server. Please don&apos;t share personal, payment or passport details with Yatri. Replies can be wrong, so check anything important.</p> },
+        { heading: "The Yatri assistant", body: <p>The messages you send to Yatri pass through our server to Groq, which runs the AI model that writes the reply and processes them under its own terms. We do not store your conversations on our server. Please don&apos;t share personal, payment or passport details with Yatri. Replies can be wrong, so check anything important.</p> },
         { heading: "Abuse prevention", body: <p>To limit automated abuse of forms, we store a salted hash of your IP address for a short period. We do not store the address itself.</p> },
         {
           heading: "Third parties",
           body: (
             <p>
-              We do not use advertising or analytics scripts. Vercel AI Gateway and its model providers process messages sent to Yatri. When you view a map, your browser loads it from Google Maps, which receives your IP address under Google&apos;s privacy policy. Weather forecasts are fetched by our server from Open-Meteo. Our hosting provider and database provider process data on our behalf and may keep technical logs. If you follow a share or external link, that site&apos;s own policy applies.
+              We do not use advertising or analytics scripts. Groq processes messages sent to Yatri. When you view a map, your browser loads it from Google Maps, which receives your IP address under Google&apos;s privacy policy. Weather forecasts are fetched by our server from Open-Meteo. Our hosting provider and database provider process data on our behalf and may keep technical logs. If you follow a share or external link, that site&apos;s own policy applies.
             </p>
           ),
         },
