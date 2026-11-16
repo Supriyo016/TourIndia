@@ -34,8 +34,8 @@ const pad = (value: number) => String(value).padStart(2, "0");
 
 /**
  * Full-bleed photo slider. The height is fixed by the viewport, never by the photo,
- * so every slide has the same frame. Slides change with a 3D turn, and the photo
- * follows the pointer slightly for depth.
+ * so every slide has the same frame. Slides change with a 3D turn. The photo never
+ * reacts to the pointer: hovering only pauses the slideshow and holds the slow zoom still.
  */
 export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [{ index, previous }, setSlide] = useState<{ index: number; previous: number | null }>({ index: 0, previous: null });
@@ -45,18 +45,13 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [focused, setFocused] = useState(false);
   const [warm, setWarm] = useState(false);
   const swipeStart = useRef<number | null>(null);
-  const frame = useRef<number>(0);
   const paused = userPaused ?? reducedMotion;
   // Holds still while the pointer or keyboard focus is inside, so nothing moves while someone reads or types.
   const running = !paused && !hovering && !focused && slides.length > 1;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setWarm(true), 1500);
-    const pending = frame;
-    return () => {
-      window.clearTimeout(timer);
-      cancelAnimationFrame(pending.current);
-    };
+    return () => window.clearTimeout(timer);
   }, []);
 
   const show = useCallback(
@@ -84,23 +79,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       aria-label="Destinations across India"
       className="hero-stage relative isolate -mt-[var(--header-h,4.5rem)] h-[clamp(34rem,100svh,60rem)] overflow-hidden bg-[#0e3c46] text-white"
       onPointerEnter={(event) => event.pointerType === "mouse" && setHovering(true)}
-      onPointerLeave={(event) => {
-        setHovering(false);
-        event.currentTarget.style.setProperty("--px", "0");
-        event.currentTarget.style.setProperty("--py", "0");
-      }}
-      onPointerMove={(event) => {
-        if (event.pointerType !== "mouse" || reducedMotion) return;
-        const target = event.currentTarget;
-        const { left, top, width, height } = target.getBoundingClientRect();
-        const x = (event.clientX - left) / width - 0.5;
-        const y = (event.clientY - top) / height - 0.5;
-        cancelAnimationFrame(frame.current);
-        frame.current = requestAnimationFrame(() => {
-          target.style.setProperty("--px", x.toFixed(3));
-          target.style.setProperty("--py", y.toFixed(3));
-        });
-      }}
+      onPointerLeave={() => setHovering(false)}
       onPointerDown={(event) => {
         if (event.pointerType !== "mouse") swipeStart.current = event.clientX;
       }}
@@ -140,7 +119,8 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                   priority={position === 0}
                   placeholder={slide.blur ? "blur" : "empty"}
                   blurDataURL={slide.blur}
-                  className={cn("object-cover", state === "active" && running && "ken-burns")}
+                  // The zoom keeps its place while paused, rather than snapping back.
+                  className={cn("object-cover", state === "active" && !paused && "ken-burns", !running && "ken-burns-held")}
                 />
               </div>
             </div>

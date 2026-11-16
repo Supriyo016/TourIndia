@@ -599,6 +599,9 @@
 .ken-burns {
   animation: ken-burns 9s ease-out both;
 }
+.ken-burns-held {
+  animation-play-state: paused;
+}
 
 /* Logo: the same two colours, with a slow light sweep and a lift on hover. */
 @keyframes wordmark-sheen {
@@ -658,12 +661,9 @@
   opacity: 0;
   transform: translate3d(-8%, 0, -320px) rotateY(16deg) scale(1.02);
 }
-/* Depth: the photo drifts against the pointer. */
 .hero-photo {
   position: absolute;
-  inset: -3%;
-  transform: translate3d(calc(var(--px, 0) * -2.4%), calc(var(--py, 0) * -2.4%), 0);
-  transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  inset: 0;
 }
 .hero-search {
   border-color: rgb(255 255 255 / 0.32);
@@ -683,9 +683,6 @@
   .hero-slide[data-state="leaving"] {
     transform: none;
     transition: opacity 300ms ease;
-  }
-  .hero-photo {
-    transform: none;
   }
 }
 @keyframes tagline-in {
