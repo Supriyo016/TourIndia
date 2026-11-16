@@ -25,7 +25,7 @@ import {
  * of free allowance. With no provider set, Yatri answers from the guides.
  */
 const PROVIDERS = {
-  groq: { url: "https://api.groq.com/openai/v1/chat/completions", models: "openai/gpt-oss-120b,openai/gpt-oss-20b" },
+  groq: { url: "https://api.groq.com/openai/v1/chat/completions", models: "openai/gpt-oss-120b,openai/gpt-oss-20b,llama-3.1-8b-instant" },
   gateway: { url: "https://ai-gateway.vercel.sh/v1/chat/completions", models: "google/gemini-2.5-flash,nvidia/nemotron-3.5-lightning-free" },
 } as const;
 
@@ -40,7 +40,9 @@ const models = (name: keyof typeof PROVIDERS) =>
 
 // A public endpoint, so every reply has a firm ceiling on length and tool use.
 const MAX_TOKENS = 1500;
-const MAX_TOOL_ROUNDS = 4;
+const MAX_TOOL_ROUNDS = 3;
+// Free plans limit tokens per minute, so each tool result is kept short.
+const MAX_TOOL_OUTPUT = 3000;
 
 export const isAssistantConnected = () => provider() !== null;
 
@@ -177,7 +179,8 @@ function runTool(call: ToolCall): string {
   }
   const parsed = tool.schema.safeParse(input);
   if (!parsed.success) return JSON.stringify({ error: parsed.error.issues[0]?.message ?? "Invalid arguments" });
-  return JSON.stringify(tool.run(parsed.data as never) ?? null).slice(0, 12_000);
+  const output = JSON.stringify(tool.run(parsed.data as never) ?? null);
+  return output.length > MAX_TOOL_OUTPUT ? `${output.slice(0, MAX_TOOL_OUTPUT)} …(shortened)` : output;
 }
 
 async function complete(url: string, model: string, messages: GatewayMessage[], token: string, signal?: AbortSignal) {
@@ -222,7 +225,7 @@ export async function runYatri({ messages, onTool, signal }: { messages: ChatTur
           return { text, toolOutput };
         }
         conversation.push({ role: "assistant", content: reply.content ?? null, tool_calls: calls });
-        for (const call of calls.slice(0, 4)) {
+        for (const call of calls.slice(0, 3)) {
           onTool(call.function.name);
           const output = runTool(call);
           toolOutput += output;

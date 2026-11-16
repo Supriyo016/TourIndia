@@ -240,3 +240,20 @@ describe("answer cards follow the answer", () => {
     expect(extras.cards.map((card) => card.slug)).toEqual(["agra"]);
   });
 });
+
+describe("Yatri stays within free-plan limits", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    delete process.env.GROQ_API_KEY;
+  });
+
+  it("keeps each tool result short and falls through all three Groq models", async () => {
+    process.env.GROQ_API_KEY = "test-groq";
+    const bodies = fakeGateway([429, 429, { content: null, tool_calls: [call("find_destinations", {})] }, { content: "Try [Agra](/destinations/agra)." }]);
+    const reply = await runYatri({ messages: [{ role: "user", content: "Anywhere" }], onTool: () => undefined });
+    expect(reply.text).toContain("Agra");
+    expect(bodies.slice(0, 3).map((body) => body.model)).toEqual(["openai/gpt-oss-120b", "openai/gpt-oss-20b", "llama-3.1-8b-instant"]);
+    const toolMessage = (bodies[3]!.messages as { role: string; content: string }[]).find((message) => message.role === "tool")!;
+    expect(toolMessage.content.length).toBeLessThanOrEqual(3020);
+  });
+});

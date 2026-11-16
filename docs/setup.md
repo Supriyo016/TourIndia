@@ -67,7 +67,7 @@ Yatri's AI runs on the server. Without a provider it answers from the site's gui
 2. In Vercel → tour-india → Settings → Environment Variables, add `GROQ_API_KEY` for Production and Preview, then redeploy.
 3. Ask Yatri a question; the header should read "Your India travel concierge", not "Answering from the guides".
 
-Defaults to `openai/gpt-oss-120b`, then `openai/gpt-oss-20b` if the first is busy. Groq's free plan has per-minute and per-day limits; when they're reached, Yatri answers from the guides until they reset.
+Defaults to `openai/gpt-oss-120b`, then `openai/gpt-oss-20b`, then `llama-3.1-8b-instant`; each has its own free limit, so a busy one hands over to the next. Groq's free plan has per-minute and per-day limits; when they're reached, Yatri answers from the guides until they reset.
 
 **Vercel AI Gateway (alternative):** set `AI_GATEWAY_API_KEY`, or `AI_GATEWAY_OIDC=1` to use the deployment's own token. The gateway refuses requests until a card is saved on the Vercel account, even on the free tier; set a budget so it can't charge.
 
