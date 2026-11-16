@@ -27,12 +27,14 @@ const GUIDE = /\/destinations\/([a-z0-9-]+)/g;
 
 /**
  * Builds the cards, sources and follow-up questions for one answer from the site
- * links it contains. Places named in the answer come first, then ones only the
- * tools looked up. Nothing here comes from the model except the links themselves,
+ * links it contains. Places the answer links to become cards; ones the tools only
+ * looked up are used only when the answer links to none. Nothing here comes from the model except the links themselves,
  * and every link is checked against the site's own data.
  */
 export function answerExtras(text: string, toolOutput = ""): AnswerExtras {
-  const ordered = [...text.matchAll(GUIDE), ...toolOutput.matchAll(GUIDE)].map((match) => match[1]!);
+  // Cards follow what the answer recommends; places the tools only looked up count only when the answer names none.
+  const named = [...text.matchAll(GUIDE)].map((match) => match[1]!);
+  const ordered = named.some((slug) => bySlug.has(slug)) ? named : [...toolOutput.matchAll(GUIDE)].map((match) => match[1]!);
   const cards = [...new Set(ordered)]
     .flatMap((slug) => {
       const item = bySlug.get(slug);

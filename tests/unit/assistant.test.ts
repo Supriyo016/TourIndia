@@ -228,3 +228,15 @@ describe("answer extras", () => {
     expect(answerExtras("See [this](https://evil.example) and [that](//evil.example)").sources).toEqual([]);
   });
 });
+
+describe("answer cards follow the answer", () => {
+  it("shows only places the answer recommends, not everything the tools looked up", () => {
+    const extras = answerExtras("Go to [Jaipur](/destinations/jaipur).", '{"href":"/destinations/agra"}{"href":"/destinations/aizawl"}');
+    expect(extras.cards.map((card) => card.slug)).toEqual(["jaipur"]);
+  });
+
+  it("falls back to looked-up places when the answer links none", () => {
+    const extras = answerExtras("Here are some ideas.", '{"href":"/destinations/agra"}');
+    expect(extras.cards.map((card) => card.slug)).toEqual(["agra"]);
+  });
+});
