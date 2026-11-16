@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { CalendarPlus, ChevronLeft, ChevronRight, Leaf } from "lucide-react";
 import { formatLongDate, monthGrid, shiftMonth, todayInIndia } from "@/features/calendar/calendar";
+import { CALCULATED_NOTE, FIRST_YEAR, LAST_YEAR } from "@/features/calendar/computed";
 import { natureInMonth, OCCASION_KINDS, occasionsForYear, occasionsToIcs, type FestivalDateFact, type Occasion, type OccasionKind } from "@/data/occasions";
 import { monthNames } from "@/data/taxonomy";
 import { cn } from "@/lib/utils";
@@ -11,8 +12,18 @@ import { cn } from "@/lib/utils";
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const ALL_KINDS = Object.keys(OCCASION_KINDS) as OccasionKind[];
 const subscribeNever = () => () => undefined;
+const YEARS = Array.from({ length: LAST_YEAR - FIRST_YEAR + 1 }, (_, index) => FIRST_YEAR + index);
+const clampYear = (year: number) => Math.min(LAST_YEAR, Math.max(FIRST_YEAR, year));
 
-/** Occasions for a month, filtered by kind. Shared with the workspace's day panel. */
+/** The "calculated" label shown beside dates worked out from astronomical rules. */
+export function CalculatedBadge() {
+  return <span className="ml-2 inline-block rounded-full bg-surface-2 px-2 text-xs text-muted">{CALCULATED_NOTE}</span>;
+}
+
+/**
+ * Occasions for a month, filtered by kind. Shared with the workspace's day panel. Each year
+ * is worked out only when it is first shown, then kept.
+ */
 export function useOccasions(festivalDates: FestivalDateFact[], kinds: Set<OccasionKind>) {
   return useMemo(() => {
     const cache = new Map<number, Occasion[]>();
@@ -49,7 +60,9 @@ export function HolidayCalendar({
 
   if (!today) return <div className="card h-[26rem] animate-pulse bg-surface-2" aria-hidden />;
 
-  const current = view ?? { year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) };
+  const current = view ?? { year: clampYear(Number(today.slice(0, 4))), month: Number(today.slice(5, 7)) };
+  const atStart = current.year === FIRST_YEAR && current.month === 1;
+  const atEnd = current.year === LAST_YEAR && current.month === 12;
   const weeks = monthGrid(current.year, current.month);
   const list = occasions.inMonth(current.year, current.month);
   const nature = natureInMonth(current.month);
@@ -69,11 +82,23 @@ export function HolidayCalendar({
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-2xl" aria-live="polite">{label}</h2>
         <div className="flex items-center">
+          <label className="mr-1">
+            <span className="sr-only">Year</span>
+            <select
+              className="chip !min-h-9 cursor-pointer text-sm"
+              value={current.year}
+              onChange={(event) => setView({ year: Number(event.target.value), month: current.month })}
+            >
+              {YEARS.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </label>
           <button type="button" className="btn btn-outline mr-1 !min-h-9 !px-3" onClick={() => setView(null)}>Today</button>
-          <button type="button" className="icon-btn" aria-label="Previous month" onClick={() => setView(shiftMonth(current.year, current.month, -1))}>
+          <button type="button" className="icon-btn" aria-label="Previous month" disabled={atStart} onClick={() => setView(shiftMonth(current.year, current.month, -1))}>
             <ChevronLeft className="size-5" aria-hidden />
           </button>
-          <button type="button" className="icon-btn" aria-label="Next month" onClick={() => setView(shiftMonth(current.year, current.month, 1))}>
+          <button type="button" className="icon-btn" aria-label="Next month" disabled={atEnd} onClick={() => setView(shiftMonth(current.year, current.month, 1))}>
             <ChevronRight className="size-5" aria-hidden />
           </button>
         </div>
@@ -199,8 +224,9 @@ export function HolidayCalendar({
                   <span aria-hidden className={cn("mr-1.5 inline-block size-2 rounded-full", OCCASION_KINDS[item.kind].className)} />
                   {item.href ? <Link href={item.href} className="link-text">{item.name}</Link> : <span className="text-ink">{item.name}</span>}
                   <span className="ml-2 text-xs text-muted">{OCCASION_KINDS[item.kind].label}</span>
+                  {item.calculated && <CalculatedBadge />}
                   {mode === "agenda" && item.detail && <span className="block text-sm">{item.detail}</span>}
-                  {item.note && <span className="block text-sm text-muted">{item.note}</span>}
+                  {item.note && !item.calculated && <span className="block text-sm text-muted">{item.note}</span>}
                 </span>
               </li>
             ))}

@@ -9,15 +9,17 @@ const isDev = process.env.NODE_ENV !== "production";
 const contentSecurityPolicy = [
   "default-src 'self'",
   // wasm-unsafe-eval lets the opt-in on-device model compile WebAssembly; it does not allow eval().
-  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ""}`,
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://tile.openstreetmap.org",
-  "font-src 'self'",
+  // Google Maps hosts are the ones Google lists for the Maps JavaScript API.
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://maps.googleapis.com https://*.googleapis.com https://*.gstatic.com https://*.google.com https://*.ggpht.com${isDev ? " 'unsafe-eval'" : ""}`,
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "img-src 'self' data: blob: https://maps.googleapis.com https://*.googleapis.com https://*.gstatic.com https://*.google.com https://*.ggpht.com https://*.googleusercontent.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "worker-src 'self' blob:",
   // The on-device model downloads its weights from Hugging Face and its runtime from GitHub.
-  `connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com${isDev ? " ws:" : ""}`,
+  `connect-src 'self' https://maps.googleapis.com https://*.googleapis.com https://*.gstatic.com https://*.google.com https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com${isDev ? " ws:" : ""}`,
   "media-src 'self'",
   "object-src 'none'",
-  // Only the planner's click-to-load Google map may be framed.
+  // Google's keyless map embeds, used when no Maps API key is set.
   "frame-src https://maps.google.com https://www.google.com",
   "base-uri 'self'",
   "form-action 'self'",

@@ -23,6 +23,8 @@ import { formatINR } from "@/lib/utils";
 import type { TravelInterest } from "@/types/content";
 import { PlanNotes } from "@/components/notes/PlanNotes";
 import { ItineraryDays } from "./ItineraryDays";
+import { hasMapsKey } from "@/lib/google-maps";
+import { GoogleRouteMap } from "./GoogleRouteMap";
 import { RouteOverlay } from "./RouteOverlay";
 import { ExpenseTracker, PackingChecklist } from "./TripExtras";
 import { MapsAndLinks, TripAnalysisPanel } from "./TripAnalysisPanel";
@@ -422,10 +424,14 @@ function Planner({ catalogue, festivals, states, mapBase, map, initial }: Planne
             <aside className="space-y-5 print:hidden lg:sticky lg:top-24">
               <div className="card p-4">
                 <h3 className="mb-2 text-lg">Route</h3>
-                <div className="relative">
-                  {mapBase}
-                  <RouteOverlay legs={trip.legs} map={map} />
-                </div>
+                {hasMapsKey ? (
+                  <GoogleRouteMap legs={trip.legs} />
+                ) : (
+                  <div className="relative">
+                    {mapBase}
+                    <RouteOverlay legs={trip.legs} map={map} />
+                  </div>
+                )}
                 <ol className="mt-3 space-y-1 text-sm text-ink-2">
                   {trip.legs.map((leg) => (
                     <li key={`${leg.from}-${leg.to}`}>

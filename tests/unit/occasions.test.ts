@@ -6,7 +6,7 @@ const festivalDates = festivals.flatMap(({ name, slug, confirmedDates }) => conf
 
 describe("calendar occasions", () => {
   it("includes holidays, observances and state days on fixed dates every year", () => {
-    for (const year of [2026, 2030]) {
+    for (const year of [2026, 2030, 2100]) {
       const list = occasionsForYear(year, festivalDates);
       expect(list.find((item) => item.name === "Republic Day")?.date).toBe(`${year}-01-26`);
       expect(list.find((item) => item.name === "International Day of Yoga")?.date).toBe(`${year}-06-21`);
@@ -14,12 +14,41 @@ describe("calendar occasions", () => {
     }
   });
 
-  it("adds festivals only where a source published the date, without doubling holidays", () => {
+  it("prefers published dates over calculated ones, without doubling holidays", () => {
     const year2027 = occasionsForYear(2027, festivalDates);
-    const diwali = year2027.filter((item) => /Diwali/.test(item.name) && item.date === "2027-10-29");
+    const diwali = year2027.filter((item) => /Diwali/.test(item.name));
     expect(diwali).toHaveLength(1);
-    // No published dates for 2031, so no lunar festival is guessed.
-    expect(occasionsForYear(2031, festivalDates).some((item) => item.kind === "festival")).toBe(false);
+    expect(diwali[0]).toMatchObject({ date: "2027-10-29", kind: "listed" });
+    expect(diwali[0]!.calculated).toBeUndefined();
+    expect(year2027.filter((item) => item.name === "Holi").map((item) => item.date)).toEqual(["2027-03-23"]);
+    // Guru Nanak's Birthday is published for 2026 under another name; no calculated copy.
+    expect(occasionsForYear(2026).filter((item) => /Guru Nanak/.test(item.name))).toHaveLength(1);
+  });
+
+  it("calculates lunar festivals for years without published dates, and says so", () => {
+    const list = occasionsForYear(2031, festivalDates);
+    const calculated = list.filter((item) => item.calculated);
+    expect(calculated.map((item) => item.name)).toEqual(expect.arrayContaining(["Diwali", "Holi", "Eid al-Fitr", "Good Friday"]));
+    expect(calculated.every((item) => item.note === "Calculated, may differ by a day locally")).toBe(true);
+    expect(list.filter((item) => !item.calculated && /Diwali|Holi|Eid/.test(item.name))).toEqual([]);
+  });
+
+  it("covers all five kinds in every year from 2000 to 2100", () => {
+    for (const year of [2000, 2050, 2100]) {
+      const kinds = new Set(occasionsForYear(year).map((item) => item.kind));
+      expect([...kinds].sort()).toEqual(["festival", "listed", "national", "observance", "state"]);
+    }
+  });
+
+  it("shows fixed days only from the year they began", () => {
+    const names = (year: number) => occasionsForYear(year).map((item) => item.name);
+    expect(names(2013)).not.toContain("Telangana Formation Day");
+    expect(names(2014)).toContain("Telangana Formation Day");
+    expect(names(2000)).toContain("Chhattisgarh Rajyotsava");
+    expect(names(2018)).not.toContain("Ladakh Union Territory Day");
+    expect(names(2019)).toContain("Ladakh Union Territory Day");
+    expect(names(2014)).not.toContain("International Day of Yoga");
+    expect(names(2015)).toContain("International Day of Yoga");
   });
 
   it("every observance and state day cites a source", () => {

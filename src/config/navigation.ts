@@ -49,7 +49,7 @@ export const navigation: NavItem[] = [
         links: [
           { label: "Trip planner", href: "/planner", description: "A day-by-day itinerary you can edit and export." },
           { label: "Compare destinations", href: "/compare", description: "Season, budget and duration side by side." },
-          { label: "Travel quiz", href: "/quiz", description: "Five questions to narrow down where to go." },
+          { label: "Travel quiz", href: "/quiz", description: "Eight quick questions to find where to go." },
           { label: "Calendar and notes", href: "/calendar", description: "Holidays by month, with your plan notes." },
           { label: "Saved and passport", href: "/saved", description: "Your wishlist, trips and state stamps." },
         ],
@@ -83,7 +83,7 @@ export const moreNavigation: NavLink[] = [
   { label: "Gallery", href: "/gallery", description: "Photos and the video tour." },
   { label: "Services", href: "/services", description: "Guides, transport and stays." },
   { label: "Compare destinations", href: "/compare", description: "Season, budget and duration side by side." },
-  { label: "Travel quiz", href: "/quiz", description: "Five questions to narrow down where to go." },
+  { label: "Travel quiz", href: "/quiz", description: "Eight quick questions to find where to go." },
   { label: "Saved and passport", href: "/saved", description: "Your wishlist, trips and state stamps." },
   { label: "About Us", href: "/about", description: "Who runs Tour India." },
   { label: "Contact", href: "/contact", description: "Questions, corrections and ideas." },

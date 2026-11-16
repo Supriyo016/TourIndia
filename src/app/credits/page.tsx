@@ -24,7 +24,7 @@ export default function CreditsPage() {
               State boundaries: <ExternalLink href="https://github.com/udit-001/india-maps-data" className="link-text">India Maps Data</ExternalLink>, a community collection curated from public sources, simplified for display. Boundaries are shown for navigation only and are not an authoritative depiction of India&apos;s external boundaries.
             </li>
             <li>
-              Destination maps: <ExternalLink href="https://www.openstreetmap.org/copyright" className="link-text">© OpenStreetMap contributors</ExternalLink>, available under the Open Database Licence.
+              Interactive maps: <ExternalLink href="https://www.google.com/intl/en_in/help/terms_maps/" className="link-text">Google Maps</ExternalLink>, under Google&apos;s terms; state shading uses Google&apos;s own boundaries.
             </li>
             <li>
               Weather forecasts: <ExternalLink href="https://open-meteo.com/" className="link-text">Open-Meteo</ExternalLink>, CC BY 4.0.

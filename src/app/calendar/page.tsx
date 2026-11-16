@@ -9,7 +9,7 @@ import { formatLongDate } from "@/features/calendar/calendar";
 
 export const metadata: Metadata = {
   title: "Indian calendar: holidays, festivals, special days and seasons",
-  description: "Public holidays, festival dates confirmed by published sources, national and international days, state days and nature seasons across India, with plan notes and calendar export.",
+  description: "Indian calendar for every year from 2000 to 2100: national and public holidays, festivals, days of observance, state days and nature seasons, with plan notes and calendar export.",
   alternates: { canonical: "/calendar" },
 };
 
@@ -23,12 +23,12 @@ const festivalDates: FestivalDateFact[] = festivals.flatMap(({ name, slug, confi
 export default function CalendarPage() {
   return (
     <>
-      <PageIntro crumbs={[{ label: "Calendar and notes" }]} eyebrow="Plan" title="Calendar and plan notes" lede="Holidays, festivals, special days, state days and nature seasons, month by month. Filter what you see, export a month to your own calendar, and keep plan notes beside it." />
+      <PageIntro imageKey="festival:diwali" crumbs={[{ label: "Calendar and notes" }]} eyebrow="Plan" title="Calendar and plan notes" lede="Holidays, festivals, special days, state days and nature seasons, month by month for any year from 2000 to 2100. Filter what you see, export a month to your own calendar, and keep plan notes beside it." />
       <div className="container-x space-y-8 py-8">
         <CalendarWorkspace festivalDates={festivalDates} />
 
         <Notice title="About these dates" tone="warn">
-          Holidays come from Government of India lists; festival dates appear only where a source has published them; observances and state days fall on fixed dates; nature seasons are typical patterns. Some are restricted holidays, states add their own, and dates that depend on the moon can change. Confirm before you book.{" "}
+          Where a Government of India list or another source has published a date, that date is shown. Other festival and holiday dates that follow the moon are calculated from astronomical rules for New Delhi and marked &ldquo;Calculated, may differ by a day locally&rdquo;: regional calendars and moon sighting (for Islamic dates) can move them by a day. Observances and state days fall on fixed dates and appear from the year they began; nature seasons are typical patterns. States add their own holidays. Confirm before you book.{" "}
           <span className="block mt-1">
             Sources:{" "}
             {HOLIDAY_SOURCES.map((source, index) => (

@@ -102,10 +102,8 @@ export function MapsAndLinks({ trip, states }: { trip: Itinerary; states: { slug
   const last = trip.legs[trip.legs.length - 1]?.toPoint;
   const stops = trip.legs.map((leg) => leg.toPoint);
   const embed = last ? `https://maps.google.com/maps?saddr=${trip.legs[0]!.fromPoint.lat},${trip.legs[0]!.fromPoint.lng}&daddr=${stops.map((point) => `${point.lat},${point.lng}`).join("+to:")}&output=embed` : "";
-  const osm = last ? `https://www.openstreetmap.org/?mlat=${last.lat}&mlon=${last.lng}#map=7/${last.lat}/${last.lng}` : "https://www.openstreetmap.org";
   const links: [string, string][] = [
     ["Directions in Google Maps", route],
-    ["OpenStreetMap", osm],
     ["Indian Railways (IRCTC)", "https://www.irctc.co.in/"],
     ["Weather (India Meteorological Department)", "https://mausam.imd.gov.in/"],
     ["Incredible India (Ministry of Tourism)", "https://www.incredibleindia.org"],

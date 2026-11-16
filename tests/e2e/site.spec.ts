@@ -222,9 +222,9 @@ test.describe("date, calendar and notes", () => {
   test("booking requests walk through five steps and ask to sign in before sending", async ({ page }) => {
     await page.goto("/bookings?destination=hampi");
     await page.getByLabel("A place to stay").check();
-    await page.getByRole("button", { name: "Next" }).click();
+    await page.getByRole("button", { name: "Next", exact: true }).click();
     await expect(page.getByRole("combobox", { name: "Destination" })).toHaveValue("hampi");
-    await page.getByRole("button", { name: "Next" }).click();
+    await page.getByRole("button", { name: "Next", exact: true }).click();
     await expect(page.getByText("Choose your dates.")).toBeVisible();
   });
 
@@ -705,8 +705,23 @@ test.describe("other tools", () => {
 
   test("the quiz reaches results", async ({ page }) => {
     await page.goto("/quiz");
-    for (let i = 0; i < 5; i += 1) await page.getByRole("main").locator("ul button").first().click();
-    await expect(page.getByRole("heading", { name: "You might like" })).toBeVisible();
+    await page.getByRole("link", { name: "Start the quiz" }).click();
+    await expect(page.getByText("Question 1 of 8", { exact: true })).toBeVisible();
+    await page.locator("label", { hasText: "October" }).click();
+    await expect(page).toHaveURL(/month=10/);
+    await page.getByRole("button", { name: "Next", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "How long is the trip?" })).toBeFocused();
+    await page.keyboard.press("2");
+    await page.keyboard.press("Enter");
+    await expect(page.getByText("Question 3 of 8", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "Back", exact: true }).click();
+    await expect(page.getByLabel("About a week")).toBeChecked();
+    for (let i = 0; i < 7; i += 1) await page.getByRole("button", { name: /^(Next|Skip|See my matches)$/ }).click();
+    await expect(page.getByRole("heading", { name: /Your best match is/ })).toBeVisible();
+    await expect(page.getByText("Best in October").first()).toBeVisible();
+    await expect(page.getByRole("link", { name: "Plan this trip" })).toHaveAttribute("href", /^\/planner\?d=[a-z-]+,[a-z-]+&days=7$/);
+    await page.reload();
+    await expect(page.getByRole("heading", { name: /Your best match is/ })).toBeVisible();
   });
 
   test("compare shows chosen destinations", async ({ page }) => {

@@ -6,6 +6,9 @@ import { useSearchParams } from "next/navigation";
 import { useRef, useState, type ReactNode } from "react";
 import { ArrowRight, MapPin } from "lucide-react";
 import { regions } from "@/data/taxonomy";
+import { hasMapsKey } from "@/lib/google-maps";
+import { cn } from "@/lib/utils";
+import { GoogleIndiaMap } from "./GoogleIndiaMap";
 import type { RegionId } from "@/types/content";
 
 export interface StatePreview {
@@ -48,6 +51,7 @@ function Explorer({
   const [slug, setSlug] = useState(initialSlug);
   const lastSelected = useRef<Element | null>(null);
   const [showPins, setShowPins] = useState(false);
+  const [googleReady, setGoogleReady] = useState(false);
   const preview = previews.find((item) => item.slug === slug);
   const cursorLabel = useRef<HTMLDivElement>(null);
   const mapArea = useRef<HTMLDivElement>(null);
@@ -122,7 +126,7 @@ function Explorer({
       <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div
           ref={mapArea}
-          className="map-3d relative mx-auto w-full max-w-[46rem]"
+          className={cn("relative mx-auto w-full max-w-[46rem]", !googleReady && "map-3d")}
           data-region-filter={region ?? undefined}
           onMouseOver={onHover}
           onFocus={onHover}
@@ -131,8 +135,16 @@ function Explorer({
             if (cursorLabel.current) cursorLabel.current.style.opacity = "0";
           }}
         >
-          {children}
-          {showPins && markers}
+          {hasMapsKey && (
+            <div className={googleReady ? "" : "absolute inset-0 -z-10 opacity-0"}>
+              <GoogleIndiaMap previews={previews} region={region} selected={slug} onHover={setSlug} onReady={() => setGoogleReady(true)} />
+            </div>
+          )}
+          {/* The drawn map: the whole map without a Google key, and until the Google map is ready. */}
+          <div className={googleReady ? "hidden" : undefined}>
+            {children}
+            {showPins && markers}
+          </div>
           <div
             ref={cursorLabel}
             aria-hidden

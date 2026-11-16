@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { PlanNotes, usePlanNotes } from "@/components/notes/PlanNotes";
 import { OCCASION_KINDS, type FestivalDateFact, type OccasionKind } from "@/data/occasions";
 import { formatLongDate } from "@/features/calendar/calendar";
-import { HolidayCalendar, useOccasions } from "./HolidayCalendar";
+import { CalculatedBadge, HolidayCalendar, useOccasions } from "./HolidayCalendar";
 
 const ALL = new Set(Object.keys(OCCASION_KINDS) as OccasionKind[]);
 
@@ -36,9 +36,12 @@ export function CalendarWorkspace({ festivalDates }: { festivalDates: FestivalDa
                 {day.map((item) => (
                   <li key={item.name}>
                     <span className="text-xs font-semibold text-muted uppercase">{OCCASION_KINDS[item.kind].label}</span>
-                    <span className="block font-medium">{item.href ? <Link href={item.href} className="link-text">{item.name}</Link> : item.name}</span>
+                    <span className="block font-medium">
+                      {item.href ? <Link href={item.href} className="link-text">{item.name}</Link> : item.name}
+                      {item.calculated && <CalculatedBadge />}
+                    </span>
                     {item.detail && <span className="block text-sm text-ink-2">{item.detail}</span>}
-                    {item.note && <span className="block text-sm text-muted">{item.note}</span>}
+                    {item.note && !item.calculated && <span className="block text-sm text-muted">{item.note}</span>}
                     {item.source && (
                       <span className="block text-xs text-muted">
                         Source: <a href={item.source.url} target="_blank" rel="noopener noreferrer" className="underline">{item.source.label}</a>
