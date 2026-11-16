@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useRef, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, MapPin } from "lucide-react";
 import { regions } from "@/data/taxonomy";
 import { hasMapsKey } from "@/lib/google-maps";
@@ -31,23 +31,20 @@ interface ExplorerProps {
   initialSlug: string;
 }
 
-/** Keyed on the region, so choosing a region from the menu takes effect on this page too. */
-export function MapExplorer(props: ExplorerProps) {
-  const requested = useSearchParams().get("region");
-  const region = regions.some((item) => item.id === requested)
-    ? requested
-    : null;
-  return <Explorer key={region ?? "all"} {...props} initialRegion={region} />;
+const toRegion = (value: string | null) => (regions.some((item) => item.id === value) ? value : null);
+
+/**
+ * Follows ?region= in the address, so choosing a region from the menu takes effect here too.
+ * It is the only part that reads the address, so the map itself renders on the server once.
+ */
+function RegionFromAddress({ onChange }: { onChange: (region: string | null) => void }) {
+  const requested = toRegion(useSearchParams().get("region"));
+  useEffect(() => onChange(requested), [requested, onChange]);
+  return null;
 }
 
-function Explorer({
-  previews,
-  children,
-  markers,
-  initialSlug,
-  initialRegion,
-}: ExplorerProps & { initialRegion: string | null }) {
-  const [region, setRegion] = useState<string | null>(initialRegion);
+export function MapExplorer({ previews, children, markers, initialSlug }: ExplorerProps) {
+  const [region, setRegion] = useState<string | null>(null);
   const [slug, setSlug] = useState(initialSlug);
   const lastSelected = useRef<Element | null>(null);
   const [showPins, setShowPins] = useState(false);
@@ -86,6 +83,9 @@ function Explorer({
 
   return (
     <div>
+      <Suspense fallback={null}>
+        <RegionFromAddress onChange={setRegion} />
+      </Suspense>
       <div
         className="mb-4 flex flex-wrap items-center gap-2"
         role="group"
