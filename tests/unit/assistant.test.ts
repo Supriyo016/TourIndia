@@ -114,8 +114,10 @@ describe("guide-mode answers", () => {
     expect(answerLocally(question)).toContain(expected);
   });
 
-  it("says when it doesn't know", () => {
-    expect(answerLocally("zzzzqqq xylophone")).toContain("couldn't find");
+  it("says when it doesn't know, and still offers somewhere to start", () => {
+    const answer = answerLocally("zzzzqqq xylophone");
+    expect(answer).toContain("don't have a guide that matches");
+    expect(answer).toMatch(/\/destinations\//);
   });
 });
 
