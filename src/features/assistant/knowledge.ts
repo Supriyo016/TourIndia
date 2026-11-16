@@ -90,6 +90,8 @@ export function findDestinations(filters: { month?: number; region?: string; cat
     .filter((item) => !filters.region || item.region === (filters.region as RegionId))
     .filter((item) => !filters.category || item.categories.includes(filters.category as CategoryId))
     .filter((item) => !filters.maxDays || item.recommendedDays.min <= filters.maxDays)
+    // Well-known places first, so a short list leads with the likeliest picks rather than the alphabet.
+    .toSorted((a, b) => Number(Boolean(b.popular)) - Number(Boolean(a.popular)))
     .slice(0, filters.limit ?? 8)
     .map((item) => ({ name: item.name, state: getState(item.stateSlug)?.name, tagline: item.tagline, bestMonths: formatMonthRange(item.bestMonths), href: `/destinations/${item.slug}` }));
 }
