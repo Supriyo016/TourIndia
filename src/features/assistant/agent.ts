@@ -145,8 +145,12 @@ interface ToolCall {
 }
 
 class GatewayError extends Error {
-  constructor(readonly status: number) {
-    super(`Gateway returned ${status}`);
+  constructor(
+    readonly status: number,
+    detail = "",
+  ) {
+    // The gateway's own short error text helps diagnose quota and model problems; it never contains our token.
+    super(`Gateway returned ${status}${detail ? `: ${detail.slice(0, 200)}` : ""}`);
   }
 }
 
@@ -172,7 +176,10 @@ async function complete(model: string, messages: GatewayMessage[], token: string
     body: JSON.stringify({ model, messages, tools: toolDefinitions, max_tokens: MAX_TOKENS, temperature: 0.4 }),
     signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(25_000)]) : AbortSignal.timeout(25_000),
   });
-  if (!response.ok) throw new GatewayError(response.status);
+  if (!response.ok) {
+    const body = (await response.json().catch(() => ({}))) as { error?: { message?: string } };
+    throw new GatewayError(response.status, `${model}: ${body.error?.message ?? ""}`);
+  }
   const data = (await response.json()) as { choices?: { message?: { content?: string | null; tool_calls?: ToolCall[] } }[] };
   const message = data.choices?.[0]?.message;
   if (!message) throw new GatewayError(502);

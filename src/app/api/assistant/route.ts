@@ -72,8 +72,8 @@ export async function POST(request: NextRequest) {
         }
         const reply = await runYatri({ messages, signal: request.signal, onTool: (name) => send({ t: "tool", v: name }) });
         finish(reply.text, "ai", reply.toolOutput);
-      } catch {
-        console.error("[assistant] AI reply failed; answering from the guides");
+      } catch (error) {
+        console.error("[assistant] AI reply failed; answering from the guides:", error instanceof Error ? `${error.name}: ${error.message}` : "unknown error");
         if (!request.signal.aborted) finish(answerLocally(question), "guide");
       } finally {
         controller.close();
