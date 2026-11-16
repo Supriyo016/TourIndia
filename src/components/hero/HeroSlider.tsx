@@ -122,7 +122,6 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                   alt={state === "active" ? slide.alt : ""}
                   fill
                   sizes="100vw"
-                  quality={80}
                   priority={position === 0}
                   placeholder={slide.blur ? "blur" : "empty"}
                   blurDataURL={slide.blur}

@@ -19,38 +19,38 @@
 
 ## Phases
 
-- [ ] **P14 Hero slider.**
+- [ ] **P14 Hero slider.** Fixed height, 3D turn, parallax, smaller tagline and translucent search are done (commit d79f241); the 12 high-resolution slides are still to come.
   - Fixed height for every image, whatever its size.
   - 12 slides with a 3D depth and parallax transition.
   - Smaller tagline, a translucent search box, and a layout that leaves the photo visible.
   - Check: the height stays the same across all slides at 375, 768 and 1440 px.
-- [ ] **P15 Header.**
+- [x] **P15 Header.**
   - About 25% shorter.
   - The theme icon switches in one click (Light → Dark → System), with a long press or menu for the full list.
   - An animated "Tour India" logo with the same design.
   - Check: header height measured.
-- [ ] **P16 Site-wide 3D.**
+- [x] **P16 Site-wide 3D.**
   - One shared background scene with drifting kites, lanterns, clouds and petals.
   - A distinct footer scene: a train crossing hills, and boats.
   - An animated Yatri launcher and panel.
   - New animated 3D cartoon characters to replace the flat ones.
   - Everything pauses when hidden and stops for reduced motion.
-- [ ] **P17 Home sections.**
+- [x] **P17 Home sections.**
   - Remove "Every guide, pinned on the globe" and the globe code.
   - Re-lay out "Explore India by state" without the empty space.
   - Tighten the "From readers" and other loose sections.
-- [ ] **P18 Section and page heroes.** Every overview title gets a related photo behind it: discover categories such as Lakes, travel styles, culture hubs, calendar, quiz and planner.
-- [ ] **P19 Google Maps.**
+- [x] **P18 Section and page heroes.** Every overview title gets a related photo behind it: discover categories such as Lakes, travel styles, culture hubs, calendar, quiz and planner.
+- [x] **P19 Google Maps.**
   - A Maps JS loader driven by `NEXT_PUBLIC_GOOGLE_MAPS_KEY`.
   - Place, route and planner maps.
   - An India state map tilted in 3D, with highlighted states.
   - The current map remains as a fallback until the key exists.
-- [ ] **P20 Calendar 2000–2100.**
+- [x] **P20 Calendar 2000–2100.**
   - National and public holidays, festivals, observances and state days.
   - Lunar festivals are calculated, and Islamic dates use the tabular calendar; both are labelled.
   - Check: unit tests against published dates in known years.
 - [ ] **P21 Living traditions.** Every art form gets photos, a video with sound (licensed, playing on click) and a full encyclopedia article.
-- [ ] **P22 Travel quiz.** Restructure it as steps with progress, a result with reasons, and links into the planner.
+- [x] **P22 Travel quiz.** Restructure it as steps with progress, a result with reasons, and links into the planner.
 - [ ] **P23 Clean-up.** Remove unused code and dependencies, including three.js if the globe was its only use.
 - [ ] **P24 Sign-in on.** Owner walkthrough for MongoDB, Resend, Google OAuth and the Maps key. Then `db:setup` and a live sign-in test.
 - [ ] **P25 Verify.**

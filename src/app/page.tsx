@@ -30,13 +30,17 @@ import { getImage, type ImageKey } from "@/lib/images";
 /** Image, place, region, guide link, then the tagline shown with that slide. */
 const heroSlides: [ImageKey, string, string, string, string][] = [
   ["hero:taj-mahal", "Taj Mahal", "Agra", "/destinations/agra", "Marble that changes colour with the light"],
-  ["hero:kashmir", "Dal Lake", "Kashmir", "/destinations/srinagar", "Quiet mornings on still water"],
-  ["hero:kerala", "The backwaters", "Kerala", "/destinations/alappuzha", "Slow days on palm-lined canals"],
+  ["hero:kerala", "Kumarakom backwaters", "Kerala", "/destinations/alappuzha", "Slow days on palm-lined canals"],
   ["hero:rajasthan", "Jaisalmer Fort", "Rajasthan", "/destinations/jaisalmer", "A golden fort at the edge of the Thar"],
+  ["hero:ladakh", "Pangong Tso", "Ladakh", "/destinations/leh", "A high lake that changes blue by the hour"],
   ["hero:varanasi", "The ghats", "Varanasi", "/destinations/varanasi", "Evenings of lamps on the Ganga"],
-  ["hero:northeast", "Living root bridges", "Meghalaya", "/destinations/shillong-sohra", "Bridges grown by hand, not built"],
-  ["hero:goa", "The coast", "Goa", "/destinations/goa", "Sea, spice and Konkan sunsets"],
-  ["hero:ladakh", "Nubra Valley", "Ladakh", "/destinations/leh", "High desert under wide open skies"],
+  ["hero:hampi", "Virupaksha Temple", "Hampi", "/destinations/hampi", "A kingdom's capital, carved in granite"],
+  ["hero:goa", "Coco Beach", "Goa", "/destinations/goa", "Sea, spice and Konkan sunsets"],
+  ["hero:amritsar", "The Golden Temple", "Amritsar", "/destinations/amritsar", "A shrine where everyone eats together"],
+  ["hero:northeast", "Mawphlang", "Meghalaya", "/destinations/shillong-sohra", "Hills where the clouds come to rest"],
+  ["hero:udaipur", "Lake Pichola", "Udaipur", "/destinations/udaipur", "Palaces that float on a lake"],
+  ["hero:konark", "Sun Temple", "Konark", "/destinations/puri-konark", "A stone chariot for the sun god"],
+  ["hero:munnar", "Tea gardens", "Munnar", "/destinations/munnar", "Hills combed green with tea"],
 ];
 
 

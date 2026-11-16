@@ -3,7 +3,7 @@ import type { LicensedImage } from "@/types/content";
 
 const images = manifest as unknown as Record<string, LicensedImage>;
 
-export type ImageKey = `${"destination" | "state" | "festival" | "food" | "story" | "unesco" | "hero" | "gallery"}:${string}`;
+export type ImageKey = `${"destination" | "state" | "festival" | "food" | "story" | "unesco" | "hero" | "gallery" | "art"}:${string}`;
 
 /** Returns the licensed image for a content record, if one has been sourced. */
 export function getImage(key: ImageKey): LicensedImage | undefined {

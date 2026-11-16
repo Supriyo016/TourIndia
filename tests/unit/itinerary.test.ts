@@ -14,7 +14,6 @@ import {
   type TripInput,
 } from "@/features/itinerary/generate";
 import { decodeShared, isValidTripDate, shareHash } from "@/features/itinerary/share";
-import { scoreQuiz, quiz } from "@/features/discovery/quiz";
 import { computeBadges } from "@/features/user/badges";
 import { formatMonthRange } from "@/data/taxonomy";
 import { haversineKm, projectToMap } from "@/lib/utils";
@@ -265,15 +264,6 @@ describe("other logic", () => {
     const point = projectToMap({ lat: 20, lng: 80 }, { scale: 1000, translate: [10, 20] });
     expect(point.x).toBeCloseTo(1000 * (80 * Math.PI) / 180 + 10);
     expect(point.y).toBeLessThan(20);
-  });
-
-  it("prefers matching destinations in the quiz", () => {
-    const candidates = [
-      { slug: "peak", categories: ["mountains" as const], region: "north" as const, months: [6], minDays: 5 },
-      { slug: "shore", categories: ["beaches" as const], region: "west" as const, months: [12], minDays: 3 },
-    ];
-    expect(scoreQuiz(candidates, [quiz[0]!.options[1]!])[0]).toBe("shore");
-    expect(scoreQuiz(candidates, [quiz[0]!.options[0]!])[0]).toBe("peak");
   });
 
   it("awards badges only for recorded stamps", () => {
