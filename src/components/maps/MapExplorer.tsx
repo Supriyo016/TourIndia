@@ -110,9 +110,9 @@ function Explorer({
             {item.name}
           </button>
         ))}
-        <label className="inline-flex items-center gap-2 text-sm font-medium text-ink-2">
+        <label className="inline-flex max-w-full min-w-0 items-center gap-2 text-sm font-medium text-ink-2">
           <span>State</span>
-          <select className="input !min-h-9 !w-auto !py-1 text-sm" value={slug} onChange={(event) => setSlug(event.target.value)}>
+          <select className="input !min-h-9 !w-auto max-w-[min(16rem,70vw)] min-w-0 !py-1 text-sm" value={slug} onChange={(event) => setSlug(event.target.value)}>
             {[...previews]
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((item) => (
