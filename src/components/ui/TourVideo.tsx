@@ -142,6 +142,8 @@ export function TourVideo({ size = "third", className }: { size?: "third" | "fil
         onVolumeChange={(event) => setMuted(event.currentTarget.muted)}
         className="size-full rounded-[var(--radius-lg)] bg-black object-contain shadow-lg"
       >
+        {/* The film has music but no speech, so the caption track says so. */}
+        <track kind="captions" srcLang="en" label="English" src="/videos/tour-india.en.vtt" />
         Your browser can&apos;t play this video.
       </video>
 

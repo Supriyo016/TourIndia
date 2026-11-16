@@ -76,7 +76,7 @@ function BudgetTable({ item }: { item: Destination }) {
         {item.budget.assumptions}
       </p>
       <p className="mt-2 text-sm text-muted">
-        These are editorial estimates, not quotes or live prices. <Link className="underline" href="/disclaimer#estimates">How estimates work</Link>.
+        These are editorial estimates, not quotes or live prices. <Link prefetch={false} className="underline" href="/disclaimer#estimates">How estimates work</Link>.
       </p>
     </>
   );
@@ -162,11 +162,11 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
         </dl>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <Link href={`/planner?d=${item.slug}`} className="btn btn-accent">
+          <Link prefetch={false} href={`/planner?d=${item.slug}`} className="btn btn-accent">
             Plan a trip here <ArrowRight className="nudge size-4" aria-hidden />
           </Link>
           <SaveButton slug={item.slug} name={item.name} variant="full" />
-          <Link href={`/compare?a=${item.slug}`} className="btn btn-outline">
+          <Link prefetch={false} href={`/compare?a=${item.slug}`} className="btn btn-outline">
             Compare
           </Link>
           <ShareBar title={`${item.name} travel guide`} path={`/destinations/${item.slug}`} />
@@ -287,7 +287,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
                   {linkedFestivals.length > 0 && (
                     <p className="mt-3 flex flex-wrap gap-2">
                       {linkedFestivals.map((festival) => (
-                        <Link key={festival.slug} href={`/culture/festivals/${festival.slug}`} className="chip">
+                        <Link prefetch={false} key={festival.slug} href={`/culture/festivals/${festival.slug}`} className="chip">
                           {festival.name}
                         </Link>
                       ))}
@@ -328,7 +328,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
                   <li key={place.name} className="text-[0.97rem] text-ink-2">
                     <span className="font-semibold text-ink">
                       {place.destinationSlug && getDestination(place.destinationSlug) ? (
-                        <Link href={`/destinations/${place.destinationSlug}`} className="link-text">
+                        <Link prefetch={false} href={`/destinations/${place.destinationSlug}`} className="link-text">
                           {place.name}
                         </Link>
                       ) : (
@@ -358,7 +358,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
               <p className="font-semibold">Last updated {formatDate(item.lastReviewed)}</p>
               <p className="mt-1 text-ink-2">
                 Timings, fees, permits and transport change. Confirm anything important with an official source before you travel.{" "}
-                <Link href="/content-policy" className="underline">
+                <Link prefetch={false} href="/content-policy" className="underline">
                   How we write and update guides
                 </Link>
                 .
@@ -408,7 +408,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
       </section>
       <div className="container-x pb-12">
         <p className="mt-8 text-sm">
-          Spotted something out of date? <Link href={`/encyclopedia/${item.slug}`} className="link-text">Suggest a correction in the encyclopedia</Link>.
+          Spotted something out of date? <Link prefetch={false} href={`/encyclopedia/${item.slug}`} className="link-text">Suggest a correction in the encyclopedia</Link>.
         </p>
         <CommunityPanel target={{ type: "place", id: item.slug }} title={item.name} path={`/destinations/${item.slug}`} />
       </div>

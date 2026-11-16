@@ -41,7 +41,7 @@ export default function FoodPage() {
                           {food.vegetarian && <span className="tag">Vegetarian</span>}
                           {food.recipe && <span className="tag tag-editorial">Recipe</span>}
                         </div>
-                        <h3 className="text-lg"><Link href={`/culture/food/${food.slug}`} className="after:absolute after:inset-0">{food.name}</Link></h3>
+                        <h3 className="text-lg"><Link prefetch={false} href={`/culture/food/${food.slug}`} className="after:absolute after:inset-0">{food.name}</Link></h3>
                         <p className="mt-1 line-clamp-2 text-[0.95rem] text-ink-2">{food.description}</p>
                       </div>
                     </li>

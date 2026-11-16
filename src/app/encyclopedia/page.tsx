@@ -33,7 +33,7 @@ export default function EncyclopediaIndexPage() {
                   <ul className="mt-2 flex flex-wrap gap-2">
                     {regionStates.map((state) => (
                       <li key={state.slug}>
-                        <Link href={`/encyclopedia/states/${state.slug}`} className="chip">{state.name}</Link>
+                        <Link prefetch={false} href={`/encyclopedia/states/${state.slug}`} className="chip">{state.name}</Link>
                       </li>
                     ))}
                   </ul>
@@ -43,7 +43,7 @@ export default function EncyclopediaIndexPage() {
                   <ul className="mt-2 flex flex-wrap gap-2">
                     {places.map((place) => (
                       <li key={place.slug}>
-                        <Link href={`/encyclopedia/${place.slug}`} className="chip">{place.name}</Link>
+                        <Link prefetch={false} href={`/encyclopedia/${place.slug}`} className="chip">{place.name}</Link>
                       </li>
                     ))}
                   </ul>

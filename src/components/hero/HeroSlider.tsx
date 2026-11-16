@@ -166,15 +166,15 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
               <SearchBox variant="hero" placeholder="Search a place, state, festival or dish" />
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Link href="/explore" className="btn btn-accent">Explore the map</Link>
-              <Link href="/planner" className="btn btn-on-photo">Plan a trip</Link>
+              <Link prefetch={false} href="/explore" className="btn btn-accent">Explore the map</Link>
+              <Link prefetch={false} href="/planner" className="btn btn-on-photo">Plan a trip</Link>
             </div>
           </div>
 
           {current && (
             <div className="flex flex-col items-start gap-2 lg:items-end">
               <div aria-live={paused ? "polite" : "off"} className="text-sm lg:text-right">
-                <Link href={current.href} className="link-u font-semibold">{current.place}</Link>
+                <Link prefetch={false} href={current.href} className="link-u font-semibold">{current.place}</Link>
                 <span className="text-white/85">, {current.region}</span>
                 <p className="max-w-xs truncate text-xs text-white/75">Photo: {current.credit}</p>
               </div>
@@ -200,7 +200,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                   <ChevronRight className="size-5" aria-hidden />
                 </button>
               </div>
-              <div className="flex gap-1" role="group" aria-label="Choose a photo">
+              <div className="flex" role="group" aria-label="Choose a photo">
                 {slides.map((slide, position) => (
                   <button
                     key={slide.src}
@@ -208,7 +208,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                     aria-label={`${slide.place}, ${slide.region}`}
                     aria-current={position === index}
                     onClick={() => show(position)}
-                    className="group flex h-6 items-center"
+                    className="group flex h-6 min-w-6 items-center justify-center"
                   >
                     <span className={cn("block h-1 rounded-full bg-white/40 transition-[width,background-color] duration-300 group-hover:bg-white/80", position === index ? "w-7 bg-[#f2a33c]" : "w-2.5")} />
                   </button>

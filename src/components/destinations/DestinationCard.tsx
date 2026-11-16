@@ -23,7 +23,7 @@ export function DestinationCard({ destination, priority }: { destination: Destin
       <div className="flex flex-1 flex-col p-4">
         <p className="text-sm font-medium text-muted">{state?.name}</p>
         <h3 className="mt-0.5">
-          <Link href={`/destinations/${destination.slug}`} className="after:absolute after:inset-0">
+          <Link prefetch={false} href={`/destinations/${destination.slug}`} className="after:absolute after:inset-0">
             {destination.name}
           </Link>
         </h3>

@@ -53,7 +53,7 @@ export default function QuizPage() {
           <p className="mt-2 max-w-2xl text-lg text-white/90">
             {questions.length} quick questions about season, budget and pace. Six places that fit, and why.
           </p>
-          <Link href="/quiz?step=1#quiz" className="btn btn-accent mt-5">
+          <Link prefetch={false} href="/quiz?step=1#quiz" className="btn btn-accent mt-5">
             Start the quiz
             <ArrowDown className="size-4" aria-hidden />
           </Link>

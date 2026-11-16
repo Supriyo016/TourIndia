@@ -22,7 +22,7 @@ export default function ContentPolicyPage() {
         { heading: "Dates and updates", body: <p>Destination and state guides show when they were last updated. An update date does not mean every detail has been re-confirmed that day, so always check timings, fees, permits and safety advice with an official source.</p> },
         { heading: "Reviews and statistics", body: <p>We do not publish visitor numbers, ratings, awards or testimonials unless they are genuine and can be supported.</p> },
         { heading: "Reader stories", body: <p>Reader stories are reviewed before publication and represent the views of their authors.</p> },
-        { heading: "Corrections", body: <p>If you find a mistake, please <Link className="link-text" href="/contact">tell us</Link>. Corrections are made as soon as they can be confirmed.</p> },
+        { heading: "Corrections", body: <p>If you find a mistake, please <Link prefetch={false} className="link-text" href="/contact">tell us</Link>. Corrections are made as soon as they can be confirmed.</p> },
       ]}
     />
   );

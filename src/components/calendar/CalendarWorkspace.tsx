@@ -37,7 +37,7 @@ export function CalendarWorkspace({ festivalDates }: { festivalDates: FestivalDa
                   <li key={item.name}>
                     <span className="text-xs font-semibold text-muted uppercase">{OCCASION_KINDS[item.kind].label}</span>
                     <span className="block font-medium">
-                      {item.href ? <Link href={item.href} className="link-text">{item.name}</Link> : item.name}
+                      {item.href ? <Link prefetch={false} href={item.href} className="link-text">{item.name}</Link> : item.name}
                       {item.calculated && <CalculatedBadge />}
                     </span>
                     {item.detail && <span className="block text-sm text-ink-2">{item.detail}</span>}

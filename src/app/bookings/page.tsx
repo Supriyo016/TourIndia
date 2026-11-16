@@ -75,7 +75,7 @@ export default function BookingsPage() {
                   </li>
                 ))}
               </ul>
-              <Link href={help.href} className="mt-3 inline-block text-[0.95rem] underline">{help.label}</Link>
+              <Link prefetch={false} href={help.href} className="mt-3 inline-block text-[0.95rem] underline">{help.label}</Link>
             </li>
           ))}
         </ul>
@@ -88,7 +88,7 @@ export default function BookingsPage() {
               Each guide suggests areas to stay. Compare on the booking site you already trust, and check the cancellation terms before you pay. State tourism corporations also run their own hotels in many places.
             </p>
           </div>
-          <Link href="/discover" className="btn btn-outline">Find a guide</Link>
+          <Link prefetch={false} href="/discover" className="btn btn-outline">Find a guide</Link>
         </section>
       </div>
     </>

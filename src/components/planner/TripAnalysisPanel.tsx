@@ -68,7 +68,7 @@ export function TripAnalysisPanel({ trip, catalogue, festivals }: { trip: Itiner
                     <span className="text-ink-2">
                       {finding.text}{" "}
                       {finding.href && (
-                        <Link href={finding.href} className="link-text">
+                        <Link prefetch={false} href={finding.href} className="link-text">
                           More
                         </Link>
                       )}

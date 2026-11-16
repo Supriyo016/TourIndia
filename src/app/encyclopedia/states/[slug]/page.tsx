@@ -60,7 +60,7 @@ export default async function StateEncyclopediaPage({ params }: PageProps<"/ency
               <ul className="mt-3 flex flex-wrap gap-2">
                 {places.map((place) => (
                   <li key={place.slug}>
-                    <Link href={`/encyclopedia/${place.slug}`} className="chip">
+                    <Link prefetch={false} href={`/encyclopedia/${place.slug}`} className="chip">
                       {place.name}
                     </Link>
                   </li>

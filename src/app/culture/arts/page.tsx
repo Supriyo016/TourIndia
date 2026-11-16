@@ -52,7 +52,7 @@ export default function ArtsPage() {
                       <Photo imageKey={`art:${form.slug}`} alt="" sizes="(min-width: 1280px) 22rem, (min-width: 640px) 45vw, 100vw" />
                     </div>
                     <div className="flex flex-1 flex-col p-4">
-                      <h3 className="text-lg"><Link href={`/culture/arts/${form.slug}`} className="after:absolute after:inset-0">{form.name}</Link></h3>
+                      <h3 className="text-lg"><Link prefetch={false} href={`/culture/arts/${form.slug}`} className="after:absolute after:inset-0">{form.name}</Link></h3>
                       <p className="text-sm text-muted">{form.stateSlugs.map((slug) => getState(slug)?.name).filter(Boolean).join(", ") || "Across India"}</p>
                       <p className="mt-1.5 text-[0.97rem] text-ink-2">{oneLine(form.summary)}</p>
                     </div>

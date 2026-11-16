@@ -42,11 +42,11 @@ export function UserMenu() {
       {open && (
         <div role="menu" className="glass-panel anim-menu absolute right-0 top-full z-50 mt-2 w-60 p-1">
           <p className="truncate px-3 py-2 text-sm text-muted">{user.email}</p>
-          <Link role="menuitem" href="/account" onClick={() => setOpen(false)} className="flex min-h-11 items-center gap-2.5 rounded-[var(--radius-md)] px-3 text-ink hover:bg-surface-2">
+          <Link prefetch={false} role="menuitem" href="/account" onClick={() => setOpen(false)} className="flex min-h-11 items-center gap-2.5 rounded-[var(--radius-md)] px-3 text-ink hover:bg-surface-2">
             <UserRound className="size-4" aria-hidden /> Your account
           </Link>
           {user.role === "admin" && (
-            <Link role="menuitem" href="/admin" onClick={() => setOpen(false)} className="flex min-h-11 items-center gap-2.5 rounded-[var(--radius-md)] px-3 text-ink hover:bg-surface-2">
+            <Link prefetch={false} role="menuitem" href="/admin" onClick={() => setOpen(false)} className="flex min-h-11 items-center gap-2.5 rounded-[var(--radius-md)] px-3 text-ink hover:bg-surface-2">
               <ShieldCheck className="size-4" aria-hidden /> Admin
             </Link>
           )}

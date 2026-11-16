@@ -82,7 +82,7 @@ export default function PlannerPage() {
             ))}
           </ul>
           <p className="mt-2">
-            To book, see <Link href="/bookings" className="link-text">official booking links</Link>. Tour India does not sell travel.
+            To book, see <Link prefetch={false} href="/bookings" className="link-text">official booking links</Link>. Tour India does not sell travel.
           </p>
         </Notice>
       </div>

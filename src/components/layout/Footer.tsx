@@ -45,7 +45,7 @@ export function Footer() {
               <ul className="mt-3 space-y-0.5">
                 {group.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="link-u inline-flex min-h-8 items-center text-[0.97rem] hover:text-white">
+                    <Link prefetch={false} href={link.href} className="link-u inline-flex min-h-8 items-center text-[0.97rem] hover:text-white">
                       {link.label}
                     </Link>
                   </li>
@@ -73,7 +73,7 @@ export function Footer() {
             Ministry of Tourism helpline:{" "}
             <a className="font-semibold text-white underline" href="tel:18001111363">1800-11-1363</a>
           </span>
-          <Link href="/services#safety" className="underline">
+          <Link prefetch={false} href="/services#safety" className="underline">
             More safety information
           </Link>
         </div>
@@ -83,7 +83,7 @@ export function Footer() {
         <div className="container-x flex flex-wrap items-center justify-between gap-3 py-5 text-sm">
           <p>
             © {new Date().getFullYear()} {site.name}. Photographs remain the work of their{" "}
-            <Link href="/credits" className="underline">
+            <Link prefetch={false} href="/credits" className="underline">
               credited authors
             </Link>
             .

@@ -20,7 +20,7 @@ export default function ContactPage() {
         <section className="card p-6" aria-label="Contact form">
           <ContactForm />
           <p className="mt-4 text-sm text-muted">
-            We use your details only to reply. See our <Link href="/privacy" className="underline">privacy policy</Link>.
+            We use your details only to reply. See our <Link prefetch={false} href="/privacy" className="underline">privacy policy</Link>.
           </p>
         </section>
         <aside className="space-y-5">

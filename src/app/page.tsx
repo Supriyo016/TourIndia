@@ -101,13 +101,13 @@ export default function HomePage() {
 
       <section className="pt-10 pb-2" aria-label="Travel styles">
         <div className="container-x">
-          <SectionHeading eyebrow="Discover" title="Choose how you like to travel" action={<Link href="/discover" className="btn btn-outline">All {categories.length} styles <ArrowRight className="nudge size-4" aria-hidden /></Link>} />
+          <SectionHeading eyebrow="Discover" title="Choose how you like to travel" action={<Link prefetch={false} href="/discover" className="btn btn-outline">All {categories.length} styles <ArrowRight className="nudge size-4" aria-hidden /></Link>} />
           <ul className="rail -mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-3">
             {featuredStyles.map((category) => (
               <li key={category.id} data-tilt className="zoom-media relative aspect-[3/4] w-40 shrink-0 snap-start overflow-hidden rounded-[var(--radius-md)] sm:w-48">
                 <Photo imageKey={categoryImage[category.id]} sizes="12rem" />
                 <div aria-hidden className="photo-scrim absolute inset-0" />
-                <Link href={`/discover/${category.id}`} className="absolute inset-0 flex items-end p-3 text-[1.05rem] font-semibold text-white">
+                <Link prefetch={false} href={`/discover/${category.id}`} className="absolute inset-0 flex items-end p-3 text-[1.05rem] font-semibold text-white">
                   {category.name}
                 </Link>
               </li>
@@ -116,7 +116,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="map-title">
+      <section className="section lazy-render" aria-labelledby="map-title">
         <div className="container-x">
           <div className="reveal">
             <div className="flex items-end justify-between gap-6">
@@ -136,12 +136,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section bg-surface-2" aria-labelledby="popular">
+      <section className="section lazy-render bg-surface-2" aria-labelledby="popular">
         <div className="container-x">
           <SectionHeading
             eyebrow="Popular"
             title="Places most first-time visitors ask about"
-            action={<Link href="/discover" className="btn btn-outline">All guides <ArrowRight className="nudge size-4" aria-hidden /></Link>}
+            action={<Link prefetch={false} href="/discover" className="btn btn-outline">All guides <ArrowRight className="nudge size-4" aria-hidden /></Link>}
           />
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {popular.map((item, index) => (
@@ -151,9 +151,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" aria-label="Lesser-known places">
+      <section className="section lazy-render" aria-label="Lesser-known places">
         <div className="container-x">
-          <SectionHeading eyebrow="Quieter" title="Lesser-known places" lede="Fewer crowds, usually with more effort to reach." action={<Link href="/discover/hidden-gems" className="btn btn-outline">More quiet places</Link>} />
+          <SectionHeading eyebrow="Quieter" title="Lesser-known places" lede="Fewer crowds, usually with more effort to reach." action={<Link prefetch={false} href="/discover/hidden-gems" className="btn btn-outline">More quiet places</Link>} />
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {gems.map((item, index) => (
               <li key={item.slug} className={index >= 2 ? "reveal max-sm:hidden" : "reveal"}><DestinationCard destination={item} /></li>
@@ -162,7 +162,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section bg-brand-strong text-white dark:bg-surface" aria-labelledby="season">
+      <section className="section lazy-render bg-brand-strong text-white dark:bg-surface" aria-labelledby="season">
         <div className="container-x">
           <p className="eyebrow !text-[#f7c26b]">Right now</p>
           <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
@@ -170,7 +170,7 @@ export default function HomePage() {
               <h2 id="season" className="!text-white">Good to visit in {monthName(month)}</h2>
               <p className="mt-2 max-w-xl text-white/85">Chosen from each guide&apos;s recommended months, so this list changes through the year.</p>
             </div>
-            <Link href={`/discover?month=${month}`} className="btn btn-on-photo">See all for {monthName(month)}</Link>
+            <Link prefetch={false} href={`/discover?month=${month}`} className="btn btn-on-photo">See all for {monthName(month)}</Link>
           </div>
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {seasonal.map((item, index) => (
@@ -180,7 +180,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="festivals">
+      <section className="section lazy-render" aria-labelledby="festivals">
         <div className="container-x grid items-start gap-10 lg:grid-cols-[2fr_3fr]">
           <div className="reveal">
             <DiyaCharacter className="mb-3 h-20 w-auto" />
@@ -188,9 +188,9 @@ export default function HomePage() {
             <h2 id="festivals">Festivals, food and living traditions</h2>
             <p className="lede mt-3">Many festivals follow lunar calendars, so dates shift each year. We show how each date is set and link to a source when a date is confirmed.</p>
             <div className="mt-5 flex flex-wrap gap-2">
-              <Link href="/culture/festivals" className="btn btn-primary"><CalendarDays className="size-4" aria-hidden /> Festival calendar</Link>
-              <Link href="/culture/arts" className="btn btn-outline">Art and traditions</Link>
-              <Link href="/culture/heritage" className="btn btn-outline">World Heritage Sites</Link>
+              <Link prefetch={false} href="/culture/festivals" className="btn btn-primary"><CalendarDays className="size-4" aria-hidden /> Festival calendar</Link>
+              <Link prefetch={false} href="/culture/arts" className="btn btn-outline">Art and traditions</Link>
+              <Link prefetch={false} href="/culture/heritage" className="btn btn-outline">World Heritage Sites</Link>
             </div>
           </div>
           <ul className="grid gap-4 sm:grid-cols-2">
@@ -202,7 +202,7 @@ export default function HomePage() {
                 <div className="p-4">
                   <p className="text-sm text-muted">Usually {formatMonthRange(festival.months)}</p>
                   <h3 className="text-lg">
-                    <Link href={`/culture/festivals/${festival.slug}`} className="after:absolute after:inset-0">{festival.name}</Link>
+                    <Link prefetch={false} href={`/culture/festivals/${festival.slug}`} className="after:absolute after:inset-0">{festival.name}</Link>
                   </h3>
                 </div>
               </li>
@@ -211,7 +211,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section bg-surface-2" aria-labelledby="circuits">
+      <section className="section lazy-render bg-surface-2" aria-labelledby="circuits">
         <div className="container-x">
           <SectionHeading eyebrow="Routes" title="Travel circuits to start from" lede="Editorial suggestions. Open one in the planner and change anything you like." />
           <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -221,7 +221,7 @@ export default function HomePage() {
                 <h3 className="mt-1">{circuit.name}</h3>
                 <p className="mt-1.5 flex-1 text-[0.97rem] text-ink-2">{circuit.summary}</p>
                 <p className="mt-3 text-sm text-muted">{circuit.days} days · {formatMonthRange(circuit.bestMonths)}</p>
-                <Link href={`/planner?d=${circuit.destinationSlugs.join(",")}&days=${circuit.days}`} className="link-text mt-2">
+                <Link prefetch={false} href={`/planner?d=${circuit.destinationSlugs.join(",")}&days=${circuit.days}`} className="link-text mt-2">
                   Open in planner
                 </Link>
               </li>
@@ -230,7 +230,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="planner-promo">
+      <section className="section lazy-render" aria-labelledby="planner-promo">
         <div className="container-x">
           <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-brand-soft p-6 sm:p-10">
             <div className="grid items-center gap-8 md:grid-cols-[3fr_1fr]">
@@ -239,8 +239,8 @@ export default function HomePage() {
                 <h2 id="planner-promo">A day-by-day plan you can rearrange</h2>
                 <p className="lede mt-3">Pick your places, dates and interests. You get an order that makes sense, daily plans and clearly labelled cost estimates, ready for your calendar.</p>
                 <div className="mt-5 flex flex-wrap gap-2">
-                  <Link href="/planner" className="btn btn-accent"><Sparkles className="size-4" aria-hidden /> Build an itinerary</Link>
-                  <Link href="/quiz" className="btn btn-outline">Not sure where to go?</Link>
+                  <Link prefetch={false} href="/planner" className="btn btn-accent"><Sparkles className="size-4" aria-hidden /> Build an itinerary</Link>
+                  <Link prefetch={false} href="/quiz" className="btn btn-outline">Not sure where to go?</Link>
                 </div>
               </div>
               <BackpackerCharacter className="mx-auto hidden h-44 w-auto md:block" />
@@ -250,10 +250,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section bg-surface-2" aria-labelledby="food">
+      <section className="section lazy-render bg-surface-2" aria-labelledby="food">
         <div className="container-x">
           <div className="flex items-end justify-between gap-6">
-            <SectionHeading eyebrow="Food explorer" title="Eat your way across the regions" action={<Link href="/culture/food" className="btn btn-outline"><UtensilsCrossed className="size-4" aria-hidden /> All dishes</Link>} />
+            <SectionHeading eyebrow="Food explorer" title="Eat your way across the regions" action={<Link prefetch={false} href="/culture/food" className="btn btn-outline"><UtensilsCrossed className="size-4" aria-hidden /> All dishes</Link>} />
             <FoodCharacter className="mb-6 hidden h-24 w-auto shrink-0 lg:block" />
           </div>
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -263,7 +263,7 @@ export default function HomePage() {
                   <Photo imageKey={`food:${food.slug}`} sizes="(min-width: 1024px) 25vw, 92vw" />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg"><Link href={`/culture/food/${food.slug}`} className="after:absolute after:inset-0">{food.name}</Link></h3>
+                  <h3 className="text-lg"><Link prefetch={false} href={`/culture/food/${food.slug}`} className="after:absolute after:inset-0">{food.name}</Link></h3>
                   <p className="mt-1 line-clamp-2 text-[0.95rem] text-ink-2">{food.description}</p>
                 </div>
               </li>
@@ -272,9 +272,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="stories">
+      <section className="section lazy-render" aria-labelledby="stories">
         <div className="container-x">
-          <SectionHeading eyebrow="Travel stories" title="Practical reading before you go" action={<Link href="/stories" className="btn btn-outline">All stories</Link>} />
+          <SectionHeading eyebrow="Travel stories" title="Practical reading before you go" action={<Link prefetch={false} href="/stories" className="btn btn-outline">All stories</Link>} />
           <ul className="grid gap-5 md:grid-cols-2">
             {storyList.map((story) => (
               <li key={story.slug} className="card card-hover overflow-hidden">
@@ -283,7 +283,7 @@ export default function HomePage() {
                 </div>
                 <div className="p-4">
                   <p className="text-sm text-muted">{story.category} · {story.readingMinutes} min read</p>
-                  <h3 className="mt-1 text-lg"><Link href={`/stories/${story.slug}`} className="after:absolute after:inset-0">{story.title}</Link></h3>
+                  <h3 className="mt-1 text-lg"><Link prefetch={false} href={`/stories/${story.slug}`} className="after:absolute after:inset-0">{story.title}</Link></h3>
                 </div>
               </li>
             ))}
@@ -291,23 +291,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="video-tour">
+      <section className="section lazy-render" aria-labelledby="video-tour">
         <div className="container-x">
           <SectionHeading eyebrow="Video tour" title="See India in motion" lede="A short film of the places and celebrations that make the trip worthwhile." />
           <TourVideo />
         </div>
       </section>
 
-      <section className="section bg-surface-2" aria-labelledby="gallery-title">
+      <section className="section lazy-render bg-surface-2" aria-labelledby="gallery-title">
         <div className="container-x">
           <div className="flex items-end justify-between gap-6">
-            <SectionHeading eyebrow="Gallery" title="India in pictures" action={<Link href="/gallery" className="btn btn-outline"><MapPinned className="size-4" aria-hidden /> Open gallery</Link>} />
+            <SectionHeading eyebrow="Gallery" title="India in pictures" action={<Link prefetch={false} href="/gallery" className="btn btn-outline"><MapPinned className="size-4" aria-hidden /> Open gallery</Link>} />
             <CameraCharacter className="mb-6 hidden h-20 w-auto shrink-0 lg:block" />
           </div>
           <ul className="grid grid-cols-2 gap-3 md:grid-cols-3">
             {gallery.map((item) => (
               <li key={item.slug} className="zoom-media relative aspect-[4/3] rounded-[var(--radius-md)]">
-                <Link href={`/destinations/${item.slug}`} aria-label={item.name}>
+                <Link prefetch={false} href={`/destinations/${item.slug}`} aria-label={item.name}>
                   <Photo imageKey={`gallery:${item.slug}-2`} sizes="(min-width: 768px) 32vw, 46vw" />
                 </Link>
               </li>
@@ -316,7 +316,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" aria-label="Travel tips and newsletter">
+      <section className="section lazy-render" aria-label="Travel tips and newsletter">
         <div className="container-x grid gap-12 lg:grid-cols-2">
           <div>
             <p className="eyebrow mb-1.5">Before you go</p>
@@ -326,7 +326,7 @@ export default function HomePage() {
                 <li key={title} className="flex gap-4">
                   <span className="font-display text-3xl leading-none text-accent-ink" aria-hidden>{index + 1}</span>
                   <div>
-                    <Link href={href} className="link-text text-[1.05rem]">{title}</Link>
+                    <Link prefetch={false} href={href} className="link-text text-[1.05rem]">{title}</Link>
                     <p className="text-[0.97rem] text-ink-2">{body}</p>
                   </div>
                 </li>

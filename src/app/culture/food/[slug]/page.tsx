@@ -62,7 +62,7 @@ export default async function FoodDetailPage({ params }: PageProps<"/culture/foo
             {food.whereToTry.map((place) => (
               <li key={place.place}>
                 {place.destinationSlug && getDestination(place.destinationSlug) ? (
-                  <Link href={`/destinations/${place.destinationSlug}`} className="link-text">{place.place}</Link>
+                  <Link prefetch={false} href={`/destinations/${place.destinationSlug}`} className="link-text">{place.place}</Link>
                 ) : (
                   place.place
                 )}

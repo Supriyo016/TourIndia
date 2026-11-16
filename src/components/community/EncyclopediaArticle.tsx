@@ -34,7 +34,7 @@ export function EncyclopediaArticle({ target, title, summary, source, path, guid
           </h1>
           <p className="mt-3 max-w-prose text-lg text-ink-2">{summary}</p>
           {guide && (
-            <Link href={guide.href} className="link-text mt-2 inline-block">
+            <Link prefetch={false} href={guide.href} className="link-text mt-2 inline-block">
               {guide.label}
             </Link>
           )}

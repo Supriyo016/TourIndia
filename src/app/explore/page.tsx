@@ -34,11 +34,11 @@ export default function ExplorePage() {
           <ElephantCharacter className="hidden h-16 w-auto shrink-0 sm:block" />
           <p className="max-w-3xl text-sm text-muted">
             Boundaries are shown for navigation only and are not an authoritative depiction of India&apos;s external boundaries. See{" "}
-            <Link href="/credits#map-data" className="underline">map data credits</Link>.
+            <Link prefetch={false} href="/credits#map-data" className="underline">map data credits</Link>.
           </p>
         </div>
 
-        <section className="mt-12" aria-labelledby="all-states">
+        <section className="lazy-render mt-12" aria-labelledby="all-states">
           <h2 id="all-states" className="mb-6">All states and Union Territories</h2>
           <div className="space-y-8">
             {regions.map((region) => (
@@ -55,7 +55,7 @@ export default function ExplorePage() {
                       <li key={state.slug} data-tilt className="zoom-media relative aspect-[3/2] overflow-hidden rounded-[var(--radius-md)] bg-brand-soft">
                         <Photo imageKey={`state:${state.slug}`} sizes="(min-width: 1280px) 16vw, (min-width: 640px) 30vw, 46vw" />
                         <div aria-hidden className="photo-scrim absolute inset-0" />
-                        <Link href={`/explore/${state.slug}`} className="absolute inset-0 flex items-end p-3 font-semibold text-white">
+                        <Link prefetch={false} href={`/explore/${state.slug}`} className="absolute inset-0 flex items-end p-3 font-semibold text-white">
                           {state.name}
                         </Link>
                       </li>

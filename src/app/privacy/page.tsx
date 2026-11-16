@@ -11,7 +11,7 @@ export default function PrivacyPage() {
       title="Privacy policy"
       intro="We collect as little as we can. This page sets out what that is and why."
       sections={[
-        { heading: "Who is responsible", body: <p>{site.name} is owned by {site.owner.name}. To ask about your information, use the <Link className="link-text" href="/contact">contact form</Link>.</p> },
+        { heading: "Who is responsible", body: <p>{site.name} is owned by {site.owner.name}. To ask about your information, use the <Link prefetch={false} className="link-text" href="/contact">contact form</Link>.</p> },
         {
           heading: "What you send us",
           body: (
@@ -21,7 +21,7 @@ export default function PrivacyPage() {
             </>
           ),
         },
-        { heading: "What stays on your device", body: <p>Your wishlist, saved trips, notes, passport stamps, packing list, expenses, and, if you allow it, recently viewed places, theme and Yatri chat are kept in your browser&apos;s local storage. They are not sent to us. Clearing your browser data removes them. See <Link className="link-text" href="/cookies">cookies and storage</Link>.</p> },
+        { heading: "What stays on your device", body: <p>Your wishlist, saved trips, notes, passport stamps, packing list, expenses, and, if you allow it, recently viewed places, theme and Yatri chat are kept in your browser&apos;s local storage. They are not sent to us. Clearing your browser data removes them. See <Link prefetch={false} className="link-text" href="/cookies">cookies and storage</Link>.</p> },
         { heading: "The Yatri assistant", body: <p>When Yatri is connected to its AI model, the messages you send are passed through our server to Anthropic, which generates the reply and processes them under its own terms. We do not store your conversations on our server. Please don&apos;t share personal, payment or passport details with Yatri. Replies can be wrong, so check anything important.</p> },
         { heading: "Abuse prevention", body: <p>To limit automated abuse of forms, we store a salted hash of your IP address for a short period. We do not store the address itself.</p> },
         {
@@ -33,7 +33,7 @@ export default function PrivacyPage() {
           ),
         },
         { heading: "How long we keep it", body: <p>Contact messages and story submissions are kept for as long as needed to deal with them. Newsletter addresses are kept until you ask to be removed through the contact form. Rate-limit records expire automatically within hours.</p> },
-        { heading: "Your choices", body: <p>You can ask to see, correct or delete information you have sent us through the <Link className="link-text" href="/contact">contact form</Link>. Rights under the laws that apply to you, including India&apos;s Digital Personal Data Protection Act, 2023, are unaffected by this policy.</p> },
+        { heading: "Your choices", body: <p>You can ask to see, correct or delete information you have sent us through the <Link prefetch={false} className="link-text" href="/contact">contact form</Link>. Rights under the laws that apply to you, including India&apos;s Digital Personal Data Protection Act, 2023, are unaffected by this policy.</p> },
       ]}
     />
   );

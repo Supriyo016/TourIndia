@@ -71,7 +71,7 @@ export function CompareTool({ rows }: { rows: CompareRow[] }) {
                 <td className="w-44 p-3"><span className="sr-only">Attribute</span></td>
                 {shown.map((row) => (
                   <th key={row.slug} scope="col" className="p-3 font-display text-lg">
-                    <Link href={`/destinations/${row.slug}`} className="link-text">{row.name}</Link>
+                    <Link prefetch={false} href={`/destinations/${row.slug}`} className="link-text">{row.name}</Link>
                   </th>
                 ))}
               </tr>
@@ -90,7 +90,7 @@ export function CompareTool({ rows }: { rows: CompareRow[] }) {
         </div>
       )}
       {shown.length > 0 && (
-        <Link href={`/planner?d=${shown.map((row) => row.slug).join(",")}`} className="btn btn-accent mt-5">
+        <Link prefetch={false} href={`/planner?d=${shown.map((row) => row.slug).join(",")}`} className="btn btn-accent mt-5">
           Plan a trip with these
         </Link>
       )}

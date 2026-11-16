@@ -84,7 +84,7 @@ export default function GalleryPage() {
                 </video>
                 <div className="p-4">
                   <h3 className="text-lg">
-                    <Link href={video.href} className="link-text">{video.title}</Link>
+                    <Link prefetch={false} href={video.href} className="link-text">{video.title}</Link>
                   </h3>
                   <p className="mt-1 text-xs text-muted">
                     {video.duration} seconds · {video.author},{" "}

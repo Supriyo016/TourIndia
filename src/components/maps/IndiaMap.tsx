@@ -22,7 +22,7 @@ export function IndiaMap({ className, linked = true }: { className?: string; lin
           );
         }
         return (
-          <Link key={item.slug} href={`/explore/${item.slug}`} className="map-state" data-slug={item.slug} data-region={state?.region} aria-label={state?.name ?? item.name}>
+          <Link prefetch={false} key={item.slug} href={`/explore/${item.slug}`} className="map-state" data-slug={item.slug} data-region={state?.region} aria-label={state?.name ?? item.name}>
             <title>{state?.name ?? item.name}</title>
             {shape}
           </Link>

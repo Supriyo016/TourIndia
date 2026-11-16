@@ -30,7 +30,7 @@ export function Breadcrumbs({ items }: { items: { label: string; href?: string }
           <li key={item.label} className="flex items-center gap-1">
             {index > 0 && <ChevronRight className="size-3.5" aria-hidden />}
             {item.href && index < all.length - 1 ? (
-              <Link href={item.href} className="link-u hover:text-brand">
+              <Link prefetch={false} href={item.href} className="link-u hover:text-brand">
                 {item.label}
               </Link>
             ) : (

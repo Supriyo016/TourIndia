@@ -46,7 +46,7 @@ export default async function StoriesPage() {
               </div>
               <div className="p-4">
                 <p className="text-sm text-muted">{story.category} · {story.readingMinutes} min read</p>
-                <h3 className="mt-1 text-lg"><Link href={`/stories/${story.slug}`} className="after:absolute after:inset-0">{story.title}</Link></h3>
+                <h3 className="mt-1 text-lg"><Link prefetch={false} href={`/stories/${story.slug}`} className="after:absolute after:inset-0">{story.title}</Link></h3>
                 <p className="mt-1 text-[0.97rem] text-ink-2">{story.dek}</p>
               </div>
             </li>
@@ -97,7 +97,7 @@ export default async function StoriesPage() {
           <section className="card p-6" aria-labelledby="share">
             <h2 id="share" className="text-2xl">Share your experience</h2>
             <p className="mt-2 mb-4 text-ink-2">
-              Stories are read before they appear, and we may edit them for length. See how we handle <Link href="/privacy" className="link-text">your details</Link>.
+              Stories are read before they appear, and we may edit them for length. See how we handle <Link prefetch={false} href="/privacy" className="link-text">your details</Link>.
             </p>
             <StoryForm />
           </section>

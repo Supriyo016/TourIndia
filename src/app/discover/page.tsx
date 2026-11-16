@@ -24,7 +24,7 @@ export default function DiscoverPage() {
       >
         <nav aria-label="Travel styles" className="mt-5 flex flex-wrap gap-2">
           {categories.map((category) => (
-            <Link key={category.id} href={`/discover/${category.id}`} className="chip">
+            <Link prefetch={false} key={category.id} href={`/discover/${category.id}`} className="chip">
               {category.name}
             </Link>
           ))}

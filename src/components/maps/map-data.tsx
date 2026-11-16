@@ -31,7 +31,7 @@ export function DestinationPins() {
       {destinations.map((item) => {
         const { x, y } = projectToMap(item.coordinates, map);
         return (
-          <Link
+          <Link prefetch={false}
             key={item.slug}
             href={`/destinations/${item.slug}`}
             title={item.name}

@@ -89,7 +89,7 @@ export function QuizResults({
         <div className="flex flex-col p-5 sm:p-7">
           <p className="text-sm font-medium text-muted">{detail?.state}</p>
           <h3 className="mt-0.5 text-2xl">
-            <Link href={`/destinations/${top.slug}`} className="link-u">
+            <Link prefetch={false} href={`/destinations/${top.slug}`} className="link-u">
               {detail?.name ?? top.slug}
             </Link>
           </h3>
@@ -113,7 +113,7 @@ export function QuizResults({
             </ul>
           )}
           <div className="mt-auto pt-5">
-            <Link href={`/destinations/${top.slug}`} className="link-text">
+            <Link prefetch={false} href={`/destinations/${top.slug}`} className="link-text">
               Read the {detail?.name ?? ""} guide
             </Link>
             {detail?.image && (
@@ -129,7 +129,7 @@ export function QuizResults({
       </article>
 
       <div className="mt-6 flex flex-wrap gap-2">
-        <Link href={planHref} className="btn btn-accent">
+        <Link prefetch={false} href={planHref} className="btn btn-accent">
           Plan this trip
           <ArrowRight className="nudge size-4" aria-hidden />
         </Link>

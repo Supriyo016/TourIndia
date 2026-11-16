@@ -27,7 +27,7 @@ function MegaPanel({ item, links, onClose, align = "left" }: { item?: NavItem; l
       <ul className={cn("grid gap-0.5", wide && "grid-cols-3")}>
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} onClick={onClose} className="block rounded-[var(--radius-md)] px-3 py-2 hover:bg-surface-2">
+            <Link prefetch={false} href={link.href} onClick={onClose} className="block rounded-[var(--radius-md)] px-3 py-2 hover:bg-surface-2">
               <span className="block text-[0.95rem] font-semibold text-ink">{link.label}</span>
               {link.description && <span className="block text-sm leading-snug text-muted">{link.description}</span>}
             </Link>
@@ -35,7 +35,7 @@ function MegaPanel({ item, links, onClose, align = "left" }: { item?: NavItem; l
         ))}
       </ul>
       {item && (
-        <Link href={item.href} onClick={onClose} className="link-text mt-2 block px-3 pb-1 text-sm">
+        <Link prefetch={false} href={item.href} onClick={onClose} className="link-text mt-2 block px-3 pb-1 text-sm">
           All of {item.label}
         </Link>
       )}
@@ -163,7 +163,7 @@ export function Header() {
                   onPointerLeave={(event) => event.pointerType === "mouse" && item.groups && hoverOpen(null)}
                 >
                   <div className="flex items-center">
-                    <Link
+                    <Link prefetch={false}
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       onClick={() => setOpenMenu(null)}
@@ -218,7 +218,7 @@ export function Header() {
           <button type="button" className="icon-btn" aria-label="Search (press /)" onClick={() => setSearchOpen(true)}>
             <Search className="size-5" aria-hidden />
           </button>
-          <Link href="/saved" className="icon-btn max-xs:hidden" aria-label="Saved destinations and passport">
+          <Link prefetch={false} href="/saved" className="icon-btn max-xs:hidden" aria-label="Saved destinations and passport">
             <Heart className="size-5" aria-hidden />
           </Link>
           {/* On the narrowest phones the theme menu moves into the mobile menu, so the bar fits. */}
@@ -251,7 +251,7 @@ export function Header() {
               return (
                 <li key={item.label} className="border-b border-line last:border-0">
                   <div className="flex items-center justify-between">
-                    <Link
+                    <Link prefetch={false}
                       href={item.href}
                       onClick={closeAll}
                       aria-current={isActive(pathname, item.href) ? "page" : undefined}
@@ -275,7 +275,7 @@ export function Header() {
                     <ul className="anim-menu grid grid-cols-1 pb-2 xs:grid-cols-2">
                       {links.map((link) => (
                         <li key={link.href}>
-                          <Link href={link.href} onClick={closeAll} className="flex min-h-11 items-center pl-3 text-ink-2">
+                          <Link prefetch={false} href={link.href} onClick={closeAll} className="flex min-h-11 items-center pl-3 text-ink-2">
                             {link.label}
                           </Link>
                         </li>
@@ -287,7 +287,7 @@ export function Header() {
             })}
             {moreNavigation.map((link) => (
               <li key={link.href} className="border-b border-line last:border-0">
-                <Link
+                <Link prefetch={false}
                   href={link.href}
                   onClick={closeAll}
                   aria-current={isActive(pathname, link.href) ? "page" : undefined}

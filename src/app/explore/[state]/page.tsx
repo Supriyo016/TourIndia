@@ -104,7 +104,7 @@ export default async function StatePage({ params }: PageProps<"/explore/[state]"
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {stateFoods.map((food) => (
                     <li key={food.slug}>
-                      <Link href={`/culture/food/${food.slug}`} className="chip">{food.name}</Link>
+                      <Link prefetch={false} href={`/culture/food/${food.slug}`} className="chip">{food.name}</Link>
                     </li>
                   ))}
                 </ul>
@@ -117,7 +117,7 @@ export default async function StatePage({ params }: PageProps<"/explore/[state]"
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {stateFestivals.map((festival) => (
                     <li key={festival.slug}>
-                      <Link href={`/culture/festivals/${festival.slug}`} className="chip">{festival.name}</Link>
+                      <Link prefetch={false} href={`/culture/festivals/${festival.slug}`} className="chip">{festival.name}</Link>
                     </li>
                   ))}
                 </ul>

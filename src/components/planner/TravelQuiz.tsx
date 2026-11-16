@@ -174,7 +174,7 @@ export function TravelQuizFallback() {
       <p className="text-2xl font-semibold">Loading the quiz…</p>
       <p className="mt-1.5 text-ink-2">
         The quiz needs JavaScript. You can also browse every guide on the{" "}
-        <Link href="/discover" className="link-text">
+        <Link prefetch={false} href="/discover" className="link-text">
           Discover page
         </Link>
         .

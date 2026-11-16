@@ -164,7 +164,7 @@ export function YatriTerminal({ onClose }: { onClose: () => void }) {
       <div ref={screen} role="log" aria-live="polite" aria-label="Terminal output" className="min-h-0 flex-1 overflow-y-auto p-3 whitespace-pre-wrap">
         {lines.map((line, index) => (
           <div key={index} className={line.tone ? toneClass[line.tone] : undefined}>
-            {line.href ? <Link href={line.href} onClick={onClose} className="underline underline-offset-2 hover:text-white">{line.text}</Link> : line.text || " "}
+            {line.href ? <Link prefetch={false} href={line.href} onClick={onClose} className="underline underline-offset-2 hover:text-white">{line.text}</Link> : line.text || " "}
           </div>
         ))}
         {busy && <div className="text-[#8fb0a8]">working...</div>}
