@@ -8,8 +8,8 @@ export default function NotFound() {
       <h1 className="mt-5">This page has wandered off</h1>
       <p className="lede mt-3">The address may be mistyped, or the page may have moved.</p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">
-        <Link href="/" className="btn btn-primary">Back to home</Link>
-        <Link href="/discover" className="btn btn-outline">Browse guides</Link>
+        <Link prefetch={false} href="/" className="btn btn-primary">Back to home</Link>
+        <Link prefetch={false} href="/discover" className="btn btn-outline">Browse guides</Link>
       </div>
     </div>
   );

@@ -128,7 +128,7 @@ export default function AboutPage() {
         <section className="mt-14" aria-labelledby="connect">
           <h2 id="connect" className="mb-3">Contact and connect</h2>
           <p className="max-w-[62ch] text-ink-2">
-            Spotted a mistake or have a suggestion? <Link href="/contact" className="link-text">Send a message</Link>, or find us here:
+            Spotted a mistake or have a suggestion? <Link prefetch={false} href="/contact" className="link-text">Send a message</Link>, or find us here:
           </p>
           <ul className="mt-4 flex flex-wrap gap-2">
             {publishedSocials.map((social) => (

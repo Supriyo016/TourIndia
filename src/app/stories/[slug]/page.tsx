@@ -69,7 +69,7 @@ export default async function StoryPage({ params }: PageProps<"/stories/[slug]">
           {related.map((item, index) => (
             <span key={item.slug}>
               {index > 0 && ", "}
-              <Link href={`/destinations/${item.slug}`} className="link-text">{item.name}</Link>
+              <Link prefetch={false} href={`/destinations/${item.slug}`} className="link-text">{item.name}</Link>
             </span>
           ))}
         </p>

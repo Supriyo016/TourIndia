@@ -56,7 +56,7 @@ export default async function PlaceEncyclopediaPage({ params }: PageProps<"/ency
         guide={{ href: `/destinations/${slug}`, label: `Read the full ${item.name} travel guide` }}
         imageKey={`destination:${slug}`}
         infobox={[
-          ["State", state ? <Link href={`/encyclopedia/states/${state.slug}`} className="link-text">{state.name}</Link> : "—"],
+          ["State", state ? <Link prefetch={false} href={`/encyclopedia/states/${state.slug}`} className="link-text">{state.name}</Link> : "—"],
           ["Region", regionName(item.region)],
           ["Coordinates", `${item.coordinates.lat.toFixed(3)}° N, ${item.coordinates.lng.toFixed(3)}° E`],
           ["Best months", formatMonthRange(item.bestMonths)],

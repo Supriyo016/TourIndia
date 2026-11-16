@@ -11,6 +11,14 @@ import type { LatLng } from "@/types/content";
 export function LocationMap({ center, name, points }: { center: LatLng; name: string; points: { name: string; coordinates: LatLng }[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "error">("idle");
+  // The keyless embed is heavy, so its frame is only added once the map is about to scroll into view.
+  const [near, setNear] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || hasMapsKey) return;
+    return whenNear(node, () => setNear(true));
+  }, []);
 
   useEffect(() => {
     const node = ref.current;
@@ -54,13 +62,16 @@ export function LocationMap({ center, name, points }: { center: LatLng; name: st
 
   if (!hasMapsKey) {
     return (
-      <iframe
-        title={`Google map of ${name}`}
-        src={`https://maps.google.com/maps?q=${center.lat},${center.lng}&z=11&output=embed`}
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        className="h-80 w-full rounded-[var(--radius-lg)] border border-line sm:h-[26rem]"
-      />
+      <div ref={ref} className="h-80 w-full overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface-2 sm:h-[26rem]">
+        {near && (
+          <iframe
+            title={`Google map of ${name}`}
+            src={`https://maps.google.com/maps?q=${center.lat},${center.lng}&z=11&output=embed`}
+            referrerPolicy="no-referrer-when-downgrade"
+            className="size-full"
+          />
+        )}
+      </div>
     );
   }
 

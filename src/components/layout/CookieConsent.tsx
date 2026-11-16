@@ -36,7 +36,7 @@ export function CookieConsent() {
       <h2 className="flex items-center gap-2 text-lg"><Cookie className="size-5 text-accent-ink" aria-hidden /> Cookies and storage</h2>
       <p className="mt-1 text-[0.93rem] text-ink-2">
         We use no advertising or tracking cookies. Essential ones keep the site secure. Optional ones remember your theme, recently viewed guides and Yatri chat.{" "}
-        <Link href="/cookies" className="link-text">Details</Link>
+        <Link prefetch={false} href="/cookies" className="link-text">Details</Link>
       </p>
 
       {manage && (

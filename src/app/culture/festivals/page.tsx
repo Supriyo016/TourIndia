@@ -25,7 +25,7 @@ export default function FestivalsPage() {
             {festival.confirmedDates[0] ? festival.confirmedDates[0].label : `Usually ${formatMonthRange(festival.months)}`}
           </p>
           <h2 className="text-xl">
-            <Link href={`/culture/festivals/${festival.slug}`} className="after:absolute after:inset-0">{festival.name}</Link>
+            <Link prefetch={false} href={`/culture/festivals/${festival.slug}`} className="after:absolute after:inset-0">{festival.name}</Link>
           </h2>
           <p className="mt-1 line-clamp-3 text-[0.97rem] text-ink-2">{festival.summary}</p>
         </div>

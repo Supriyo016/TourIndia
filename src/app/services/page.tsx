@@ -34,7 +34,7 @@ export default function ServicesPage() {
               <Icon className="size-6 text-accent-ink" aria-hidden />
               <h2 className="mt-2 text-xl">{title}</h2>
               <p className="mt-1 flex-1 text-[0.97rem] text-ink-2">{body}</p>
-              <Link href={href} className="link-text mt-3">{cta}</Link>
+              <Link prefetch={false} href={href} className="link-text mt-3">{cta}</Link>
             </li>
           ))}
         </ul>

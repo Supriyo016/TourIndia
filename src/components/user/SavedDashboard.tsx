@@ -36,7 +36,7 @@ export function SavedDashboard({
         {ready && favourites.length === 0 ? (
           <EmptyState title="Nothing saved yet" art={<CompassCharacter className="h-24 w-24" />}>
             <p>Tap the heart on any guide and it will be kept here.</p>
-            <Link href="/discover" className="btn btn-primary mt-3">Browse guides</Link>
+            <Link prefetch={false} href="/discover" className="btn btn-primary mt-3">Browse guides</Link>
           </EmptyState>
         ) : (
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -49,7 +49,7 @@ export function SavedDashboard({
         <h2 id="trips" className="mb-5">Saved trips</h2>
         {trips.length === 0 ? (
           <p className="text-ink-2">
-            Trips you save from the <Link href="/planner" className="link-text">planner</Link> will appear here.
+            Trips you save from the <Link prefetch={false} href="/planner" className="link-text">planner</Link> will appear here.
           </p>
         ) : (
           <ul className="grid gap-3 md:grid-cols-2">

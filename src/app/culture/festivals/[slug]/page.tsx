@@ -87,7 +87,7 @@ export default async function FestivalPage({ params }: PageProps<"/culture/festi
             <li key={place.place} className="card p-4">
               <h3 className="text-lg">
                 {place.destinationSlug && getDestination(place.destinationSlug) ? (
-                  <Link href={`/destinations/${place.destinationSlug}`} className="link-text">{place.place}</Link>
+                  <Link prefetch={false} href={`/destinations/${place.destinationSlug}`} className="link-text">{place.place}</Link>
                 ) : (
                   place.place
                 )}

@@ -16,7 +16,7 @@ function EditCard({ edit }: { edit: EditDoc }) {
   return (
     <li className="card p-4">
       <p className="text-sm text-muted">
-        <Link href={edit.path} className="link-text font-semibold">{edit.title}</Link> · {edit.field} · by {edit.authorName} · {when(edit.createdAt)}
+        <Link prefetch={false} href={edit.path} className="link-text font-semibold">{edit.title}</Link> · {edit.field} · by {edit.authorName} · {when(edit.createdAt)}
       </p>
       <div className="mt-3 grid gap-3 md:grid-cols-2">
         <div>

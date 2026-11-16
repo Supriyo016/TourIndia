@@ -31,7 +31,7 @@ export default function CulturePage() {
             <li key={href} data-tilt className="card card-hover relative flex items-center gap-5 p-6">
               <Art className="h-24 w-20 shrink-0" />
               <div>
-                <h2 className="text-2xl"><Link href={href} className="after:absolute after:inset-0">{title}</Link></h2>
+                <h2 className="text-2xl"><Link prefetch={false} href={href} className="after:absolute after:inset-0">{title}</Link></h2>
                 <p className="mt-1.5 text-ink-2">{body}</p>
               </div>
             </li>
@@ -51,7 +51,7 @@ export default function CulturePage() {
                     <ul className="mt-2 space-y-1 text-[0.95rem]">
                       {list.map((festival) => (
                         <li key={festival.slug}>
-                          <Link href={`/culture/festivals/${festival.slug}`} className="link-u text-ink-2 hover:text-brand">{festival.name}</Link>
+                          <Link prefetch={false} href={`/culture/festivals/${festival.slug}`} className="link-u text-ink-2 hover:text-brand">{festival.name}</Link>
                         </li>
                       ))}
                     </ul>
@@ -80,7 +80,7 @@ export default function CulturePage() {
                   <ul className="mt-3 flex flex-wrap gap-1.5">
                     {[...regionFestivals.slice(0, 2).map((item) => [item.name, `/culture/festivals/${item.slug}`]), ...regionArts.slice(0, 2).map((item) => [item.name, `/culture/arts/${item.slug}`]), ...regionFoods.slice(0, 2).map((item) => [item.name, `/culture/food/${item.slug}`])].map(([name, href]) => (
                       <li key={href}>
-                        <Link href={href!} className="chip !min-h-9 text-sm">{name}</Link>
+                        <Link prefetch={false} href={href!} className="chip !min-h-9 text-sm">{name}</Link>
                       </li>
                     ))}
                   </ul>

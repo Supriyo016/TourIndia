@@ -214,7 +214,7 @@ function Explorer({
                     </dd>
                   </div>
                 </dl>
-                <Link
+                <Link prefetch={false}
                   href={`/explore/${preview.slug}`}
                   className="btn btn-primary mt-4 w-full"
                 >

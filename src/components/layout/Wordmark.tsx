@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
  */
 export function Wordmark({ className, onDark, live }: { className?: string; onDark?: boolean; live?: boolean }) {
   return (
-    <Link href="/" aria-label="Tour India home" className={cn("font-wordmark inline-block leading-none whitespace-nowrap", live && "wordmark-live", className)}>
+    <Link prefetch={false} href="/" aria-label="Tour India home" className={cn("font-wordmark inline-block leading-none whitespace-nowrap", live && "wordmark-live", className)}>
       <span style={{ color: onDark ? "#e6c61a" : "var(--gold)" }}>Tour</span>{" "}
       <span style={{ color: onDark ? "#ffffff" : "var(--brand)" }}>India</span>
     </Link>

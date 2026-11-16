@@ -12,7 +12,7 @@ function renderInline(text: string, onNavigate?: () => void): ReactNode[] {
     if (index > last) parts.push(text.slice(last, index));
     if (match[1] && match[2]) {
       parts.push(
-        <Link key={index} href={safePath(match[2])} onClick={onNavigate} className="link-text">
+        <Link prefetch={false} key={index} href={safePath(match[2])} onClick={onNavigate} className="link-text">
           {match[1]}
         </Link>,
       );

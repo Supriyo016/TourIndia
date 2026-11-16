@@ -37,7 +37,7 @@ export default function CalendarPage() {
                 <ExternalLink href={source.url} className="underline">{source.label}</ExternalLink>
               </span>
             ))}
-            . See also the <Link href="/culture/festivals" className="link-text">festival calendar</Link>.
+            . See also the <Link prefetch={false} href="/culture/festivals" className="link-text">festival calendar</Link>.
           </span>
         </Notice>
 

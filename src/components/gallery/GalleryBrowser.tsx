@@ -134,7 +134,7 @@ export function GalleryBrowser({
             </div>
             <div className="p-4 text-center text-sm">
               <p className="font-semibold">
-                {current.href ? <Link href={current.href} className="underline">{current.alt}</Link> : current.alt}
+                {current.href ? <Link prefetch={false} href={current.href} className="underline">{current.alt}</Link> : current.alt}
               </p>
               <p className="text-white/75">
                 {current.author},{" "}

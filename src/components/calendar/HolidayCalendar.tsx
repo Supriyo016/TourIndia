@@ -196,7 +196,7 @@ export function HolidayCalendar({
           <ul className="mt-1.5 space-y-1 text-sm text-ink-2">
             {nature.map((season) => (
               <li key={season.name}>
-                <strong className="text-ink">{season.href ? <Link href={season.href} className="link-text">{season.name}</Link> : season.name}:</strong> {season.detail}
+                <strong className="text-ink">{season.href ? <Link prefetch={false} href={season.href} className="link-text">{season.name}</Link> : season.name}:</strong> {season.detail}
               </li>
             ))}
           </ul>
@@ -222,7 +222,7 @@ export function HolidayCalendar({
                 </span>
                 <span className="text-ink-2">
                   <span aria-hidden className={cn("mr-1.5 inline-block size-2 rounded-full", OCCASION_KINDS[item.kind].className)} />
-                  {item.href ? <Link href={item.href} className="link-text">{item.name}</Link> : <span className="text-ink">{item.name}</span>}
+                  {item.href ? <Link prefetch={false} href={item.href} className="link-text">{item.name}</Link> : <span className="text-ink">{item.name}</span>}
                   <span className="ml-2 text-xs text-muted">{OCCASION_KINDS[item.kind].label}</span>
                   {item.calculated && <CalculatedBadge />}
                   {mode === "agenda" && item.detail && <span className="block text-sm">{item.detail}</span>}

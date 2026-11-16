@@ -43,7 +43,7 @@ export default function HeritagePage() {
                 <p className="mt-1.5 flex-1 text-[0.97rem] text-ink-2">{site.summary}</p>
                 <p className="mt-3 flex flex-wrap gap-x-4 text-[0.95rem]">
                   {site.destinationSlug && getDestination(site.destinationSlug) && (
-                    <Link href={`/destinations/${site.destinationSlug}`} className="link-text">Read the guide</Link>
+                    <Link prefetch={false} href={`/destinations/${site.destinationSlug}`} className="link-text">Read the guide</Link>
                   )}
                   <ExternalLink href={`https://whc.unesco.org/en/list/${site.unescoId}`} className="link-text">UNESCO entry</ExternalLink>
                 </p>

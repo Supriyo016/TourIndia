@@ -31,7 +31,6 @@
   width: 26px;
   height: 36px;
   animation-name: rise;
-  filter: drop-shadow(0 0 10px rgb(255 190 90 / 0.8));
 }
 .bird {
   top: 14%;
@@ -116,6 +115,9 @@
 .footerScene {
   position: relative;
   height: 9.5rem;
+  /* Nothing here is drawn or animated until the footer comes near the screen. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 9.5rem;
   overflow: hidden;
   perspective: 600px;
   background: linear-gradient(180deg, #0b2f37 0%, #12434c 70%, #0e3c46 100%);
@@ -177,27 +179,34 @@
   inset-inline: 0;
   bottom: 0;
   height: 2.6rem;
-  background:
-    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.12) 0 18px, transparent 18px 60px) 0 70% / 120px 2px no-repeat repeat-x,
-    linear-gradient(180deg, #1b5d69, #0f4550);
-  background-repeat: repeat-x, no-repeat;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1b5d69, #0f4550);
+}
+/* Ripples: a wider strip slides left by one pattern width, on the GPU. */
+.river::before {
+  content: "";
+  position: absolute;
+  top: 70%;
+  left: 0;
+  width: calc(100% + 120px);
+  height: 2px;
+  background: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.12) 0 18px, transparent 18px 120px);
   animation: ripple 6s linear infinite;
 }
 .boat {
   position: absolute;
   bottom: 0.4rem;
-  animation:
-    sail linear infinite,
-    rock 3.2s ease-in-out infinite;
+  left: 0;
+  animation: sail linear infinite;
 }
 .boatOne {
-  animation-duration: 40s, 3.2s;
+  animation-duration: 40s;
 }
 .boatTwo {
   bottom: 1.2rem;
   opacity: 0.75;
-  animation-duration: 64s, 4s;
-  animation-delay: -30s, -1s;
+  animation-duration: 64s;
+  animation-delay: -30s;
 }
 .rising {
   position: absolute;
@@ -225,20 +234,15 @@
 }
 @keyframes sail {
   from {
-    left: 105%;
+    transform: translateX(105vw);
   }
   to {
-    left: -12%;
-  }
-}
-@keyframes rock {
-  50% {
-    transform: rotate(-4deg) translateY(-2px);
+    transform: translateX(-12rem);
   }
 }
 @keyframes ripple {
   to {
-    background-position: 120px 70%, 0 0;
+    transform: translateX(-120px);
   }
 }
 @keyframes glow {

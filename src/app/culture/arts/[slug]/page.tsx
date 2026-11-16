@@ -106,7 +106,7 @@ export default async function ArtFormPage({ params }: PageProps<"/culture/arts/[
               <dd className="mt-1 flex flex-wrap gap-2">
                 {stateList.length
                   ? stateList.map((state) => (
-                      <Link key={state.slug} href={`/explore/${state.slug}`} className="chip">
+                      <Link prefetch={false} key={state.slug} href={`/explore/${state.slug}`} className="chip">
                         {state.name}
                       </Link>
                     ))
@@ -201,7 +201,7 @@ export default async function ArtFormPage({ params }: PageProps<"/culture/arts/[
               <ul className="mt-3 flex flex-wrap gap-2">
                 {related.map((other) => (
                   <li key={other.slug}>
-                    <Link href={`/culture/arts/${other.slug}`} className="chip">{other.name}</Link>
+                    <Link prefetch={false} href={`/culture/arts/${other.slug}`} className="chip">{other.name}</Link>
                   </li>
                 ))}
               </ul>

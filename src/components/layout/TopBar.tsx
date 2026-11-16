@@ -38,10 +38,10 @@ export function TopBar() {
               Next holiday: <span className="font-semibold text-ink">{upcoming.name}</span>, {shortDate(upcoming.date)}
             </span>
           )}
-          <Link href="/calendar" className="link-u inline-flex min-h-6 items-center gap-1.5 font-semibold text-brand">
+          <Link prefetch={false} href="/calendar" className="link-u inline-flex min-h-6 items-center gap-1.5 font-semibold text-brand">
             <CalendarDays className="size-3.5" aria-hidden /> Calendar
           </Link>
-          <Link href="/calendar#notes" className="link-u hidden min-h-6 items-center gap-1.5 font-semibold text-brand xs:inline-flex">
+          <Link prefetch={false} href="/calendar#notes" className="link-u hidden min-h-6 items-center gap-1.5 font-semibold text-brand xs:inline-flex">
             <NotebookPen className="size-3.5" aria-hidden /> Notes
           </Link>
         </div>
