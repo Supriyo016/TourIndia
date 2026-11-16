@@ -53,16 +53,17 @@ export function Header() {
   const searchDialog = useRef<HTMLDialogElement>(null);
   const hoverTimer = useRef<number | undefined>(undefined);
   const headerRef = useRef<HTMLElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
   const [overHero, setOverHero] = useState(true);
   // Transparent glass over the home slider; solid glass once the page scrolls past it, or when a menu is open.
   const overlay = pathname === "/" && overHero && !mobileOpen;
 
   useEffect(() => {
-    const header = headerRef.current;
-    if (!header) return;
+    const bar = barRef.current;
+    if (!bar) return;
     // Lets the home hero slide up underneath the header.
-    const observer = new ResizeObserver(() => document.documentElement.style.setProperty("--header-h", `${header.offsetHeight}px`));
-    observer.observe(header);
+    const observer = new ResizeObserver(() => document.documentElement.style.setProperty("--header-h", `${bar.offsetHeight}px`));
+    observer.observe(bar);
     const onScroll = () => setOverHero(window.scrollY < window.innerHeight * 0.55);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -144,6 +145,8 @@ export function Header() {
         overlay ? "border-white/15 bg-[linear-gradient(180deg,rgb(4_16_22/0.62),rgb(4_16_22/0.18))]" : "border-line bg-[color-mix(in_oklab,var(--surface)_82%,transparent)]",
       )}
     >
+      {/* Only this bar is measured for --header-h: the open mobile menu below must not count, or the two resize each other. */}
+      <div ref={barRef}>
       <TopBar />
       <div aria-hidden className="scroll-progress absolute inset-x-0 -bottom-px h-0.5 bg-accent" />
 
@@ -236,6 +239,7 @@ export function Header() {
             {mobileOpen ? <X className="size-6" aria-hidden /> : <Menu className="size-6" aria-hidden />}
           </button>
         </div>
+      </div>
       </div>
 
       {mobileOpen && (
