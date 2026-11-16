@@ -21,7 +21,7 @@ export function readAnswers(params: ReadableParams): QuizAnswers {
   const length = oneOf(params.get("length"), allowedValues("length"));
   const styles = (params.get("style") ?? "")
     .split(",")
-    .filter((value, index, list): value is StyleAnswer => value in styleMatches && list.indexOf(value) === index);
+    .filter((value, index, list): value is StyleAnswer => Object.hasOwn(styleMatches, value) && list.indexOf(value) === index);
   return {
     month: month === undefined ? undefined : month === "any" ? "any" : (Number(month) as QuizAnswers["month"]),
     length: length === undefined ? undefined : (Number(length) as QuizAnswers["length"]),

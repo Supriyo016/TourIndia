@@ -21,7 +21,14 @@ export function loadGoogleMaps(): Promise<typeof google.maps> {
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?${params}`;
     script.async = true;
-    (window as unknown as Record<string, () => void>)[callback] = () => resolve(window.google.maps);
+    const hooks = window as unknown as Record<string, () => void>;
+    hooks[callback] = () => resolve(window.google.maps);
+    // Google calls this when the key is wrong or not allowed on this site.
+    hooks.gm_authFailure = () => {
+      loading = null;
+      reject(new Error("Google Maps rejected the key"));
+      window.dispatchEvent(new Event("ti-maps-auth-failed"));
+    };
     script.onerror = () => {
       loading = null;
       reject(new Error("Google Maps failed to load"));

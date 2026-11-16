@@ -42,15 +42,21 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const reducedMotion = useSyncExternalStore(subscribeToMotion, prefersReducedMotion, () => false);
   const [userPaused, setUserPaused] = useState<boolean | null>(null);
   const [hovering, setHovering] = useState(false);
+  const [focused, setFocused] = useState(false);
   const [loadAll, setLoadAll] = useState(false);
   const swipeStart = useRef<number | null>(null);
   const frame = useRef<number>(0);
   const paused = userPaused ?? reducedMotion;
-  const running = !paused && !hovering && slides.length > 1;
+  // Holds still while the pointer or keyboard focus is inside, so nothing moves while someone reads or types.
+  const running = !paused && !hovering && !focused && slides.length > 1;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoadAll(true), 1500);
-    return () => window.clearTimeout(timer);
+    const pending = frame;
+    return () => {
+      window.clearTimeout(timer);
+      cancelAnimationFrame(pending.current);
+    };
   }, []);
 
   const show = useCallback(
@@ -97,6 +103,13 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       }}
       onPointerDown={(event) => {
         if (event.pointerType !== "mouse") swipeStart.current = event.clientX;
+      }}
+      onFocus={() => setFocused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
+      }}
+      onPointerCancel={() => {
+        swipeStart.current = null;
       }}
       onPointerUp={(event) => {
         if (swipeStart.current === null) return;

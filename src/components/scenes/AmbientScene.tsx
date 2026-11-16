@@ -44,13 +44,6 @@ function Kite() {
 function Lantern() {
   return (
     <svg viewBox="0 0 40 56" className="h-full w-full">
-      <defs>
-        <radialGradient id="ambient-lantern" cx="50%" cy="65%" r="60%">
-          <stop offset="0" stopColor="#fff3c4" />
-          <stop offset="0.55" stopColor="#f6a93b" />
-          <stop offset="1" stopColor="#d9622b" />
-        </radialGradient>
-      </defs>
       <path d="M8 6h24l6 40H2Z" fill="url(#ambient-lantern)" />
       <ellipse cx="20" cy="47" rx="9" ry="3" fill="#ffe08a" />
     </svg>
@@ -80,6 +73,16 @@ const style = ([left, depth, duration, delay]: [number, number, number, number])
 export function AmbientScene() {
   return (
     <div aria-hidden className={`no-print ${styles.ambient}`}>
+      {/* Shared by every lantern, so the id appears once on the page. */}
+      <svg width="0" height="0" className="absolute">
+        <defs>
+          <radialGradient id="ambient-lantern" cx="50%" cy="65%" r="60%">
+            <stop offset="0" stopColor="#fff3c4" />
+            <stop offset="0.55" stopColor="#f6a93b" />
+            <stop offset="1" stopColor="#d9622b" />
+          </radialGradient>
+        </defs>
+      </svg>
       {kites.map((item, index) => (
         <span key={`k${index}`} className={`${styles.sprite} ${styles.kite}`} style={style(item)}>
           <Kite />

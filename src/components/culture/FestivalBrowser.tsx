@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { DiyaCharacter } from "@/components/characters/Characters";
-import { EmptyState } from "@/components/ui/primitives";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { monthNames } from "@/data/taxonomy";
 
 export interface FestivalMeta {

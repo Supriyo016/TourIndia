@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Award, Lock, Trash2 } from "lucide-react";
 import { CompassCharacter } from "@/components/characters/Characters";
-import { EmptyState } from "@/components/ui/primitives";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { shareHash } from "@/features/itinerary/share";
 import { computeBadges } from "@/features/user/badges";
 import { isSavedTripList, isStringList, STORAGE_KEYS, useFavourites, useStoredValue, type SavedTrip } from "@/hooks/use-stored-value";

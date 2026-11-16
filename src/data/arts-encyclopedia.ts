@@ -53,7 +53,7 @@ const NATIONAL_MUSEUM: ArtLink = { label: "National Museum, New Delhi", url: "ht
 const unesco = (label: string, path: string): ArtLink => ({ label: `UNESCO Intangible Cultural Heritage: ${label}`, url: `https://ich.unesco.org/en/RL/${path}` });
 
 /** State tourism boards, linked from every article whose art form belongs to that state. */
-export const STATE_TOURISM: Record<string, ArtLink> = {
+const STATE_TOURISM: Record<string, ArtLink> = {
   "andhra-pradesh": { label: "Andhra Pradesh Tourism", url: "https://tourism.ap.gov.in" },
   "arunachal-pradesh": { label: "Arunachal Pradesh Tourism", url: "https://arunachaltourism.com" },
   assam: { label: "Assam Tourism", url: "https://assamtourism.gov.in" },

@@ -979,11 +979,3 @@ html {
   }
 }
 
-/* Leaflet is styled for theme rather than importing its full stylesheet twice. */
-.leaflet-container {
-  font-family: var(--font-sans);
-  background: var(--surface-2);
-}
-[data-theme="dark"] .leaflet-tile {
-  filter: brightness(0.72) contrast(1.1) saturate(0.7);
-}

@@ -279,38 +279,6 @@ export function TrainCharacter({ className, animated = true }: Props) {
   );
 }
 
-/** A small airliner with a friendly face, gliding past speed lines. */
-export function PlaneCharacter({ className, animated = true }: Props) {
-  const [id, f] = useKit();
-  return (
-    <Rig vb="0 0 170 100" className={className} animated={animated}>
-      <Kit id={id} t={["ra", "cr", "pe"]} />
-      <Shadow f={f} cx={92} cy={95} rx={44} ry={3} />
-      {[
-        [40, 0],
-        [56, -0.4],
-        [72, -0.8],
-      ].map(([y, d]) => (
-        <path key={y} className={st.dash} style={o("50% 50%", d)} d={`M0 ${y} h14`} {...s} stroke={PAL.gr[1]} strokeWidth={3} />
-      ))}
-      <g className={st.bob}>
-        <g className={st.roll} style={o("60% 60%")}>
-          <path d="M18 30 l14 22 h26z" fill={f("ra")} {...s} />
-          <path d="M22 52 q60 -18 118 -6 q16 4 16 12 q0 10 -18 11 h-92 q-20 0 -24 -17z" fill={f("cr")} {...s} />
-          <path className={st.rim} d="M40 48 q50 -12 96 -4" />
-          {[62, 76, 90, 104].map((x) => (
-            <circle key={x} cx={x} cy="52" r="3.2" fill={f("pe")} />
-          ))}
-          <path d="M70 62 l-26 28 h22 l40 -28z" fill={f("pe")} {...s} />
-          <Eyes x={136} y={54} gap={12} d={1.8} />
-          <Smile x={136} y={61} />
-          <Blush x={136} y={61} gap={22} />
-        </g>
-      </g>
-    </Rig>
-  );
-}
-
 /** A mountaineer beside a small summit with a fluttering flag. */
 export function MountaineerCharacter({ className, animated = true }: Props) {
   const [id, f] = useKit();

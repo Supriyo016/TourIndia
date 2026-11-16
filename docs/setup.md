@@ -106,3 +106,12 @@ Add these in Vercel (Project → Settings → Environment Variables), then redep
 6. Search Console: add the site, choose the HTML-tag method, put the code in `GOOGLE_SITE_VERIFICATION`, redeploy, click Verify, then submit `/sitemap.xml`.
 
 In development none of this is needed: codes print to the server log, data is kept in memory, and admin addresses can be set in `.env.development.local`.
+
+## Switching on Google Maps
+
+1. In Google Cloud, create a project with billing turned on (Maps has a monthly free allowance), then enable **Maps JavaScript API** and **Places API (New)**.
+2. Create an API key. Restrict it to **Websites** (your production domain and `*.vercel.app` preview domain) and to those two APIs only.
+3. In **Map Management**, create a **JavaScript, Vector** Map ID. Open its **Map style** and, under **Feature layers**, turn on **Administrative area level 1**, then publish the style.
+4. In Vercel, add `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` and `NEXT_PUBLIC_GOOGLE_MAP_ID` for Production and Preview, then redeploy. These are build-time values, so a redeploy is needed.
+
+Until the Map ID has the state layer, the India map stays on the drawn version; place and route maps work with the key alone.

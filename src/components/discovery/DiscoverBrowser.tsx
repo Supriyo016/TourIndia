@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
 import { Shuffle } from "lucide-react";
 import { CompassCharacter } from "@/components/characters/Characters";
-import { EmptyState } from "@/components/ui/primitives";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { monthNames, regions } from "@/data/taxonomy";
 import type { CategoryId, RegionId } from "@/types/content";
 

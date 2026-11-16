@@ -7,6 +7,11 @@ import type { StatePreview } from "./MapExplorer";
 
 const normalise = (value: string) => value.toLowerCase().replace(/&/g, "and").replace(/[^a-z]/g, "");
 
+// Boundary features carry only a place ID. Names are fetched once per page view and kept here,
+// so remounting the map (for example on a region change) does not fetch them again.
+const placeNames = new Map<string, string>();
+const pendingPlaces = new Set<string>();
+
 /**
  * India on a tilted Google vector map. States are shaded with Google's own boundaries
  * (data-driven styling), so the outline matches the official map service. The camera
@@ -46,24 +51,28 @@ export function GoogleIndiaMap({
     const element = node.current;
     if (!element) return;
     const bySlug = new Map(previews.map((item) => [normalise(item.name), item]));
-    // Boundary features carry only a place ID; each state's name is fetched once and cached.
-    const names = new Map<string, string>();
-    const pending = new Set<string>();
     let restyle = () => {};
+    let announced = false;
+    // The drawn map is only swapped out once Google's shading is proven to work.
+    const ready = () => {
+      if (announced || cancelled) return;
+      announced = true;
+      callbacks.current.onReady();
+    };
     const find = (feature?: google.maps.Feature | null) => {
       const place = feature as google.maps.PlaceFeature | undefined;
       if (!place?.placeId) return undefined;
-      const name = names.get(place.placeId);
+      const name = placeNames.get(place.placeId);
       if (name) return bySlug.get(normalise(name));
-      if (!pending.has(place.placeId)) {
-        pending.add(place.placeId);
+      if (!pendingPlaces.has(place.placeId)) {
+        pendingPlaces.add(place.placeId);
         place
           .fetchPlace()
           .then((details) => {
-            names.set(place.placeId, details.displayName ?? "");
+            placeNames.set(place.placeId, details.displayName ?? "");
             restyle();
           })
-          .catch(() => undefined);
+          .catch(() => pendingPlaces.delete(place.placeId));
       }
       return undefined;
     };
@@ -89,9 +98,12 @@ export function GoogleIndiaMap({
           });
 
           const featureLayer = map.getFeatureLayer(maps.FeatureType.ADMINISTRATIVE_AREA_LEVEL_1);
+          // Without a Map ID that has the state layer turned on, keep the drawn map.
+          if (!featureLayer.isAvailable) return;
           const style: google.maps.FeatureStyleFunction = ({ feature }) => {
             const item = find(feature);
             if (!item) return null;
+            ready();
             const { region: chosenRegion, selected: chosen, hovered } = state.current;
             const active = item.slug === chosen || item.slug === hovered;
             const dimmed = chosenRegion !== null && item.region !== chosenRegion;
@@ -134,7 +146,6 @@ export function GoogleIndiaMap({
             map.addListener("zoom_changed", halt);
             element.addEventListener("pointerdown", halt, { once: true });
           }
-          callbacks.current.onReady();
         })
         .catch(() => {
           // The SVG map stays in place.

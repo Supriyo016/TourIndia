@@ -110,7 +110,19 @@ function Explorer({
             {item.name}
           </button>
         ))}
-        {markers && (
+        <label className="inline-flex items-center gap-2 text-sm font-medium text-ink-2">
+          <span>State</span>
+          <select className="input !min-h-9 !w-auto !py-1 text-sm" value={slug} onChange={(event) => setSlug(event.target.value)}>
+            {[...previews]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((item) => (
+                <option key={item.slug} value={item.slug}>
+                  {item.name}
+                </option>
+              ))}
+          </select>
+        </label>
+        {markers && !googleReady && (
           <label className="ml-auto inline-flex min-h-9 cursor-pointer items-center gap-2 text-sm font-medium text-ink-2">
             <input
               type="checkbox"
@@ -136,7 +148,7 @@ function Explorer({
           }}
         >
           {hasMapsKey && (
-            <div className={googleReady ? "" : "absolute inset-0 -z-10 opacity-0"}>
+            <div className={googleReady ? "" : "absolute inset-0 -z-10 opacity-0"} inert={!googleReady}>
               <GoogleIndiaMap previews={previews} region={region} selected={slug} onHover={setSlug} onReady={() => setGoogleReady(true)} />
             </div>
           )}
