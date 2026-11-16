@@ -1,11 +1,11 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RichText } from "@/components/assistant/RichText";
 import { runYatri } from "@/features/assistant/agent";
+import { answerExtras } from "@/features/assistant/extras";
 import { answerLocally, destinationBrief, festivalsInfo, findDestinations, holidaysInfo, planTrip, searchSite } from "@/features/assistant/knowledge";
 import { completeCommand, runCommand, type TerminalData } from "@/features/assistant/terminal";
-import type Anthropic from "@anthropic-ai/sdk";
 
 const data: TerminalData = {
   destinations: [
@@ -136,58 +136,70 @@ describe("reply rendering", () => {
   });
 });
 
-/** A stand-in for the SDK that replays scripted streaming events. */
-function fakeClient(turns: { events: unknown[]; message: Partial<Anthropic.Message> }[]) {
-  const toolRunner = vi.fn(() => ({
-    params: {},
-    async *[Symbol.asyncIterator]() {
-      for (const turn of turns) {
-        yield {
-          async *[Symbol.asyncIterator]() {
-            yield* turn.events;
-          },
-          finalMessage: async () => ({ content: [], ...turn.message }),
-        };
-      }
-    },
-  }));
-  return { client: { beta: { messages: { toolRunner } } } as unknown as Anthropic, toolRunner };
+/** Replays scripted gateway replies in place of the network. */
+function fakeGateway(replies: (Record<string, unknown> | number)[]) {
+  const bodies: Record<string, unknown>[] = [];
+  const fetchMock = vi.fn(async (_url: string, init: RequestInit) => {
+    bodies.push(JSON.parse(String(init.body)));
+    const next = replies.shift();
+    if (typeof next === "number") return new Response("{}", { status: next });
+    return Response.json({ choices: [{ message: next }] });
+  });
+  vi.stubGlobal("fetch", fetchMock);
+  return bodies;
 }
 
-describe("Yatri agent", () => {
-  const text = (value: string) => ({ type: "content_block_delta", delta: { type: "text_delta", text: value } });
-  const tool = (name: string) => ({ type: "content_block_start", content_block: { type: "tool_use", name } });
+const call = (name: string, args: unknown) => ({ id: `call-${name}`, type: "function", function: { name, arguments: JSON.stringify(args) } });
 
-  it("streams text and reports tool use", async () => {
-    const { client } = fakeClient([
-      { events: [tool("get_destination")], message: { stop_reason: "tool_use" } },
-      { events: [text("Hello "), text("there")], message: { stop_reason: "end_turn" } },
-    ]);
-    const output: string[] = [];
+describe("Yatri agent (Vercel AI Gateway)", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  beforeEach(() => {
+    process.env.AI_GATEWAY_API_KEY = "test-key";
+  });
+
+  it("runs the site's tools on the server and returns the final answer", async () => {
+    const bodies = fakeGateway([{ content: null, tool_calls: [call("get_destination", { name: "Hampi" })] }, { content: "Visit [Hampi](/destinations/hampi) in winter." }]);
     const used: string[] = [];
-    await runYatri({ client, messages: [{ role: "user", content: "Hi" }], onText: (value) => output.push(value), onTool: (name) => used.push(name) });
-    expect(output.join("")).toBe("Hello there");
+    const reply = await runYatri({ messages: [{ role: "user", content: "Hampi?" }], onTool: (name) => used.push(name) });
+    expect(reply.text).toContain("Hampi");
     expect(used).toEqual(["get_destination"]);
+    expect(reply.toolOutput).toContain("/destinations/hampi");
+    // The tool result goes back to the model, and the system prompt carries the rules.
+    expect(JSON.stringify(bodies[1]!.messages)).toContain('"role":"tool"');
+    expect(JSON.stringify(bodies[0]!.messages)).toContain("does not sell travel");
+    expect(bodies[0]).toMatchObject({ model: "google/gemini-2.5-flash", max_tokens: 900 });
   });
 
-  it("sends the expected request: model, caching, fallbacks and a tool limit", async () => {
-    const { client, toolRunner } = fakeClient([{ events: [], message: { stop_reason: "end_turn" } }]);
-    await runYatri({ client, messages: [{ role: "user", content: "Hi" }], onText: () => undefined, onTool: () => undefined });
-    const params = (toolRunner.mock.calls as unknown as [Record<string, unknown>][])[0]![0];
-    expect(params).toMatchObject({ model: "claude-opus-5-5", fallbacks: "default", betas: ["server-side-fallback-2026-07-01"], stream: true, max_iterations: 6 });
-    expect(JSON.stringify(params.system)).toContain("ephemeral");
-    expect(JSON.stringify(params.system)).toContain("does not sell travel");
+  it("moves to the next model when the first is busy or out of free credit", async () => {
+    const bodies = fakeGateway([429, { content: "Hello" }]);
+    const reply = await runYatri({ messages: [{ role: "user", content: "Hi" }], onTool: () => undefined });
+    expect(reply.text).toBe("Hello");
+    expect(bodies.map((body) => body.model)).toEqual(["google/gemini-2.5-flash", "nvidia/nemotron-3.5-lightning-free"]);
   });
 
-  it("explains a refusal instead of going silent", async () => {
-    const { client } = fakeClient([{ events: [], message: { stop_reason: "refusal" } }]);
-    const output: string[] = [];
-    await runYatri({ client, messages: [{ role: "user", content: "Hi" }], onText: (value) => output.push(value), onTool: () => undefined });
-    expect(output.join("")).toContain("can't help");
+  it("answers a bad tool call with an error instead of crashing", async () => {
+    const bodies = fakeGateway([{ content: null, tool_calls: [call("get_destination", { name: "" }), call("delete_everything", {})] }, { content: "Sorry." }]);
+    await runYatri({ messages: [{ role: "user", content: "Hi" }], onTool: () => undefined });
+    const toolMessages = (bodies[1]!.messages as { role: string; content: string }[]).filter((message) => message.role === "tool");
+    expect(toolMessages.map((message) => JSON.parse(message.content).error)).toEqual([expect.any(String), "Unknown tool"]);
   });
 
-  it("stops rather than running a truncated tool call", async () => {
-    const { client } = fakeClient([{ events: [], message: { stop_reason: "max_tokens", content: [{ type: "tool_use" }] as never } }]);
-    await expect(runYatri({ client, messages: [{ role: "user", content: "Hi" }], onText: () => undefined, onTool: () => undefined })).rejects.toThrow("cut off");
+  it("gives up when every model fails, so the caller can answer from the guides", async () => {
+    fakeGateway([500, 500]);
+    await expect(runYatri({ messages: [{ role: "user", content: "Hi" }], onTool: () => undefined })).rejects.toThrow();
+  });
+});
+
+describe("answer extras", () => {
+  it("turns guide links into place cards and follow-ups, ignoring unknown places", () => {
+    const extras = answerExtras("Try [Hampi](/destinations/hampi) or [Nowhere](/destinations/not-a-place).");
+    expect(extras.cards.map((card) => card.slug)).toEqual(["hampi"]);
+    expect(extras.cards[0]).toMatchObject({ name: "Hampi", state: "Karnataka" });
+    expect(extras.sources.map((source) => source.href)).toEqual(["/destinations/hampi"]);
+    expect(extras.followUps[0]).toMatch(/Hampi/);
+  });
+
+  it("never treats outside links as sources", () => {
+    expect(answerExtras("See [this](https://evil.example) and [that](//evil.example)").sources).toEqual([]);
   });
 });

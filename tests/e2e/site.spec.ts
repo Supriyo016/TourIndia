@@ -418,12 +418,16 @@ test.describe("Yatri", () => {
     await open(page);
     await page.getByLabel("Message Yatri").fill("Tell me about Hampi");
     await page.getByRole("button", { name: "Send message" }).click();
-    await expect(page.getByRole("dialog").getByRole("link", { name: /guide/i })).toHaveAttribute("href", "/destinations/hampi", { timeout: 30_000 });
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByRole("link", { name: /guide/i }).first()).toHaveAttribute("href", "/destinations/hampi", { timeout: 30_000 });
+    // The answer carries a place card that can be added to a trip and opened in the planner.
+    await dialog.getByRole("button", { name: "Add to trip" }).click();
+    await expect(dialog.getByRole("link", { name: "Plan it" })).toHaveAttribute("href", "/planner?d=hampi");
   });
 
   test("the terminal runs commands, recalls history and completes", async ({ page }) => {
     await open(page);
-    await page.getByRole("tab", { name: "Terminal" }).click();
+    await page.getByRole("button", { name: "Open the Yatri terminal" }).click();
     const input = page.getByLabel("Terminal command");
     await expect(input).toBeFocused();
     await input.pressSequentially("gui");
@@ -443,7 +447,7 @@ test.describe("Yatri", () => {
 
   test("terminal commands can navigate and set the theme", async ({ page }) => {
     await open(page);
-    await page.getByRole("tab", { name: "Terminal" }).click();
+    await page.getByRole("button", { name: "Open the Yatri terminal" }).click();
     const input = page.getByLabel("Terminal command");
     await page.getByRole("log", { name: "Terminal output" }).waitFor();
     await expect.poll(async () => {

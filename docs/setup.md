@@ -60,13 +60,12 @@ GitHub Pages only serves static files, so it can't run the API routes.
 
 ## Connecting Yatri to AI
 
-Yatri answers from the site's guides until it has a key. To connect it:
+Yatri's AI runs on the server through Vercel AI Gateway. On Vercel it needs no key: each deployment authenticates itself with its OIDC token, and the gateway's free monthly credit covers the default models. Check the project's **Settings → Security** has OIDC federation turned on, which is the default.
 
-1. Create an API key in the Anthropic Console and set a monthly spend limit
-2. Add `ANTHROPIC_API_KEY` to the Vercel project's production environment variables
-3. Redeploy, then ask Yatri a question. The note "Answering from site guides" should disappear
-
-Optional: `ASSISTANT_MODEL` and `ASSISTANT_DAILY_LIMIT`. Connect the database as well, so rate limits hold across server instances.
+- Models are tried in order: `ASSISTANT_MODELS` (default `google/gemini-2.5-flash,nvidia/nemotron-3.5-lightning-free`). When one is busy or out of free credit, the next answers; when all fail, Yatri answers from the guides.
+- `ASSISTANT_DAILY_LIMIT` caps AI replies across the site (default 500). Connect the database as well, so rate limits hold across server instances.
+- For local development, create an AI Gateway API key in the Vercel dashboard and set `AI_GATEWAY_API_KEY` in `.env.local`.
+- To stay on the free tier, don't buy AI Gateway credits: buying moves the team to the paid tier, where the monthly free credit no longer applies.
 
 ## Release checklist
 
