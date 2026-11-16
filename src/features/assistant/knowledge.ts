@@ -3,7 +3,6 @@ import { festivals } from "@/data/festivals";
 import { foods } from "@/data/food";
 import { holidaysForYear } from "@/data/holidays";
 import { startCities } from "@/data/start-cities";
-import { stories } from "@/data/stories";
 import { categories, formatMonthRange, monthName, monthNames, regions } from "@/data/taxonomy";
 import { nextHoliday, todayInIndia } from "@/features/calendar/calendar";
 import { searchEntries } from "@/features/discovery/search";
