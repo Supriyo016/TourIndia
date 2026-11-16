@@ -434,7 +434,12 @@ test.describe("Yatri", () => {
     await input.press("Tab");
     await expect(input).toHaveValue("guide ");
     await input.pressSequentially("hamp");
-    await input.press("Tab");
+    // Place names complete only once the guide index has loaded, which can take a moment on a slow runner.
+    await expect.poll(async () => {
+      await input.fill("guide hamp");
+      await input.press("Tab");
+      return input.inputValue();
+    }, { timeout: 15_000 }).toBe("guide hampi");
     await input.press("Enter");
     const log = page.getByRole("log", { name: "Terminal output" });
     await expect(log).toContainText("Typical stay", { timeout: 15_000 });
