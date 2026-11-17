@@ -12,7 +12,7 @@ import { Wordmark } from "./Wordmark";
 export function Footer() {
   return (
     <footer className="no-print bg-[#0a161b] text-[#d8e6e6]">
-      {/* Laid out only when it comes near the screen; the back-to-top button stays outside so it always shows. */}
+      {/* The heavy part (scene, links, skyline) is laid out only when it comes near the screen. The back-to-top button stays outside so it always shows. */}
       <div className="footer-deferred">
         <FooterScene />
 
@@ -77,7 +77,10 @@ export function Footer() {
         <div className="container-x">
           <KolkataSkyline />
         </div>
+      </div>
 
+      {/* The helpline and copyright rows are short, so they're always laid out (and always checkable). */}
+      <div>
         <div className="border-t border-white/15">
           <div className="container-x flex flex-wrap items-center gap-x-6 gap-y-1 py-4 text-sm">
             <span className="inline-flex items-center gap-2 font-semibold text-white">
