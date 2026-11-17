@@ -7,6 +7,7 @@ import type { UserDoc } from "@/lib/auth/session";
 import { getStore, STORE_COLLECTIONS, type Doc, type Store } from "@/lib/database/store";
 import { contentFor, currentFieldValue } from "./content";
 import { moderate } from "./moderation";
+import { commentLinks } from "@/features/profile/service";
 import { EDITABLE_FIELDS, targetKey, textToField, type CommentKind, type Target } from "./targets";
 
 export type CommentStatus = "visible" | "pending" | "hidden" | "removed";
@@ -79,6 +80,8 @@ export interface PublicComment {
   id: string;
   parentId: string | null;
   authorName: string;
+  /** Set when the author chose to link their comments to a public profile. */
+  author?: { username: string; avatar: string };
   kind: CommentKind;
   body: string;
   helpful: number;
@@ -96,6 +99,7 @@ export async function getThread(target: Target, viewer: UserDoc | null) {
     viewer ? db.collection(STORE_COLLECTIONS.reactions).findOne({ _id: `${key}:${viewer._id}` }) : null,
     viewer ? db.collection<Doc & { stars: number }>(STORE_COLLECTIONS.ratings).findOne({ _id: `${key}:${viewer._id}` }) : null,
   ]);
+  const links = await commentLinks(comments.map((comment) => comment.userId ?? "")).catch(() => new Map<string, { username: string; avatar: string }>());
   return {
     stats: {
       loves: stats?.loves ?? 0,
@@ -107,6 +111,7 @@ export async function getThread(target: Target, viewer: UserDoc | null) {
       id: comment._id,
       parentId: comment.parentId,
       authorName: comment.authorName,
+      ...(comment.userId && links.has(comment.userId) ? { author: links.get(comment.userId) } : {}),
       kind: comment.kind,
       body: comment.body,
       helpful: comment.helpful ?? 0,

@@ -2,6 +2,7 @@ import "server-only";
 import { adminEmails, type SessionDoc, type UserDoc } from "@/lib/auth/session";
 import { getStore, STORE_COLLECTIONS, type Filter } from "@/lib/database/store";
 import { audit, type LogRecord } from "@/lib/security/audit";
+import type { ProfileDoc } from "@/features/profile/service";
 import type { AdminMemberDoc } from "./rbac";
 import { isActive, restrictionHistory, type RestrictionDoc } from "./restrictions";
 
@@ -68,6 +69,7 @@ export async function searchUsers(input: { q?: string; status?: "active" | "rest
 
 export interface UserRecord {
   user: DirectoryRow & { homeState?: string; country?: string; interests: string[]; marketingConsent: boolean };
+  profile: { username?: string; visibility: string; tagline: string; bio: string; city: string; website: string } | null;
   sessions: { device: string; country?: string; lastSeenAt: string; role: string }[];
   restrictions: RestrictionDoc[];
   /** The restriction in force now, if any. */
@@ -82,12 +84,13 @@ export async function userRecord(userId: string, viewer: { _id: string; email: s
   if (!store) return null;
   const user = await store.collection<UserDoc>(STORE_COLLECTIONS.users).findOne({ _id: userId });
   if (!user) return null;
-  const [sessions, restrictions, comments, logs, member] = await Promise.all([
+  const [sessions, restrictions, comments, logs, member, profile] = await Promise.all([
     store.collection<SessionDoc>(STORE_COLLECTIONS.sessions).find({ userId }, { sort: { lastSeenAt: -1 }, limit: 20 }).toArray(),
     restrictionHistory(userId),
     store.collection(STORE_COLLECTIONS.comments).find({ userId }, { sort: { createdAt: -1 }, limit: 10 }).toArray(),
     store.collection<LogRecord>(STORE_COLLECTIONS.audit).find({ target: userId }, { sort: { seq: -1 }, limit: 20 }).toArray(),
     store.collection<AdminMemberDoc>(STORE_COLLECTIONS.adminMembers).findOne({ _id: userId }),
+    store.collection<ProfileDoc>(STORE_COLLECTIONS.profiles).findOne({ _id: userId }),
   ]);
   await audit({ actorId: viewer._id, actorEmail: viewer.email, action: "user.view", target: userId, outcome: "ok" }, store);
   return {
@@ -106,6 +109,9 @@ export async function userRecord(userId: string, viewer: { _id: string; email: s
       interests: user.interests ?? [],
       marketingConsent: Boolean(user.marketingConsent),
     },
+    profile: profile
+      ? { username: profile.username, visibility: profile.privacy?.visibility ?? "private", tagline: profile.tagline, bio: profile.bio, city: profile.city, website: profile.website }
+      : null,
     sessions: sessions
       .filter((s) => s.expiresAt.getTime() > Date.now())
       .map((s) => ({ device: s.device ?? "Unknown device", country: s.country, lastSeenAt: (s.lastSeenAt ?? s.createdAt).toISOString(), role: s.role })),

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { ProfileReset } from "@/components/admin/ProfileReset";
 import { UserActions } from "@/components/admin/UserActions";
 import { requireAdminPage } from "@/features/admin/guard";
 import { REASONS } from "@/features/admin/restrictions";
@@ -55,6 +56,43 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
         canEndSessions={access.permissions.has("users.sessions")}
         active={active ? { id: active._id, kind: active.kind, appealOpen: active.appeal?.status === "open" } : null}
       />
+
+      <section aria-labelledby="profile-title" className="mt-10">
+        <h2 id="profile-title" className="text-2xl">
+          Public profile
+        </h2>
+        {!record.profile ? (
+          <p className="mt-2 text-ink-2">They haven&apos;t set one up.</p>
+        ) : (
+          <div className="card mt-3 p-5">
+            <p>
+              {record.profile.username ? `@${record.profile.username}` : "No username"} · {record.profile.visibility}
+            </p>
+            {[record.profile.tagline, record.profile.bio, record.profile.city, record.profile.website].some(Boolean) ? (
+              <dl className="mt-3 grid gap-2 text-sm">
+                {(
+                  [
+                    ["Tagline", record.profile.tagline],
+                    ["About", record.profile.bio],
+                    ["City", record.profile.city],
+                    ["Website", record.profile.website],
+                  ] as const
+                )
+                  .filter(([, value]) => value)
+                  .map(([label, value]) => (
+                    <div key={label}>
+                      <dt className="text-ink-2">{label}</dt>
+                      <dd className="break-words whitespace-pre-line">{value}</dd>
+                    </div>
+                  ))}
+              </dl>
+            ) : (
+              <p className="mt-2 text-sm text-ink-2">No text written.</p>
+            )}
+            {access.permissions.has("moderation.manage") && <ProfileReset userId={user.id} />}
+          </div>
+        )}
+      </section>
 
       <section aria-labelledby="restrictions-title" className="mt-10">
         <h2 id="restrictions-title" className="text-2xl">

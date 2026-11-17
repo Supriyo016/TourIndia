@@ -106,7 +106,7 @@ export function BookingWizard({ places }: { places: BookingPlace[] }) {
         <p className="mt-2 text-ink-2">
           Your reference is <strong className="font-mono text-ink">{sent}</strong>. We&apos;ll reply to {user?.email} with suggestions and where to book. Nothing has been booked or charged.
         </p>
-        <a href="/account#requests" className="btn btn-outline mt-4">See your requests</a>
+        <a href="/profile#requests" className="btn btn-outline mt-4">See your requests</a>
       </div>
     );
   }

@@ -97,6 +97,30 @@ const collections = {
     },
     indexes: [[{ email: 1 }, { unique: true }], [{ googleSub: 1 }, { sparse: true }]],
   },
+  // Public-profile details and choices, one per user. Usernames are unique once chosen.
+  profiles: {
+    required: ["avatar", "cover", "prefs", "privacy", "createdAt", "updatedAt"],
+    properties: {
+      _id: { bsonType: "string" },
+      username: { bsonType: "string", pattern: "^[a-z0-9][a-z0-9_]{1,18}[a-z0-9]$" },
+      avatar: str(40),
+      cover: str(60),
+      tagline: str(80),
+      bio: str(300),
+      city: str(60),
+      website: str(120),
+      prefs: { bsonType: "object" },
+      privacy: {
+        bsonType: "object",
+        required: ["visibility", "show", "linkComments"],
+        properties: { visibility: { enum: ["private", "members", "public"] }, show: { bsonType: "array", maxItems: 12, items: str(20) }, linkComments: { bsonType: "bool" } },
+      },
+      privacySetAt: { bsonType: "date" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ username: 1 }, { unique: true, partialFilterExpression: { username: { $type: "string" } } }]],
+  },
   otp_codes: {
     required: ["codeHash", "attempts", "sentAt", "expiresAt"],
     properties: { codeHash: str(64), attempts: { bsonType: "int" }, sentAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },

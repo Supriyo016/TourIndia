@@ -1,21 +1,12 @@
-import type { Metadata } from "next";
-import { Suspense } from "react";
-import { AccountSessions } from "@/components/auth/AccountSessions";
-import { AccountView } from "@/components/auth/AccountView";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Your account",
-  robots: { index: false, follow: false },
-};
-
-export default function AccountPage() {
-  return (
-    <div className="container-x max-w-3xl py-10">
-      <h1>Your account</h1>
-      <Suspense fallback={<p className="mt-6 text-muted">Loading…</p>}>
-        <AccountView />
-      </Suspense>
-      <AccountSessions />
-    </div>
-  );
+/** The old account page. Its parts now live under /profile; first-sign-in links still land here. */
+export default async function AccountPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const params = await searchParams;
+  const query = new URLSearchParams();
+  for (const key of ["welcome", "next"]) {
+    const value = params[key];
+    if (typeof value === "string") query.set(key, value);
+  }
+  redirect(query.size ? `/profile/details?${query}` : "/profile");
 }
