@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AdminActions } from "@/components/admin/AdminActions";
 import { adminOverview, listComments, listEdits, type CommentDoc, type EditDoc } from "@/features/community/service";
+import { AdminNav } from "@/components/admin/AdminNav";
 import { requireAdminPage } from "@/features/admin/guard";
 import { isStoreAvailable } from "@/lib/database/store";
 
@@ -65,6 +66,7 @@ export default async function AdminPage() {
   if (!access.permissions.has("moderation.manage")) {
     return (
       <div className="container-x py-14">
+        <AdminNav permissions={access.permissions} current="/admin" />
         <h1>Admin</h1>
         <p className="mt-2 text-ink-2">Your role doesn&apos;t include moderation. Use the links below for the areas you can manage.</p>
         <p className="mt-4 flex flex-wrap gap-3">
@@ -84,6 +86,7 @@ export default async function AdminPage() {
 
   return (
     <div className="container-x py-10">
+      <AdminNav permissions={access.permissions} current="/admin" />
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h1>Admin</h1>
         <Link prefetch={false} href="/admin/dashboard" className="link-text text-sm">

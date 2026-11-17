@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { AccountSessions } from "@/components/auth/AccountSessions";
 import { AccountView } from "@/components/auth/AccountView";
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ export default function AccountPage() {
       <Suspense fallback={<p className="mt-6 text-muted">Loading…</p>}>
         <AccountView />
       </Suspense>
+      <AccountSessions />
     </div>
   );
 }

@@ -99,6 +99,8 @@ function matchesValue(value: unknown, condition: unknown): boolean {
       });
     }
   }
+  // Like MongoDB, a plain value matches an array field when any element equals it.
+  if (Array.isArray(value) && !Array.isArray(condition)) return value.some((item) => same(item, condition));
   return same(value, condition);
 }
 

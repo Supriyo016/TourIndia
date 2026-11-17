@@ -41,7 +41,7 @@
 Each phase ends with type check, lint, unit and security tests, browser tests, a production build, a live check and a pull request merged with the owner's approval.
 
 - [x] **P1 Audit and architecture** (this document)
-- [ ] **P2 Security foundation** (2a done, see below; 2b pending): RBAC (8 built-in roles, custom roles, permission checks), Super Admin bootstrap, admin TOTP MFA with recovery codes, session list and revoke (admin and user), login history, append-only audit and security logs, re-auth for destructive actions.
+- [x] **P2 Security foundation** (2a and 2b, see the progress log): RBAC (8 built-in roles, custom roles, permission checks), Super Admin bootstrap, admin TOTP MFA with recovery codes, session list and revoke (admin and user), login history, append-only audit and security logs, re-auth for destructive actions.
 - [ ] **P3 Admin core:** admin shell (sidebar, dark/light, responsive), user directory with search and paging, suspensions and timed bans with reasons, appeals, session revocation, moderation queue (reports, spam, corrections, copyright), support tickets (New → Under Review → In Progress → Resolved → Closed).
 - [ ] **P4 Profile core:** `/profile` dashboard, personal information (avatar and cover once storage exists), preferences and personalisation, privacy settings, saved items server-side with guest migration, collections with read-only share links.
 - [ ] **P5 Trips and passport:** Trip Planner saved server-side, My Trips (states, day plans, expenses vs estimates, duplicate, archive, PDF and calendar export, read-only sharing), personal calendar and notes, Travel Passport (want to visit / visited / exploring, India map colours, original stamp designs, progress).
@@ -76,4 +76,14 @@ Each phase ends with type check, lint, unit and security tests, browser tests, a
 - The next admin sign-in asks you to set up an authenticator app and save 10 recovery codes. Keep them somewhere safe.
 - If you lose both your phone and the recovery codes: in MongoDB Atlas, open `tour_india` → `admin_members`, find your record and delete its `mfa` field; the next sign-in sets up a new authenticator.
 - Changing `AUTH_SECRET` makes every stored authenticator unreadable, so every admin would have to set theirs up again (clear their `mfa` field as above). Sessions are not affected.
+
+### P2b: sessions, sign-in history and the admin team (2026-11-17)
+
+- **Your devices** (`features/auth/sessions.ts`, `/api/account/sessions`, account page): every signed-in device with a readable label, country, sign-in and last-active times; sign out one device or all others. Every query is filtered by the owner's id.
+- **Recent sign-ins:** the last 15 sign-ins from the security log, including failed codes (matched by the keyed hash of the address, which is all that's logged).
+- **Team and roles** (`features/admin/team.ts`, `/api/admin/team`, `/admin/team`): list admins with roles, MFA status and last sign-in; add an admin (they need an account first), change or remove roles, create, edit and delete custom roles. Rules: nobody changes their own roles; only Super Admins grant Super Admin or give a role team, role or restore powers; the `ADMIN_EMAILS` owner can't be demoted; removing all roles ends that person's admin sessions at once; a role in use can't be deleted. Every change needs a fresh authenticator code and is audited with before and after values.
+- **Admin sign-out of a user everywhere** (`users.sessions`, fresh code), for lost phones or compromised accounts.
+- **Admin navigation** that shows only the areas a role allows.
+- The in-memory test store now matches array fields like MongoDB does.
+- **Tests:** 381 pass (10 new for sessions and team rules). Walked through the team page (custom role created) and the account devices and history in the browser.
 
