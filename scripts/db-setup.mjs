@@ -121,6 +121,31 @@ const collections = {
     },
     indexes: [[{ username: 1 }, { unique: true, partialFilterExpression: { username: { $type: "string" } } }]],
   },
+  // Saved places and passport stamps, one per user (_id is the user id).
+  saved_lists: {
+    required: ["places", "stamps", "updatedAt"],
+    properties: {
+      _id: { bsonType: "string" },
+      places: { bsonType: "array", maxItems: 500, items: str(80) },
+      stamps: { bsonType: "array", maxItems: 60, items: str(80) },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [],
+  },
+  // Named lists of places. shareId is the read-only link's address while sharing is on.
+  collections: {
+    required: ["userId", "name", "note", "places", "createdAt", "updatedAt"],
+    properties: {
+      userId: str(36),
+      name: str(60),
+      note: str(300),
+      places: { bsonType: "array", maxItems: 100, items: str(80) },
+      shareId: { bsonType: "string", pattern: "^[A-Za-z0-9_-]{16}$" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, updatedAt: -1 }, {}], [{ shareId: 1 }, { unique: true, partialFilterExpression: { shareId: { $type: "string" } } }]],
+  },
   otp_codes: {
     required: ["codeHash", "attempts", "sentAt", "expiresAt"],
     properties: { codeHash: str(64), attempts: { bsonType: "int" }, sentAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },

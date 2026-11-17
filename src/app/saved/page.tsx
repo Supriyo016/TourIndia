@@ -6,7 +6,7 @@ import { destinations, states } from "@/data";
 
 export const metadata: Metadata = {
   title: "Saved places and travel passport",
-  description: "Your wishlist, saved trips, recently viewed guides and India travel passport, stored on this device.",
+  description: "Your wishlist, collections, saved trips, recently viewed guides and India travel passport.",
   alternates: { canonical: "/saved" },
   robots: { index: false },
 };
@@ -14,10 +14,11 @@ export const metadata: Metadata = {
 export default function SavedPage() {
   return (
     <>
-      <PageIntro imageKey="destination:alappuzha" crumbs={[{ label: "Saved" }]} eyebrow="Yours" title="Saved places and passport" lede="Everything here stays in this browser. No account is needed, and clearing your browser data removes it." />
+      <PageIntro imageKey="destination:alappuzha" crumbs={[{ label: "Saved" }]} eyebrow="Yours" title="Saved places and passport" lede="No account needed: without one, everything stays in this browser. Sign in and your saved places, collections and passport follow you to any device." />
       <div className="container-x py-10">
         <SavedDashboard
           cards={toBrowserProps(destinations).cards}
+          names={Object.fromEntries(destinations.map((d) => [d.slug, d.name]))}
           stateList={[...states].sort((a, b) => a.name.localeCompare(b.name)).map(({ slug, name, region }) => ({ slug, name, region }))}
         />
       </div>

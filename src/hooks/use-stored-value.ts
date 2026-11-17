@@ -2,10 +2,11 @@
 
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import type { Expense, TripDay, TripInput } from "@/features/itinerary/generate";
+import { pushChange, type SavedKind } from "@/features/saved/sync";
 
 const listeners = new Map<string, Set<() => void>>();
 
-function notify(key: string) {
+export function notify(key: string) {
   listeners.get(key)?.forEach((listener) => listener());
 }
 
@@ -104,7 +105,25 @@ export const STORAGE_KEYS = {
   expenses: "ti-expenses",
   notes: "ti-notes",
   yatri: "ti-yatri",
+  /** The account the saved places and stamps on this device belong to; absent for a guest's own lists. */
+  savedOwner: "ti-saved-owner",
 } as const;
+
+/** Reads a stored JSON value outside React, falling back when it's missing or malformed. */
+export function readStored<T>(key: string, fallback: T, isValid: (value: unknown) => boolean = alwaysValid): T {
+  return parseStored(readRaw(key), fallback, isValid);
+}
+
+/** Writes (or with undefined, removes) a stored value outside React and tells components using it. */
+export function writeStored(key: string, value: unknown) {
+  try {
+    if (value === undefined) window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Storage unavailable: nothing to keep in step.
+  }
+  notify(key);
+}
 
 export interface PlanNote {
   id: string;
@@ -177,12 +196,33 @@ export const isExpenseState = (value: unknown) =>
 
 const EMPTY: string[] = [];
 
-export function useFavourites() {
-  const [favourites, setFavourites, ready] = useStoredValue<string[]>(STORAGE_KEYS.favourites, EMPTY, isStringList);
+/**
+ * A list on this device that, once someone signs in, mirrors their account: each change is
+ * also sent to the server, and undone here if the server refuses it.
+ */
+function useSyncedList(kind: SavedKind, key: string, newestFirst: boolean) {
+  const [items, setItems, ready] = useStoredValue<string[]>(key, EMPTY, isStringList);
   const toggle = useCallback(
-    (slug: string) =>
-      setFavourites((current) => (current.includes(slug) ? current.filter((item) => item !== slug) : [slug, ...current])),
-    [setFavourites],
+    (slug: string) => {
+      let on = false;
+      const add = (current: string[]) => (newestFirst ? [slug, ...current] : [...current, slug]);
+      setItems((current) => {
+        on = !current.includes(slug);
+        return on ? add(current) : current.filter((item) => item !== slug);
+      });
+      pushChange(kind, slug, on, () => setItems((current) => (on ? current.filter((item) => item !== slug) : current.includes(slug) ? current : add(current))));
+    },
+    [kind, newestFirst, setItems],
   );
-  return { favourites, toggle, ready };
+  return { items, toggle, ready };
+}
+
+export function useFavourites() {
+  const { items, toggle, ready } = useSyncedList("places", STORAGE_KEYS.favourites, true);
+  return { favourites: items, toggle, ready };
+}
+
+export function useStamps() {
+  const { items, toggle, ready } = useSyncedList("stamps", STORAGE_KEYS.stamps, false);
+  return { stamps: items, toggle, ready };
 }

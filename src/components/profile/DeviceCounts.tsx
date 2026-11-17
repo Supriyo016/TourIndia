@@ -6,29 +6,32 @@ import { isSavedTripList, isStringList, STORAGE_KEYS, useStoredValue, type Saved
 const NONE: string[] = [];
 const NO_TRIPS: SavedTrip[] = [];
 
-/** What this browser has saved. These live on the device until they're moved to the account. */
-export function DeviceCounts() {
-  const [favourites] = useStoredValue<string[]>(STORAGE_KEYS.favourites, NONE, isStringList);
-  const [stamps] = useStoredValue<string[]>(STORAGE_KEYS.stamps, NONE, isStringList);
+/** What's saved: places, stamps and collections from the account; trips and history from this browser. */
+export function DeviceCounts({ account }: { account: { places: number; stamps: number; collections: number } | null }) {
   const [trips] = useStoredValue<SavedTrip[]>(STORAGE_KEYS.trips, NO_TRIPS, isSavedTripList);
   const [recent] = useStoredValue<string[]>(STORAGE_KEYS.recent, NONE, isStringList);
   const items = [
-    ["Saved places", favourites.length],
+    ...(account
+      ? ([
+          ["Saved places", account.places],
+          ["Collections", account.collections],
+          ["Passport stamps", account.stamps],
+        ] as const)
+      : []),
     ["Trip plans", trips.length],
-    ["Passport stamps", stamps.length],
     ["Recently viewed", recent.length],
   ] as const;
   return (
-    <section aria-labelledby="device-title" className="card p-6">
+    <section aria-labelledby="saved-title" className="card p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="device-title" className="text-xl">
-          On this device
+        <h2 id="saved-title" className="text-xl">
+          Saved
         </h2>
         <Link prefetch={false} href="/saved" className="link-text text-sm font-semibold">
           Open your saved list
         </Link>
       </div>
-      <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
         {items.map(([label, count]) => (
           <div key={label} className="rounded-[var(--radius-md)] bg-surface-2 p-3">
             <dt className="text-sm text-ink-2">{label}</dt>
@@ -36,7 +39,7 @@ export function DeviceCounts() {
           </div>
         ))}
       </dl>
-      <p className="mt-3 text-sm text-muted">These are kept in this browser, not your account, so they won&apos;t appear on your other devices yet.</p>
+      <p className="mt-3 text-sm text-muted">Saved places, collections and stamps are kept in your account. Trip plans and recently viewed stay in this browser.</p>
     </section>
   );
 }

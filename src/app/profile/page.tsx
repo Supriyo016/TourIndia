@@ -4,6 +4,7 @@ import { DeviceCounts } from "@/components/profile/DeviceCounts";
 import { MyRequests } from "@/components/profile/MyRequests";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { getProfile } from "@/features/profile/service";
+import { savedCounts } from "@/features/saved/service";
 import { currentSession } from "@/lib/auth/session";
 
 export const metadata = { title: "Overview" };
@@ -19,7 +20,7 @@ export default async function ProfileOverviewPage() {
   const session = await currentSession().catch(() => null);
   if (!session) return null;
   const { user } = session;
-  const profile = await getProfile(user._id);
+  const [profile, counts] = await Promise.all([getProfile(user._id), savedCounts(user._id).catch(() => null)]);
   const visible = profile.privacy.visibility !== "private" && profile.username;
 
   const steps = [
@@ -77,7 +78,7 @@ export default async function ProfileOverviewPage() {
         </section>
       )}
 
-      <DeviceCounts />
+      <DeviceCounts account={counts} />
       <MyRequests />
     </div>
   );
