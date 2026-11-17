@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { TrainCharacter } from "@/components/characters/Characters";
+import { TrainCharacter } from "@/components/characters/lazy";
 import { IndiaMap } from "@/components/maps/IndiaMap";
 import { TripPlanner } from "@/components/planner/TripPlanner";
 import { Notice, PageIntro } from "@/components/ui/primitives";

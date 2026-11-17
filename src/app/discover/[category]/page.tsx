@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { BoatCharacter, HistorianCharacter, MountaineerCharacter, TigerCharacter } from "@/components/characters/Characters";
+import { BoatCharacter, HistorianCharacter, MountaineerCharacter, TigerCharacter } from "@/components/characters/lazy";
 import { DiscoverBrowser } from "@/components/discovery/DiscoverBrowser";
 import type { CategoryId } from "@/types/content";
 import { StaticCardGrid, toBrowserProps } from "@/components/discovery/discover-data";

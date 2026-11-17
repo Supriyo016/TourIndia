@@ -33,7 +33,7 @@
 - [x] P31 Translation and speech
 - [x] P32 Admin dashboard
 - [x] P33 Sign-in live (MongoDB Atlas M0 Mumbai, emailed codes via Resend; Google sign-in waits on 2-Step Verification)
-- [ ] P34 Verify, score and ship
+- [x] P34 Verify, score and ship (PR #9 merged 2026-11-17)
 
 ## Rules for agents
 
@@ -50,3 +50,15 @@
   - Translations that add links, emails or phone numbers are rejected; a 40-second overall deadline; per-IP limit 240/hour since cached text is free.
   - `db-setup` never fails a deploy (even with a malformed connection string) and only runs on production builds.
   - The slider pauses for keyboard focus (hover still never pauses it, per the owner); the launcher's avatar animates only on hover; the chat avatar's mood resets when the chat closes.
+- Shipped: PR #9 merged (4212680); production deploy verified (skyline served, live translation works, off-page text refused).
+- PageSpeed (pagespeed.web.dev, mobile, performance/accessibility/best practices/SEO):
+  - Home 86 and 87 on a rerun / 100 / 100 / 100 (LCP 3.5 s; was 96–98 before v4)
+  - Hampi 93 / 100 / 100 / 100 (LCP 3.2 s; render delay 780 ms, mostly script work); desktop 100
+  - Calendar 96 / 100 / 100 / 100 (LCP 2.8 s)
+  - Follow-up: win back the home page's mobile performance.
+
+## P35 Home page speed (2026-11-17)
+
+- Cause: `experimental.inlineCss` copied the whole stylesheet (104 KB) into every page three times (a style block plus two copies in the RSC payload). v4's extra styles made the home page 719 KB (123 KB compressed), finishing at 3.2 s on slow 4G.
+- Fixes: `inlineCss` off (styles load as one cached file); characters are lazy islands that load near the viewport (`components/characters/lazy.tsx`); the footer skyline's moving layer loads near the viewport; the Yatri button shows a chat icon and fetches Yatri's face and the chat only after the page has loaded.
+- Result (local, slow-4G phone profile): home HTML 291 KB (41 KB compressed), arriving at 0.4 s; all characters and the skyline traffic still appear on scroll with CLS under 0.02.

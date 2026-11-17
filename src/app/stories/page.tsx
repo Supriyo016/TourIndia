@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Lightbulb, PenLine, ShieldCheck } from "lucide-react";
-import { CameraCharacter } from "@/components/characters/Characters";
+import { CameraCharacter } from "@/components/characters/lazy";
 import { StoryForm } from "@/components/forms/Forms";
 import { PageIntro, Photo } from "@/components/ui/primitives";
 import { stories } from "@/data/stories";

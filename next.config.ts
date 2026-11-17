@@ -44,7 +44,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   experimental: {
     // Puts the stylesheet inside each page, so the first paint doesn't wait for a separate CSS request.
-    inlineCss: true,
+    inlineCss: false,
   },
   images: {
     formats: ["image/avif", "image/webp"],

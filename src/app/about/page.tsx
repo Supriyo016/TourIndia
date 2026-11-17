@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ElephantCharacter } from "@/components/characters/Characters";
+import { ElephantCharacter } from "@/components/characters/lazy";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { ExternalLink, JsonLd, PageIntro } from "@/components/ui/primitives";
 import { publishedSocials, site } from "@/config/site";

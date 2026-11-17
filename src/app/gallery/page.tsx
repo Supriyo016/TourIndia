@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CameraCharacter } from "@/components/characters/Characters";
+import { CameraCharacter } from "@/components/characters/lazy";
 import { GalleryBrowser, type GalleryItem } from "@/components/gallery/GalleryBrowser";
 import { ExternalLink, PageIntro } from "@/components/ui/primitives";
 import { destinations, getState, states } from "@/data";

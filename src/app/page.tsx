@@ -6,7 +6,7 @@ import {
   DiyaCharacter,
   FoodCharacter,
   TrainCharacter,
-} from "@/components/characters/Characters";
+} from "@/components/characters/lazy";
 import { DestinationCard } from "@/components/destinations/DestinationCard";
 import { LazyNewsletter } from "@/components/forms/LazyNewsletter";
 import { HeroSlider, type HeroSlide } from "@/components/hero/HeroSlider";

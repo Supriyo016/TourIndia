@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CompassCharacter } from "@/components/characters/Characters";
+import { CompassCharacter } from "@/components/characters/lazy";
 
 export default function NotFound() {
   return (

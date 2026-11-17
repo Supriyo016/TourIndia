@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
-import { DiyaCharacter } from "@/components/characters/Characters";
+import { DiyaCharacter } from "@/components/characters/lazy";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { monthNames } from "@/data/taxonomy";
 

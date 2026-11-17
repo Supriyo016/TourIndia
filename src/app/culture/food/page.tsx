@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FoodCharacter } from "@/components/characters/Characters";
+import { FoodCharacter } from "@/components/characters/lazy";
 import { PageIntro, Photo } from "@/components/ui/primitives";
 import { foods, regionalCuisines } from "@/data/food";
 import { regionName } from "@/data/taxonomy";
