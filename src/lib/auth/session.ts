@@ -20,6 +20,8 @@ export interface UserDoc extends Doc {
   marketingConsent: boolean;
   profileComplete: boolean;
   googleSub?: string;
+  /** For timed suspensions and bans: when the account is restored. */
+  restrictedUntil?: Date;
   createdAt: Date;
   lastLoginAt: Date;
 }

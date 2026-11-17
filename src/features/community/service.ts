@@ -322,15 +322,6 @@ export async function moderateComment(id: string, admin: UserDoc, status: "visib
   await audit(db, admin, `comment.${status}`, id, note);
 }
 
-export async function setUserStatus(userId: string, admin: UserDoc, status: "active" | "blocked") {
-  if (userId === admin._id) throw new CommunityError("You can't block your own account.", 400);
-  const db = await store();
-  const result = await db.collection(STORE_COLLECTIONS.users).updateOne({ _id: userId }, { $set: { status } });
-  if (!result.matchedCount) throw new CommunityError("That account doesn't exist.", 404);
-  if (status === "blocked") await db.collection(STORE_COLLECTIONS.sessions).deleteMany({ userId });
-  await audit(db, admin, `user.${status}`, userId);
-}
-
 export async function adminOverview() {
   const db = await store();
   const [pendingEdits, pendingComments, hiddenComments, users] = await Promise.all([

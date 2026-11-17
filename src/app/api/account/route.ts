@@ -63,6 +63,11 @@ export async function DELETE(request: NextRequest) {
   for (const edit of await edits.find({ userId: id }).toArray()) {
     await edits.updateOne({ _id: edit._id }, { $set: { userId: "deleted", authorName: "Former member" } });
   }
+  // Restriction records stay (so deleting an account can't erase a ban's history), but lose the address.
+  const restrictions = store.collection(STORE_COLLECTIONS.restrictions);
+  for (const row of await restrictions.find({ userId: id }).toArray()) {
+    await restrictions.updateOne({ _id: row._id }, { $set: { email: "deleted account" } });
+  }
   await store.collection(STORE_COLLECTIONS.users).deleteOne({ _id: id });
   await endAllSessions(id);
   const response = NextResponse.json({ ok: true });

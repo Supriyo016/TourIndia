@@ -3,7 +3,8 @@ import { z } from "zod";
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { isDenied, requireAdminApi } from "@/features/admin/guard";
 import { endUserSessions, TeamError } from "@/features/admin/team";
-import { CommunityError, decideEdit, moderateComment, setUserStatus } from "@/features/community/service";
+import { activeRestriction, lift, restrict, RestrictionError } from "@/features/admin/restrictions";
+import { CommunityError, decideEdit, moderateComment } from "@/features/community/service";
 
 const id = z.string().uuid();
 const note = z.string().trim().max(300).default("");
@@ -30,11 +31,19 @@ export async function POST(request: NextRequest) {
   try {
     if (body.action === "edit") await decideEdit(body.id, session.user, body.approve, body.note);
     if (body.action === "comment") await moderateComment(body.id, session.user, body.status, body.note);
-    if (body.action === "user") await setUserStatus(body.id, session.user, body.status);
+    // "Block author" from the moderation queue is a permanent ban for spam; "restore" lifts what's active.
+    if (body.action === "user") {
+      const actor = { user: session.user, access: context.access };
+      if (body.status === "blocked") await restrict(actor, body.id, { kind: "ban", days: null, reason: "spam", note: "Blocked from the moderation queue." });
+      else {
+        const active = await activeRestriction(body.id);
+        if (active) await lift(actor, active._id, "Restored from the moderation queue.");
+      }
+    }
     if (body.action === "sessions") await endUserSessions({ user: session.user, access: context.access }, body.id);
     return NextResponse.json({ ok: true });
   } catch (error) {
-    if (error instanceof CommunityError || error instanceof TeamError) return fail(error.status, error.message);
+    if (error instanceof CommunityError || error instanceof TeamError || error instanceof RestrictionError) return fail(error.status, error.message);
     console.error("[admin]", error);
     return unavailable();
   }

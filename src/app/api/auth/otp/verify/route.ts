@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     const user = await signInUser(body.email);
-    if (!user) return fail(403, "This account can't sign in. Contact us if you think that's a mistake.");
+    if (!user) return fail(403, "This account is suspended or banned. If you think that's a mistake, appeal at /appeal.");
     const session = await createSession(user._id, body.purpose === "admin" ? "admin" : "user", meta);
     await securityEvent({ action: `login.${body.purpose}`, outcome: "ok", actorId: user._id, country: meta.country, detail: meta.device });
     const response = NextResponse.json({ ok: true, user: toPublicUser(user) });

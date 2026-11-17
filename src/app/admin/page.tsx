@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AdminActions } from "@/components/admin/AdminActions";
 import { adminOverview, listComments, listEdits, type CommentDoc, type EditDoc } from "@/features/community/service";
-import { AdminNav } from "@/components/admin/AdminNav";
+import { AdminShell } from "@/components/admin/AdminShell";
 import { requireAdminPage } from "@/features/admin/guard";
 import { isStoreAvailable } from "@/lib/database/store";
 
@@ -65,15 +65,14 @@ export default async function AdminPage() {
   const { session, access } = await requireAdminPage();
   if (!access.permissions.has("moderation.manage")) {
     return (
-      <div className="container-x py-14">
-        <AdminNav permissions={access.permissions} current="/admin" />
+      <AdminShell permissions={access.permissions} current="/admin" email={session.user.email}>
         <h1>Admin</h1>
         <p className="mt-2 text-ink-2">Your role doesn&apos;t include moderation. Use the links below for the areas you can manage.</p>
         <p className="mt-4 flex flex-wrap gap-3">
           {access.permissions.has("analytics.view") && <Link prefetch={false} href="/admin/dashboard" className="btn btn-primary">Dashboard</Link>}
           <Link prefetch={false} href="/admin/mfa" className="btn btn-secondary">Authenticator and recovery codes</Link>
         </p>
-      </div>
+      </AdminShell>
     );
   }
 
@@ -85,8 +84,7 @@ export default async function AdminPage() {
   ];
 
   return (
-    <div className="container-x py-10">
-      <AdminNav permissions={access.permissions} current="/admin" />
+    <AdminShell permissions={access.permissions} current="/admin" email={session.user.email}>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h1>Admin</h1>
         <Link prefetch={false} href="/admin/dashboard" className="link-text text-sm">
@@ -130,6 +128,6 @@ export default async function AdminPage() {
           ))}
         </ul>
       </section>
-    </div>
+    </AdminShell>
   );
 }

@@ -42,7 +42,7 @@ Each phase ends with type check, lint, unit and security tests, browser tests, a
 
 - [x] **P1 Audit and architecture** (this document)
 - [x] **P2 Security foundation** (2a and 2b, see the progress log): RBAC (8 built-in roles, custom roles, permission checks), Super Admin bootstrap, admin TOTP MFA with recovery codes, session list and revoke (admin and user), login history, append-only audit and security logs, re-auth for destructive actions.
-- [ ] **P3 Admin core:** admin shell (sidebar, dark/light, responsive), user directory with search and paging, suspensions and timed bans with reasons, appeals, session revocation, moderation queue (reports, spam, corrections, copyright), support tickets (New → Under Review → In Progress → Resolved → Closed).
+- [ ] **P3 Admin core** (3a done, see the progress log; 3b: moderation queue and support tickets): admin shell (sidebar, dark/light, responsive), user directory with search and paging, suspensions and timed bans with reasons, appeals, session revocation, moderation queue (reports, spam, corrections, copyright), support tickets (New → Under Review → In Progress → Resolved → Closed).
 - [ ] **P4 Profile core:** `/profile` dashboard, personal information (avatar and cover once storage exists), preferences and personalisation, privacy settings, saved items server-side with guest migration, collections with read-only share links.
 - [ ] **P5 Trips and passport:** Trip Planner saved server-side, My Trips (states, day plans, expenses vs estimates, duplicate, archive, PDF and calendar export, read-only sharing), personal calendar and notes, Travel Passport (want to visit / visited / exploring, India map colours, original stamp designs, progress).
 - [ ] **P6 Analytics:** consent-aware beacon, collection API, aggregates, admin dashboards (traffic, geography, devices, pages, features, search including zero-result searches, journeys), CSV export.
@@ -86,4 +86,14 @@ Each phase ends with type check, lint, unit and security tests, browser tests, a
 - **Admin navigation** that shows only the areas a role allows.
 - The in-memory test store now matches array fields like MongoDB does.
 - **Tests:** 381 pass (10 new for sessions and team rules). Walked through the team page (custom role created) and the account devices and history in the browser.
+
+### P3a: admin shell, user directory, restrictions and appeals (2026-11-17)
+
+- **Admin shell** (`components/admin/AdminShell.tsx`): sidebar on wide screens, a scrolling row on phones, only the sections the admin's roles allow; uses the site theme, so dark and light both work.
+- **User directory** (`/admin/users`, `users.view`): search by email prefix or name (input escaped), filter by status, 25 a page, server-side; shows status, join and sign-in dates, sign-in method and admin roles.
+- **User record** (`/admin/users/[id]`): profile basics, admin roles, live sessions, restriction and appeal history, recent comments, and the admin actions taken on the account. Each view is written to the audit log (`user.view`).
+- **Restrictions** (`features/admin/restrictions.ts`, `/api/admin/users`, `users.ban` plus a fresh code): suspensions of 1 to 90 days, timed bans up to 10 years or permanent bans, each with a reason category, an admin note and an optional evidence reference. Restricting signs the account out everywhere. Owners can't be restricted; only Super Admins can restrict another admin; one active restriction at a time. Timed restrictions lift themselves at the next sign-in after they end (`liftedBy: "expiry"`); admins can lift early with a note. "Block author" in moderation now creates a permanent spam ban through the same path.
+- **Appeals** (`/appeal`, `/api/appeal`): one appeal per restriction, rate-limited, with the same reply whether or not the address exists. The admin who set a restriction can't decide its appeal unless they're a Super Admin. Overturning restores the account. Restricted email sign-ins and blocked Google sign-ins now point to the appeal page.
+- **Database:** new `user_restrictions` collection and rules; `restrictedUntil` on users. Deleting an account keeps its restriction records but replaces the address.
+- **Tests:** 390 pass (9 new: suspension sign-out and sign-in refusal, expiry restore, permanent ban and lift, self/owner/admin/duplicate rules, validation, appeals with identical replies and one-per-restriction, appeal-decider rule, directory search with escaping and paging, audited record views). Walked through in the browser: directory, a 3-day suspension through the form, an appeal arriving, the open-appeals panel and the public appeal page.
 

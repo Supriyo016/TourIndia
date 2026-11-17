@@ -1,6 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { getStore, STORE_COLLECTIONS } from "@/lib/database/store";
+import { liftIfExpired } from "@/features/admin/restrictions";
 import { adminEmails, type UserDoc } from "./session";
 
 /** Finds the account for an address, creating it on first sign-in. Returns null for blocked accounts. */
@@ -31,5 +32,7 @@ export async function signInUser(email: string, extra: { name?: string; googleSu
     if ((error as { code?: number }).code !== 11000) throw error;
     user = await users.findOneAndUpdate({ email }, { $set: set }, { returnDocument: "after" });
   }
-  return user && user.status === "active" ? user : null;
+  // A timed restriction that has run out is lifted here, on the next sign-in.
+  const current = user ? await liftIfExpired(user, store) : null;
+  return current && current.status === "active" ? current : null;
 }
