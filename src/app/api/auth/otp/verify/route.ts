@@ -2,7 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { verifyCodeSchema } from "@/features/auth/schemas";
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { verifyCode } from "@/lib/auth/otp";
-import { adminEmails, createSession, hmac, isAuthConfigured, setSessionCookie, toPublicUser } from "@/lib/auth/session";
+import { mayRequestAdminCode } from "@/features/admin/rbac";
+import { createSession, hmac, isAuthConfigured, metaFrom, setSessionCookie, toPublicUser } from "@/lib/auth/session";
+import { securityEvent } from "@/lib/security/audit";
 import { isAllowed } from "@/lib/security/rate-limit";
 import { signInUser } from "@/lib/auth/users";
 import { isStoreAvailable } from "@/lib/database/store";
@@ -26,12 +28,22 @@ export async function POST(request: NextRequest) {
 
   try {
     const result = await verifyCode(body.email, body.purpose, body.code);
-    if (result !== "ok") return fail(result === "invalid" ? 401 : 410, MESSAGES[result]);
-    if (body.purpose === "admin" && !adminEmails().has(body.email)) return fail(401, MESSAGES.invalid);
+    const meta = metaFrom(request);
+    // Failed sign-ins are logged by a keyed hash of the address, never the address itself.
+    const who = { target: hmac(`email:${body.email}`).slice(0, 16), country: meta.country };
+    if (result !== "ok") {
+      await securityEvent({ ...who, action: `login.${body.purpose}`, outcome: "failed", detail: result });
+      return fail(result === "invalid" ? 401 : 410, MESSAGES[result]);
+    }
+    if (body.purpose === "admin" && !(await mayRequestAdminCode(body.email))) {
+      await securityEvent({ ...who, action: "login.admin", outcome: "denied", detail: "not an admin" });
+      return fail(401, MESSAGES.invalid);
+    }
 
     const user = await signInUser(body.email);
     if (!user) return fail(403, "This account can't sign in. Contact us if you think that's a mistake.");
-    const session = await createSession(user._id, body.purpose === "admin" ? "admin" : "user");
+    const session = await createSession(user._id, body.purpose === "admin" ? "admin" : "user", meta);
+    await securityEvent({ action: `login.${body.purpose}`, outcome: "ok", actorId: user._id, country: meta.country, detail: meta.device });
     const response = NextResponse.json({ ok: true, user: toPublicUser(user) });
     setSessionCookie(response, request, session);
     return response;

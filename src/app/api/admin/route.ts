@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { fail, readJson, unavailable } from "@/lib/api/json";
-import { sessionFromRequest } from "@/lib/auth/session";
+import { isDenied, requireAdminApi } from "@/features/admin/guard";
 import { CommunityError, decideEdit, moderateComment, setUserStatus } from "@/features/community/service";
 
 const id = z.string().uuid();
@@ -13,13 +13,16 @@ const actionSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("user"), id, status: z.enum(["active", "blocked"]) }).strict(),
 ]);
 
-/** Admin decisions. Needs an admin session, which only an emailed admin code gives. */
+/**
+ * Moderation decisions. Each needs an admin session with MFA and the matching permission;
+ * blocking or restoring an account also needs a recent authenticator code.
+ */
 export async function POST(request: NextRequest) {
   const body = await readJson(request, actionSchema, "admin", { max: 300, windowSeconds: 600 });
   if (body instanceof NextResponse) return body;
-  const session = await sessionFromRequest(request).catch(() => null);
-  if (!session) return fail(401, "Please sign in as an admin.");
-  if (session.role !== "admin") return fail(403, "Admins only.");
+  const context = await requireAdminApi(request, body.action === "user" ? "users.ban" : "moderation.manage", { fresh: body.action === "user" });
+  if (isDenied(context)) return context;
+  const { session } = context;
   try {
     if (body.action === "edit") await decideEdit(body.id, session.user, body.approve, body.note);
     if (body.action === "comment") await moderateComment(body.id, session.user, body.status, body.note);

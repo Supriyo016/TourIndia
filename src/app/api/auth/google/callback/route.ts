@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { site } from "@/config/site";
 
 import { checkIdTokenClaims, exchangeCode, GOOGLE_STATE_COOKIE, isGoogleConfigured, readStateCookie } from "@/lib/auth/google";
-import { createSession, setSessionCookie } from "@/lib/auth/session";
+import { createSession, metaFrom, setSessionCookie } from "@/lib/auth/session";
+import { securityEvent } from "@/lib/security/audit";
 import { signInUser } from "@/lib/auth/users";
 
 // Google must send people back to the registered public address, not an internal proxy origin.
@@ -28,7 +29,9 @@ export async function GET(request: NextRequest) {
     const user = await signInUser(profile.email, { name: profile.name, googleSub: profile.sub });
     if (!user) return done("/?signin=blocked");
     // Google sign-in always gives a normal session; admin access needs an emailed code.
-    const session = await createSession(user._id, "user");
+    const meta = metaFrom(request);
+    const session = await createSession(user._id, "user", meta);
+    await securityEvent({ action: "login.google", outcome: "ok", actorId: user._id, country: meta.country, detail: meta.device });
     const target = user.profileComplete ? saved.returnTo : `/account?welcome=1&next=${encodeURIComponent(saved.returnTo)}`;
     const response = done(target);
     setSessionCookie(response, request, session);

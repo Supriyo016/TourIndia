@@ -26,7 +26,7 @@ export function AdminLogin() {
           } else {
             await postJson("/api/auth/otp/verify", { email, code, purpose: "admin" });
             // A full load, so the server renders the dashboard with the new cookie.
-            window.location.assign("/admin");
+            window.location.assign("/admin/mfa");
           }
         } catch (problem) {
           setError((problem as Error).message);

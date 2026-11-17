@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { postJson } from "@/components/auth/AuthProvider";
+import { adminPost } from "./adminFetch";
 
 type Action = { action: "edit"; id: string; approve: boolean } | { action: "comment"; id: string; status: "visible" | "removed" } | { action: "user"; id: string; status: "active" | "blocked" };
 
@@ -28,7 +28,7 @@ export function AdminActions({ choices }: { choices: { label: string; tone?: "da
           onClick={async () => {
             setError("");
             try {
-              await postJson("/api/admin", choice.body.action === "user" ? choice.body : { ...choice.body, note });
+              await adminPost("/api/admin", choice.body.action === "user" ? choice.body : { ...choice.body, note });
               startTransition(() => router.refresh());
             } catch (problem) {
               setError((problem as Error).message);

@@ -14,6 +14,7 @@ let routes: {
   account: typeof import("@/app/api/account/route");
   community: typeof import("@/app/api/community/route");
   admin: typeof import("@/app/api/admin/route").POST;
+  mfa: typeof import("@/app/api/admin/mfa/route").POST;
 };
 
 let ip = 1;
@@ -40,6 +41,18 @@ async function signIn(email: string, purpose: "login" | "admin" = "login") {
   return cookieOf(verified);
 }
 
+/** Admin sign-in plus authenticator set-up, the way a new admin goes through it. */
+async function adminSignIn(email: string) {
+  const cookie = await signIn(email, "admin");
+  const started = await routes.mfa(call("/api/admin/mfa", { action: "start" }, { cookie }));
+  expect(started.status).toBe(200);
+  const { secret } = (await started.json()) as { secret: string };
+  const { totpAt, currentStep } = await import("@/lib/auth/totp");
+  const enabled = await routes.mfa(call("/api/admin/mfa", { action: "enable", code: totpAt(secret, currentStep()) }, { cookie }));
+  expect(enabled.status).toBe(200);
+  return cookie;
+}
+
 async function completeProfile(cookie: string, name = "Asha Rao") {
   const response = await routes.account.POST(call("/api/account", { name, country: "India", homeState: "Kerala", interests: ["Food"], marketingConsent: false }, { cookie }));
   expect(response.status).toBe(200);
@@ -60,6 +73,7 @@ beforeAll(async () => {
     account: await import("@/app/api/account/route"),
     community: await import("@/app/api/community/route"),
     admin: (await import("@/app/api/admin/route")).POST,
+    mfa: (await import("@/app/api/admin/mfa/route")).POST,
   };
 });
 
@@ -198,7 +212,7 @@ describe("community", () => {
     const [pending] = await listEdits("pending");
     expect(pending?.field).toBe("bestTimeNote");
 
-    const admin = await signIn("owner@example.com", "admin");
+    const admin = await adminSignIn("owner@example.com");
     expect((await routes.admin(call("/api/admin", { action: "edit", id: pending!._id, approve: true, note: "" }, { cookie: editor }))).status).toBe(403);
     expect((await routes.admin(call("/api/admin", { action: "edit", id: pending!._id, approve: true, note: "Checked" }, { cookie: admin }))).status).toBe(200);
     expect(await overridesFor(place)).toEqual({ bestTimeNote: "October to February is cooler and clear." });

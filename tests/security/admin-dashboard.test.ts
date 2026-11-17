@@ -53,6 +53,8 @@ async function signedIn(email: string, role: "user" | "admin", status: "active" 
   const id = crypto.randomUUID();
   await db.collection(store.STORE_COLLECTIONS.users).insertOne({ _id: id, email, name: "Asha Rao", role, status, interests: [], marketingConsent: false, profileComplete: true, createdAt: new Date(), lastLoginAt: new Date() });
   const { token } = await session.createSession(id, role);
+  // Admin pages need MFA completed in the session; tests of the MFA step itself live in admin-mfa.test.ts.
+  if (role === "admin") await db.collection(store.STORE_COLLECTIONS.sessions).updateOne({ userId: id }, { $set: { mfaAt: new Date() } });
   jar.set("ti_auth", token);
 }
 

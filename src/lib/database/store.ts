@@ -49,6 +49,9 @@ export const STORE_COLLECTIONS = {
   overrides: "content_overrides",
   reports: "reports",
   audit: "audit_log",
+  securityEvents: "security_events",
+  adminRoles: "admin_roles",
+  adminMembers: "admin_members",
   bookings: "booking_requests",
   translations: "translations",
 } as const;
