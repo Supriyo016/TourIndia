@@ -181,6 +181,11 @@
     content-visibility: auto;
     contain-intrinsic-size: auto 640px;
   }
+  /* The footer is never on screen at first, so its layout waits until it comes near. */
+  .footer-deferred {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1150px;
+  }
 
   .eyebrow {
     font-size: 0.8125rem;

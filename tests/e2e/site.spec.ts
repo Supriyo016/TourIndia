@@ -315,6 +315,9 @@ test.describe("home page additions", () => {
     await expect(page.getByRole("heading", { name: "See India in motion" })).toBeVisible();
     const video = page.locator('video[aria-label="A video tour of India"]');
     await expect(video).toHaveAttribute("preload", "none");
+    // The poster is only set once the video comes near the screen.
+    await expect(video).not.toHaveAttribute("poster", /.+/);
+    await video.scrollIntoViewIfNeeded();
     await expect(video).toHaveAttribute("poster", "/videos/tour-india-poster.webp");
     expect((await page.request.get("/videos/tour-india-poster.webp")).status()).toBe(200);
     for (const size of ["", "-480", "-360"]) expect((await page.request.head(`/videos/tour-india${size}.webm`)).status()).toBe(200);

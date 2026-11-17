@@ -25,6 +25,8 @@ export function TourVideo({ size = "third", className }: { size?: "third" | "fil
   const [height, setHeight] = useState<VideoHeight | null>(null);
   const [muted, setMuted] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  // The poster is a large image far down the page, so it's only fetched when the video comes near.
+  const [near, setNear] = useState(false);
   const stalls = useRef<number[]>([]);
   const current = useRef<VideoHeight | null>(null);
 
@@ -57,6 +59,21 @@ export function TourVideo({ size = "third", className }: { size?: "third" | "fil
     const element = video.current;
     if (element) switchTo(pickRendition(network(), element.clientHeight * window.devicePixelRatio));
   }, [switchTo]);
+
+  useEffect(() => {
+    const element = video.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        setNear(true);
+      },
+      { rootMargin: "800px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   // Plays in view, pauses out of view. Tries sound first, then falls back to muted.
   useEffect(() => {
@@ -137,7 +154,7 @@ export function TourVideo({ size = "third", className }: { size?: "third" | "fil
         playsInline
         muted
         preload="none"
-        poster={tourVideo.poster}
+        poster={near ? tourVideo.poster : undefined}
         aria-label={tourVideo.title}
         onVolumeChange={(event) => setMuted(event.currentTarget.muted)}
         className="size-full rounded-[var(--radius-lg)] bg-black object-contain shadow-lg"
