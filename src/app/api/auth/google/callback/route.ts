@@ -27,7 +27,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const user = await signInUser(profile.email, { name: profile.name, googleSub: profile.sub });
-    if (!user) return done("/?signin=blocked");
+    // Suspended or banned accounts land on the appeal page instead of failing silently.
+    if (!user) return done("/appeal");
     // Google sign-in always gives a normal session; admin access needs an emailed code.
     const meta = metaFrom(request);
     const session = await createSession(user._id, "user", meta);

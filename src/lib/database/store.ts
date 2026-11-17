@@ -52,13 +52,14 @@ export const STORE_COLLECTIONS = {
   securityEvents: "security_events",
   adminRoles: "admin_roles",
   adminMembers: "admin_members",
+  restrictions: "user_restrictions",
   bookings: "booking_requests",
   translations: "translations",
 } as const;
 
 // ---- In-memory implementation -------------------------------------------------
 
-const OPERATORS = new Set(["$in", "$nin", "$ne", "$gt", "$gte", "$lt", "$lte", "$exists"]);
+const OPERATORS = new Set(["$in", "$nin", "$ne", "$gt", "$gte", "$lt", "$lte", "$exists", "$regex", "$options"]);
 
 function compare(a: unknown, b: unknown): number {
   const x = a instanceof Date ? a.getTime() : a;
@@ -93,6 +94,12 @@ function matchesValue(value: unknown, condition: unknown): boolean {
             return compare(value, operand) <= 0;
           case "$exists":
             return (value !== undefined) === Boolean(operand);
+          case "$regex": {
+            const flags = String((condition as { $options?: string }).$options ?? "").replace(/[^imsu]/g, "");
+            return typeof value === "string" && new RegExp(String(operand), flags).test(value);
+          }
+          case "$options":
+            return true;
           default:
             return false;
         }
@@ -104,7 +111,8 @@ function matchesValue(value: unknown, condition: unknown): boolean {
   return same(value, condition);
 }
 
-export const matches = (doc: Doc, filter: Filter) => Object.entries(filter).every(([key, condition]) => matchesValue(doc[key], condition));
+export const matches = (doc: Doc, filter: Filter): boolean =>
+  Object.entries(filter).every(([key, condition]) => (key === "$or" ? (condition as Filter[]).some((part) => matches(doc, part)) : matchesValue(doc[key], condition)));
 
 function applyUpdate(doc: Doc, update: Update, inserted: boolean) {
   if (inserted && update.$setOnInsert) Object.assign(doc, structuredClone(update.$setOnInsert));

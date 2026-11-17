@@ -70,6 +70,7 @@ const collections = {
       name: str(60),
       role: { enum: ["user", "admin"] },
       status: { enum: ["active", "blocked"] },
+      restrictedUntil: { bsonType: "date" },
       homeState: str(60),
       country: str(56),
       interests: { bsonType: "array", maxItems: 12, items: str(30) },
@@ -167,6 +168,23 @@ const collections = {
     required: ["name", "permissions", "createdAt"],
     properties: { name: str(40), description: str(200), permissions: { bsonType: "array", maxItems: 40, items: str(40) }, createdAt: { bsonType: "date" } },
     indexes: [[{ name: 1 }, { unique: true }]],
+  },
+  // Suspensions and bans, with their history and appeals. Kept after they end.
+  user_restrictions: {
+    required: ["userId", "email", "kind", "permanent", "reason", "note", "startsAt", "createdBy"],
+    properties: {
+      userId: str(36),
+      email: str(254),
+      kind: { enum: ["suspension", "ban"] },
+      permanent: { bsonType: "bool" },
+      reason: { enum: ["spam", "abuse", "misinformation", "copyright", "security", "other"] },
+      note: str(500),
+      evidence: str(200),
+      startsAt: { bsonType: "date" },
+      endsAt: { bsonType: "date" },
+      createdBy: str(36),
+    },
+    indexes: [[{ userId: 1, startsAt: -1 }, {}], [{ "appeal.status": 1 }, {}]],
   },
   admin_members: {
     required: ["email", "roles", "createdAt"],
