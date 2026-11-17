@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DestinationCard } from "@/components/destinations/DestinationCard";
+import { TranslateBar } from "@/components/translate/TranslateBar";
 import { Breadcrumbs, ExternalLink, JsonLd, Notice, Photo, PhotoCredit } from "@/components/ui/primitives";
 import { site } from "@/config/site";
 import { destinationsInState, getState, states } from "@/data";
@@ -58,6 +59,7 @@ export default async function StatePage({ params }: PageProps<"/explore/[state]"
           <Breadcrumbs items={[{ label: "Explore India", href: "/explore" }, { label: state.name }]} />
           <PhotoCredit imageKey={`state:${slug}`} />
         </div>
+        <TranslateBar className="mt-4" />
 
         <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
           <div>

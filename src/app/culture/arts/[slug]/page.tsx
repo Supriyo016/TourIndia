@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { CommunityPanel } from "@/components/community/CommunityPanel";
 import { ArtVideo } from "@/components/culture/ArtVideo";
 import { artImages, artVideo } from "@/components/culture/art-media";
+import { TranslateBar } from "@/components/translate/TranslateBar";
 import { ExternalLink, JsonLd, PageIntro } from "@/components/ui/primitives";
 import { site } from "@/config/site";
 import { getState } from "@/data";
@@ -100,6 +101,7 @@ export default async function ArtFormPage({ params }: PageProps<"/culture/arts/[
         </nav>
 
         <article className="min-w-0 max-w-3xl">
+          <TranslateBar className="mb-6" />
           <dl className="grid gap-4 sm:grid-cols-2">
             <div className="card p-4">
               <dt className="text-sm font-semibold text-muted">Where it comes from</dt>

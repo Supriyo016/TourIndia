@@ -120,11 +120,9 @@
   contain-intrinsic-size: auto 9.5rem;
   overflow: hidden;
   perspective: 600px;
-  background: linear-gradient(180deg, #0b2f37 0%, #12434c 70%, #0e3c46 100%);
-  border-bottom: 1px solid rgb(255 255 255 / 0.15);
-}
-:global([data-theme="dark"]) .footerScene {
+  /* The footer is a night scene in both themes. */
   background: linear-gradient(180deg, #06131a 0%, #0c2730 70%, #0a161b 100%);
+  border-bottom: 1px solid rgb(255 255 255 / 0.15);
 }
 .sun {
   position: absolute;

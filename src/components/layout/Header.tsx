@@ -171,13 +171,13 @@ export function Header() {
                       aria-current={active ? "page" : undefined}
                       onClick={() => setOpenMenu(null)}
                       className={cn(
-                        "relative flex h-11 items-center px-2.5 text-[0.94rem] font-[560] transition-colors hover:text-brand",
+                        "nav-link relative flex h-11 items-center px-2.5 text-[0.95rem] font-[650] tracking-[0.01em] transition-colors",
                         item.groups && "pr-0.5",
-                        active ? "text-brand" : "text-ink-2",
+                        active ? "text-accent-ink" : "text-brand",
                       )}
                     >
                       {item.short ?? item.label}
-                      {active && <span aria-hidden className="absolute inset-x-2.5 bottom-1 h-0.5 rounded bg-accent" />}
+                      <span aria-hidden className="nav-underline" data-active={active || undefined} />
                     </Link>
                     {item.groups && (
                       <button
@@ -205,8 +205,8 @@ export function Header() {
                 aria-expanded={openMenu === "More"}
                 onClick={() => setOpenMenu(openMenu === "More" ? null : "More")}
                 className={cn(
-                  "flex h-11 cursor-pointer items-center gap-0.5 px-2.5 text-[0.94rem] font-[560] text-ink-2 transition-colors hover:text-brand",
-                  moreNavigation.some((link) => isActive(pathname, link.href)) && "text-brand",
+                  "nav-link flex h-11 cursor-pointer items-center gap-0.5 px-2.5 text-[0.95rem] font-[650] tracking-[0.01em] text-brand transition-colors",
+                  moreNavigation.some((link) => isActive(pathname, link.href)) && "text-accent-ink",
                 )}
               >
                 More

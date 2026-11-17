@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { askYatri, googleSearchUrl, type AnswerExtras, type AskMode, type ChatMessage, type PlaceCard } from "./ask";
 import { RichText } from "./RichText";
 import styles from "./yatri.module.css";
-import { YatriOrb } from "./YatriOrb";
+import { YatriAvatar, type YatriMood } from "./YatriAvatar";
 
 const MAX_HISTORY = 15;
 const PICKS_KEY = "ti-yatri-picks";
@@ -62,7 +62,7 @@ function recall<T>(key: string, check: (value: unknown) => boolean, fallback: T)
 const isPicks = (value: unknown) => Array.isArray(value) && value.every((item) => item && typeof item === "object" && typeof (item as PlaceCard).slug === "string" && typeof (item as PlaceCard).name === "string");
 
 /** Yatri as a travel concierge: answers with place cards, sources, follow-ups and a trip tray. */
-export function YatriChat({ onNavigate, onMode }: { onNavigate: () => void; onMode: (mode: AskMode) => void }) {
+export function YatriChat({ onNavigate, onMode, onMood }: { onNavigate: () => void; onMode: (mode: AskMode) => void; onMood?: (mood: YatriMood) => void }) {
   const [turns, setTurns] = useState<Turn[]>(() => recall<ChatMessage[]>(STORAGE_KEYS.yatri, isChatHistory, []));
   const [picks, setPicks] = useState<PlaceCard[]>(() => recall<PlaceCard[]>(PICKS_KEY, isPicks, []));
   const [input, setInput] = useState("");
@@ -77,6 +77,12 @@ export function YatriChat({ onNavigate, onMode }: { onNavigate: () => void; onMo
     log.current?.scrollTo({ top: log.current.scrollHeight, behavior: "smooth" });
     if (!busy) remember(STORAGE_KEYS.yatri, turns.slice(-MAX_HISTORY).map(({ role, content }) => ({ role, content })));
   }, [turns, busy]);
+
+  // Yatri thinks while it looks things up and talks while the reply streams in.
+  useEffect(() => {
+    onMood?.(!busy ? "idle" : status ? "thinking" : "talking");
+    return () => onMood?.("idle");
+  }, [busy, status, onMood]);
 
   useEffect(() => remember(PICKS_KEY, picks), [picks]);
 
@@ -133,11 +139,10 @@ export function YatriChat({ onNavigate, onMode }: { onNavigate: () => void; onMo
   const plannerHref = `/planner?d=${picks.map((pick) => pick.slug).join(",")}`;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className={cn("flex min-h-0 flex-1 flex-col", styles.chatArea)}>
       <div ref={log} role="log" aria-live="polite" aria-label="Conversation with Yatri" className="scroll-thin min-h-0 flex-1 overflow-y-auto px-4 py-4">
         {turns.length === 0 ? (
           <div className={styles.welcome}>
-            <YatriOrb large />
             <h2 className="mt-3 font-display text-2xl">Namaste! Where to next?</h2>
             <p className="mt-1 text-[0.95rem] text-ink-2">I can suggest places for your dates, build a day-by-day plan, and explain festivals, food and permits, all from Tour India&apos;s guides.</p>
             <ul className="mt-5 grid grid-cols-2 gap-2">
@@ -160,7 +165,7 @@ export function YatriChat({ onNavigate, onMode }: { onNavigate: () => void; onMo
                 ) : (
                   <>
                     <span className="mt-0.5 shrink-0" aria-hidden>
-                      <YatriOrb />
+                      <YatriAvatar />
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="text-[0.95rem] leading-relaxed">{turn.content ? <RichText text={turn.content} onNavigate={onNavigate} /> : null}</div>

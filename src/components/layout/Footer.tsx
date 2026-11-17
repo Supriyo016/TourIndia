@@ -5,15 +5,16 @@ import { publishedSocials, site } from "@/config/site";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { ExternalLink } from "@/components/ui/primitives";
 import { FooterScene } from "@/components/scenes/FooterScene";
+import { KolkataSkyline } from "@/components/scenes/KolkataSkyline";
 import { CookieSettingsLink } from "./CookieConsent";
 import { Wordmark } from "./Wordmark";
 
 export function Footer() {
   return (
-    <footer className="no-print bg-[#0e3c46] text-[#d8e6e6] dark:bg-[#0a161b]">
+    <footer className="no-print bg-[#0a161b] text-[#d8e6e6]">
       <FooterScene />
 
-      <div className="container-x grid gap-10 py-12 lg:grid-cols-[1.5fr_3fr]">
+      <div className="container-x grid gap-10 pt-12 pb-4 lg:grid-cols-[1.5fr_3fr]">
         <div>
           <Wordmark className="text-[2.1rem]" onDark />
           <p className="mt-3 max-w-sm text-[0.97rem]">
@@ -61,6 +62,10 @@ export function Footer() {
         </div>
       </div>
 
+      <div className="container-x">
+        <KolkataSkyline />
+      </div>
+
       <div className="border-t border-white/15">
         <div className="container-x flex flex-wrap items-center gap-x-6 gap-y-1 py-4 text-sm">
           <span className="inline-flex items-center gap-2 font-semibold text-white">
@@ -90,6 +95,7 @@ export function Footer() {
           </p>
         </div>
       </div>
+
 
       <a
         href="#top"

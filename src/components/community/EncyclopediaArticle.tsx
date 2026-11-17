@@ -2,7 +2,8 @@ import Link from "next/link";
 import { BookOpenText } from "lucide-react";
 import { Breadcrumbs, ExternalLink, Photo, PhotoCredit } from "@/components/ui/primitives";
 import { EDITABLE_FIELDS, fieldToText, readField, type Target } from "@/features/community/targets";
-import type { ImageKey } from "@/lib/images";
+import { getImage, referenceImages, type ImageKey } from "@/lib/images";
+import { ReferenceGallery } from "@/components/encyclopedia/ReferenceGallery";
 import { CommunityPanel } from "./CommunityPanel";
 import { SuggestEdit } from "./SuggestEdit";
 
@@ -15,6 +16,8 @@ interface Props {
   path: string;
   guide?: { href: string; label: string };
   imageKey?: ImageKey;
+  /** Reference images live at `ref:<stem>-1` onwards. */
+  referenceStem?: string;
   infobox: [string, React.ReactNode][];
   extra?: React.ReactNode;
   sources: { label: string; url: string }[];
@@ -22,8 +25,21 @@ interface Props {
 }
 
 /** One encyclopedia entry: an infobox, editable sections, sources, and the community panel. */
-export function EncyclopediaArticle({ target, title, summary, source, path, guide, imageKey, infobox, extra, sources, lastReviewed }: Props) {
+export function EncyclopediaArticle({ target, title, summary, source, path, guide, imageKey, referenceStem, infobox, extra, sources, lastReviewed }: Props) {
   const fields = EDITABLE_FIELDS[target.type] ?? {};
+  const lead = imageKey ? getImage(imageKey) : undefined;
+  const references = referenceStem
+    ? referenceImages(referenceStem).map((image) => ({
+        src: image.src,
+        width: image.width,
+        height: image.height,
+        blur: image.blur,
+        caption: image.alt,
+        author: image.author,
+        license: image.license,
+        sourceUrl: image.sourceUrl,
+      }))
+    : [];
   return (
     <article className="container-x py-8">
       <Breadcrumbs items={[{ label: "Encyclopedia", href: "/encyclopedia" }, { label: title }]} />
@@ -73,6 +89,8 @@ export function EncyclopediaArticle({ target, title, summary, source, path, guid
 
           {extra}
 
+          <ReferenceGallery title={title} items={references} />
+
           <section aria-labelledby="sources-title" className="mt-8 border-t border-line pt-6">
             <h2 id="sources-title" className="text-2xl">Sources</h2>
             <ul className="mt-3 space-y-1 text-sm">
@@ -93,9 +111,12 @@ export function EncyclopediaArticle({ target, title, summary, source, path, guid
         <aside aria-label={`${title} at a glance`} className="lg:sticky lg:top-[calc(var(--header-h,6.5rem)+1rem)] lg:self-start">
           <div className="card overflow-hidden">
             {imageKey && (
-              <div className="relative aspect-[4/3]">
-                <Photo imageKey={imageKey} sizes="(min-width: 1024px) 20rem, 92vw" />
-              </div>
+              <figure>
+                <div className="relative aspect-[4/3]">
+                  <Photo imageKey={imageKey} sizes="(min-width: 1024px) 20rem, 92vw" />
+                </div>
+                {lead && <figcaption className="border-b border-line px-4 py-2 text-center text-sm text-ink-2">{lead.alt}</figcaption>}
+              </figure>
             )}
             <dl className="divide-y divide-line text-sm">
               {infobox.map(([label, value]) => (

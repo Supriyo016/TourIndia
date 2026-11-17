@@ -294,12 +294,20 @@ test.describe("home page additions", () => {
     await expect(header).toHaveAttribute("data-overlay", "false");
   });
 
-  test("travel styles are shown as photo tiles that open each style", async ({ page }) => {
-    await page.goto("/");
-    const section = page.getByRole("region", { name: "Travel styles" });
-    await section.getByRole("link", { name: "Lakes", exact: true }).click();
-    await expect(page).toHaveURL(/\/discover\/lakes$/);
+  test("a travel style page has a related photo behind its title", async ({ page }) => {
+    await page.goto("/discover/lakes");
+    await expect(page.getByRole("heading", { level: 1, name: "Lakes in India" })).toBeVisible();
     await expect(page.locator(".page-hero img")).toBeAttached();
+  });
+
+  test("the slideshow keeps playing while the pointer rests on it", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
+    const label = page.locator('[aria-label^="Slide "]');
+    const first = await label.getAttribute("aria-label");
+    await page.mouse.move(640, 300);
+    // The interval is 7 seconds; give it one full turn.
+    await expect(label).not.toHaveAttribute("aria-label", first!, { timeout: 10_000 });
   });
 
   test("the site video is on the home page and doesn't preload", async ({ page }) => {

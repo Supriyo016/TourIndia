@@ -1,0 +1,29 @@
+/* Two lines of caption at most in the grid; the viewer shows it in full. */
+.caption {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.viewer {
+  background: rgb(6 14 18 / 0.95);
+}
+
+.viewer::backdrop {
+  background: transparent;
+}
+
+.viewer[open] {
+  animation: viewer-in 160ms ease-out;
+}
+
+@keyframes viewer-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewer[open] { animation: none; }
+}

@@ -13,6 +13,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
+import { cleanAuthor } from "../src/lib/credits.ts";
 import { northDestinations } from "../src/data/destinations/north.ts";
 import { westSouthDestinations } from "../src/data/destinations/west-south.ts";
 import { eastIslandDestinations } from "../src/data/destinations/east-islands.ts";
@@ -467,7 +468,7 @@ async function inspectRaw(fileTitle: string, width: number) {
     height: info.height,
     license,
     licenseUrl: textOf("LicenseUrl") || undefined,
-    author: stripHtml(textOf("Artist")).slice(0, 160) || "Unknown author",
+    author: cleanAuthor(stripHtml(textOf("Artist"))),
     sourceUrl: info.descriptionurl,
     description: stripHtml(textOf("ImageDescription")),
   };
@@ -506,6 +507,9 @@ async function saveFirstSuitable(job: Job, names: string[], landscape: boolean):
     const output = await sharp(input)
       .rotate()
       .resize({ width: job.width, withoutEnlargement: true })
+      // The same gentle lift as scripts/upgrade-images.mts: a touch more colour and contrast.
+      .modulate({ saturation: 1.06 })
+      .linear(1.06, -7)
       .webp({ quality: 74 })
       .toBuffer({ resolveWithObject: true });
     writeFileSync(join(directory, `${job.file}.webp`), output.data);
@@ -515,6 +519,7 @@ async function saveFirstSuitable(job: Job, names: string[], landscape: boolean):
       src: `/images/${job.folder}/${job.file}.webp`,
       width: output.info.width,
       height: output.info.height,
+      sourceWidth: details.width,
       blur: `data:image/webp;base64,${blur.toString("base64")}`,
       alt: artAlt[job.key] ?? ((job.describe && captionFrom(details.description)) || job.alt),
       author: details.author,

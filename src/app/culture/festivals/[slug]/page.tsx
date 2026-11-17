@@ -3,6 +3,7 @@ import { CommunityPanel } from "@/components/community/CommunityPanel";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ShareBar } from "@/components/destinations/ClientWidgets";
+import { TranslateBar } from "@/components/translate/TranslateBar";
 import { Breadcrumbs, ExternalLink, JsonLd, Notice, Photo, PhotoCredit } from "@/components/ui/primitives";
 import { getDestination, getState } from "@/data";
 import { festivals } from "@/data/festivals";
@@ -55,6 +56,7 @@ export default async function FestivalPage({ params }: PageProps<"/culture/festi
           <Breadcrumbs items={[{ label: "Festivals", href: "/culture/festivals" }, { label: festival.name }]} />
           <PhotoCredit imageKey={`festival:${festival.slug}`} />
         </div>
+        <TranslateBar className="mt-4" />
         <p className="lede mt-6">{festival.summary}</p>
 
         <dl className="card mt-6 grid gap-4 p-5 sm:grid-cols-2">

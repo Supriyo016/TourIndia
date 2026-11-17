@@ -1,0 +1,80 @@
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  align-items: start;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.stats {
+  display: grid;
+  gap: 0.5rem 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+}
+
+.stat dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.rows {
+  display: grid;
+  gap: 0;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.state::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--muted);
+}
+
+.on {
+  color: var(--forest);
+}
+
+.on::before {
+  background: var(--forest);
+}
+
+.off {
+  color: var(--danger);
+}
+
+.off::before {
+  background: transparent;
+  border: 2px solid var(--danger);
+}
+
+.truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
