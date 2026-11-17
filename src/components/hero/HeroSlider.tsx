@@ -115,7 +115,8 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                   alt={state === "active" ? slide.alt : ""}
                   fill
                   sizes="100vw"
-                  priority={position === 0}
+                  preload={position === 0}
+                  fetchPriority={position === 0 ? "high" : undefined}
                   placeholder={slide.blur ? "blur" : "empty"}
                   blurDataURL={slide.blur}
                   // The zoom keeps its place while paused, rather than snapping back.
