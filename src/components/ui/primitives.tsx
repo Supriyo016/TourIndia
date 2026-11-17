@@ -90,7 +90,7 @@ export function PageIntro({
   if (image) {
     return (
       <div data-theme="dark" className="page-hero relative isolate overflow-hidden border-b border-line bg-[#0e3c46] text-ink">
-        <Image src={image.src} alt="" fill priority sizes="100vw" placeholder={image.blur ? "blur" : "empty"} blurDataURL={image.blur} className="page-hero-photo -z-20 object-cover" />
+        <Image src={image.src} alt="" fill preload fetchPriority="high" sizes="100vw" placeholder={image.blur ? "blur" : "empty"} blurDataURL={image.blur} className="page-hero-photo -z-20 object-cover" />
         <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(6_24_30/0.86)_0%,rgb(6_24_30/0.6)_50%,rgb(6_24_30/0.25)_100%)]" />
         <div className="container-x flex min-h-[17rem] flex-col justify-end py-8 sm:min-h-[20rem] sm:py-10">
           <Breadcrumbs items={crumbs} />
@@ -148,7 +148,9 @@ export function Photo({
       alt={alt ?? image.alt}
       fill
       sizes={sizes}
-      priority={priority}
+      // The page's main photo is fetched first and marked urgent, so it doesn't queue behind other files.
+      preload={priority}
+      fetchPriority={priority ? "high" : undefined}
       placeholder={image.blur ? "blur" : "empty"}
       blurDataURL={image.blur}
       className={cn("object-cover", className)}
