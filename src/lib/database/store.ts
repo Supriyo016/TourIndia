@@ -53,6 +53,8 @@ export const STORE_COLLECTIONS = {
   adminRoles: "admin_roles",
   adminMembers: "admin_members",
   restrictions: "user_restrictions",
+  /** Contact-form messages, kept as support tickets. */
+  tickets: "contact_messages",
   bookings: "booking_requests",
   translations: "translations",
 } as const;

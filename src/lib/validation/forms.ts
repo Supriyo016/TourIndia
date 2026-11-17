@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CATEGORY_IDS } from "@/features/support/types";
 
 const text = (label: string, min: number, max: number) =>
   z
@@ -12,6 +13,7 @@ const email = z.string().trim().toLowerCase().max(254, "That email address is to
 export const contactSchema = z.object({
   name: text("Name", 2, 80),
   email,
+  category: z.enum(CATEGORY_IDS).default("general"),
   subject: text("Subject", 3, 120),
   message: text("Message", 10, 3000),
 });

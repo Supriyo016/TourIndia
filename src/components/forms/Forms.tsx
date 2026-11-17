@@ -1,5 +1,6 @@
 "use client";
 
+import { TICKET_CATEGORIES } from "@/features/support/types";
 import { contactSchema, newsletterSchema, storySchema } from "@/lib/validation/forms";
 import { ApiForm } from "./ApiForm";
 
@@ -28,10 +29,11 @@ export function ContactForm() {
       submitLabel="Send message"
       successTitle="Message received"
       successBody="Thank you for writing. A reply will come to the address you gave, if your message needs one."
-      defaultValues={{ name: "", email: "", subject: "", message: "" }}
+      defaultValues={{ name: "", email: "", category: "general", subject: "", message: "" }}
       fields={[
         { name: "name", label: "Your name", autoComplete: "name" },
         { name: "email", label: "Email address", type: "email", autoComplete: "email" },
+        { name: "category", label: "What's it about?", type: "select", options: Object.entries(TICKET_CATEGORIES).map(([value, label]) => ({ value, label })) },
         { name: "subject", label: "Subject" },
         { name: "message", label: "Message", type: "textarea" },
       ]}

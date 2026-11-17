@@ -10,7 +10,9 @@ import { DancerCharacter } from "@/components/characters/lazy";
 export interface FieldConfig {
   name: string;
   label: string;
-  type?: "text" | "email" | "textarea" | "checkbox";
+  type?: "text" | "email" | "textarea" | "checkbox" | "select";
+  /** For `select`. */
+  options?: { value: string; label: string }[];
   placeholder?: string;
   hint?: string;
   autoComplete?: string;
@@ -113,6 +115,14 @@ export function ApiForm<T extends FieldValues>({
             <label className={inline ? "sr-only" : "field-label"} htmlFor={id}>{field.label}</label>
             {field.type === "textarea" ? (
               <textarea id={id} rows={5} className="input" placeholder={field.placeholder} aria-invalid={Boolean(error)} aria-describedby={describedBy} {...form.register(name)} />
+            ) : field.type === "select" ? (
+              <select id={id} className="input" aria-invalid={Boolean(error)} aria-describedby={describedBy} {...form.register(name)}>
+                {field.options?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             ) : (
               <input id={id} type={field.type ?? "text"} autoComplete={field.autoComplete} className="input" placeholder={field.placeholder} aria-invalid={Boolean(error)} aria-describedby={describedBy} {...form.register(name)} />
             )}
