@@ -73,7 +73,12 @@ export default async function AdminPage() {
 
   return (
     <div className="container-x py-10">
-      <h1>Admin</h1>
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <h1>Admin</h1>
+        <Link prefetch={false} href="/admin/dashboard" className="link-text text-sm">
+          Open the dashboard
+        </Link>
+      </div>
       <p className="mt-1 text-ink-2">Signed in as {session.user.email}.</p>
       <dl className="mt-6 grid gap-3 sm:grid-cols-4">
         {[

@@ -1,13 +1,22 @@
 /**
  * Creates the MongoDB collections with schema validation and indexes.
  * Safe to run more than once. Usage: MONGODB_URI=... npm run db:setup
+ *
+ * Vercel also runs it before each build (`npm run vercel-build`, with --deploy). In that mode a
+ * missing or unreachable database is reported but never stops the deploy.
  */
 import { MongoClient } from "mongodb";
 
+const deploy = process.argv.includes("--deploy");
 const uri = process.env.MONGODB_URI;
+// Preview builds may share production's database, so only production deploys change its rules.
+if (deploy && process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production") {
+  console.log(`db-setup: skipped for the ${process.env.VERCEL_ENV} build.`);
+  process.exit(0);
+}
 if (!uri) {
-  console.error("Set MONGODB_URI first.");
-  process.exit(1);
+  console.error(deploy ? "db-setup: MONGODB_URI is not set, skipping." : "Set MONGODB_URI first.");
+  process.exit(deploy ? 0 : 1);
 }
 
 const str = (maxLength) => ({ bsonType: "string", maxLength });
@@ -131,10 +140,18 @@ const collections = {
     properties: { reference: str(12), status: { enum: ["new", "contacted", "closed"] }, createdAt: { bsonType: "date" } },
     indexes: [[{ reference: 1 }, { unique: true }], [{ userId: 1, createdAt: -1 }, {}]],
   },
+  // Cached page translations, keyed by a hash of language and source text; they expire after 180 days.
+  translations: {
+    required: ["lang", "text", "createdAt", "expiresAt"],
+    properties: { _id: { bsonType: "string" }, lang: str(12), text: str(9000), createdAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
+  },
 };
 
-const client = new MongoClient(uri);
+let client;
 try {
+  // Inside the try: the driver checks the connection string here and throws on a malformed one.
+  client = new MongoClient(uri, { serverSelectionTimeoutMS: 10_000 });
   await client.connect();
   const db = client.db(process.env.MONGODB_DB ?? "tour_india");
   const existing = new Set((await db.listCollections().toArray()).map(({ name }) => name));
@@ -145,6 +162,10 @@ try {
     for (const [keys, options] of indexes) await db.collection(name).createIndex(keys, options);
     console.log(`ready: ${name}`);
   }
+} catch (error) {
+  // Only the error's name is printed, never the connection string.
+  console.error(`db-setup failed: ${error?.name ?? "Error"}${error?.codeName ? ` (${error.codeName})` : ""}`);
+  if (!deploy) process.exitCode = 1;
 } finally {
-  await client.close();
+  await client?.close().catch(() => {});
 }

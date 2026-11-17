@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { HistorianCharacter } from "@/components/characters/Characters";
 import { ExternalLink, Notice, PageIntro, Photo } from "@/components/ui/primitives";
+import { TranslateBar } from "@/components/translate/TranslateBar";
 import { getDestination, getState } from "@/data";
 import { museumsAndSites, unescoSites } from "@/data/heritage";
 
@@ -20,6 +21,7 @@ export default function HeritagePage() {
     <>
       <PageIntro imageKey="unesco:group-of-monuments-at-hampi" crumbs={[{ label: "Culture", href: "/culture" }, { label: "Heritage" }]} eyebrow="Heritage explorer" title="India's heritage" lede={`This list has ${sites.length} World Heritage Sites, ordered by year of inscription, followed by museums and historic sites.`} />
       <div className="container-x py-10">
+        <TranslateBar className="mb-6" />
         <div className="mb-6 flex items-center gap-5">
           <HistorianCharacter className="hidden h-24 w-auto shrink-0 sm:block" />
           <Notice>

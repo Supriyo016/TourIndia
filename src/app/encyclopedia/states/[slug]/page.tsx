@@ -45,6 +45,7 @@ export default async function StateEncyclopediaPage({ params }: PageProps<"/ency
         path={path}
         guide={{ href: `/explore/${slug}`, label: `Explore ${item.name} on the map` }}
         imageKey={`state:${slug}`}
+        referenceStem={`state-${slug}`}
         infobox={[
           ["Type", item.kind === "state" ? "State" : "Union Territory"],
           ["Capital", item.capital],

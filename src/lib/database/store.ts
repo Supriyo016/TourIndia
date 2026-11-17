@@ -50,6 +50,7 @@ export const STORE_COLLECTIONS = {
   reports: "reports",
   audit: "audit_log",
   bookings: "booking_requests",
+  translations: "translations",
 } as const;
 
 // ---- In-memory implementation -------------------------------------------------

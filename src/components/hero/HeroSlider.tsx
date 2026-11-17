@@ -35,19 +35,19 @@ const pad = (value: number) => String(value).padStart(2, "0");
 /**
  * Full-bleed photo slider. The height is fixed by the viewport, never by the photo,
  * so every slide has the same frame. Slides change with a 3D turn. The photo never
- * reacts to the pointer: hovering only pauses the slideshow and holds the slow zoom still.
+ * reacts to the pointer, and the slideshow keeps playing under it; only the pause button
+ * and keyboard focus (someone typing in the search box) stop it.
  */
 export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [{ index, previous }, setSlide] = useState<{ index: number; previous: number | null }>({ index: 0, previous: null });
   const reducedMotion = useSyncExternalStore(subscribeToMotion, prefersReducedMotion, () => false);
   const [userPaused, setUserPaused] = useState<boolean | null>(null);
-  const [hovering, setHovering] = useState(false);
   const [focused, setFocused] = useState(false);
   const [warm, setWarm] = useState(false);
   const swipeStart = useRef<number | null>(null);
   const paused = userPaused ?? reducedMotion;
-  // Holds still while the pointer or keyboard focus is inside, so nothing moves while someone reads or types.
-  const running = !paused && !hovering && !focused && slides.length > 1;
+  // Holds still while someone types in the search box.
+  const running = !paused && !focused && slides.length > 1;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setWarm(true), 1500);
@@ -78,15 +78,14 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       aria-roledescription="carousel"
       aria-label="Destinations across India"
       className="hero-stage relative isolate -mt-[var(--header-h,4.5rem)] h-[clamp(34rem,100svh,60rem)] overflow-hidden bg-[#0e3c46] text-white"
-      onPointerEnter={(event) => event.pointerType === "mouse" && setHovering(true)}
-      onPointerLeave={() => setHovering(false)}
       onPointerDown={(event) => {
         if (event.pointerType !== "mouse") swipeStart.current = event.clientX;
       }}
-      onFocus={() => setFocused(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
-      }}
+      // Only typing in the search box pauses; clicking an arrow or dot keeps the show going.
+      // Hovering never pauses it (owner's choice); typing in the search box or keyboard focus on a slide control does,
+      // so a keyboard user never follows a link that changed under them.
+      onFocus={(event) => setFocused((event.target as HTMLElement).matches("input, textarea, :focus-visible"))}
+      onBlur={() => setFocused(false)}
       onPointerCancel={() => {
         swipeStart.current = null;
       }}

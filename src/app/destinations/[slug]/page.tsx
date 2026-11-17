@@ -7,6 +7,7 @@ import { DestinationCard } from "@/components/destinations/DestinationCard";
 import { ShareBar, TrackRecentlyViewed, WeatherPanel } from "@/components/destinations/ClientWidgets";
 import { LocationMap } from "@/components/destinations/LocationMap";
 import { SaveButton } from "@/components/destinations/SaveButton";
+import { TranslateBar } from "@/components/translate/TranslateBar";
 import { Breadcrumbs, ExternalLink, JsonLd, Notice, Photo, PhotoCredit } from "@/components/ui/primitives";
 import { site } from "@/config/site";
 import { destinations, getDestination, getState, similarDestinations } from "@/data";
@@ -170,6 +171,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
             Compare
           </Link>
           <ShareBar title={`${item.name} travel guide`} path={`/destinations/${item.slug}`} />
+          <TranslateBar />
         </div>
 
         <div className="mt-8 grid gap-10 pb-16 lg:grid-cols-[13rem_minmax(0,1fr)]">

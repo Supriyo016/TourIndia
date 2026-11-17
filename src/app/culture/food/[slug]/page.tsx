@@ -3,6 +3,7 @@ import { CommunityPanel } from "@/components/community/CommunityPanel";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs, JsonLd, Photo, PhotoCredit } from "@/components/ui/primitives";
+import { TranslateBar } from "@/components/translate/TranslateBar";
 import { getDestination, getState } from "@/data";
 import { foods } from "@/data/food";
 import { regionName } from "@/data/taxonomy";
@@ -44,6 +45,7 @@ export default async function FoodDetailPage({ params }: PageProps<"/culture/foo
       <Breadcrumbs items={[{ label: "Food", href: "/culture/food" }, { label: food.name }]} />
       <p className="eyebrow mt-5 mb-1">{regionName(food.region)}</p>
       <h1>{food.name}</h1>
+      <TranslateBar className="mt-3" />
       <p className="mt-2 text-muted">{food.stateSlugs.map((slugValue) => getState(slugValue)?.name).filter(Boolean).join(", ")}</p>
       <div className="relative mt-5 aspect-[16/9] overflow-hidden rounded-[var(--radius-lg)]">
         <Photo imageKey={`food:${food.slug}`} sizes="(min-width: 900px) 56rem, 100vw" priority />

@@ -4,16 +4,12 @@ import {
   BackpackerCharacter,
   CameraCharacter,
   DiyaCharacter,
-  ElephantCharacter,
   FoodCharacter,
   TrainCharacter,
 } from "@/components/characters/Characters";
 import { DestinationCard } from "@/components/destinations/DestinationCard";
 import { LazyNewsletter } from "@/components/forms/LazyNewsletter";
 import { HeroSlider, type HeroSlide } from "@/components/hero/HeroSlider";
-import { IndiaMap } from "@/components/maps/IndiaMap";
-import { MapExplorer } from "@/components/maps/MapExplorer";
-import { statePreviews } from "@/components/maps/map-data";
 import { TourVideo } from "@/components/ui/TourVideo";
 import { JsonLd, Photo, SectionHeading } from "@/components/ui/primitives";
 import { publishedSocials, site } from "@/config/site";
@@ -22,8 +18,7 @@ import { circuits } from "@/data/circuits";
 import { festivals } from "@/data/festivals";
 import { foods } from "@/data/food";
 import { stories } from "@/data/stories";
-import { categories, formatMonthRange, monthName } from "@/data/taxonomy";
-import { categoryImage } from "@/config/category-images";
+import { formatMonthRange, monthName } from "@/data/taxonomy";
 import { getImage, type ImageKey } from "@/lib/images";
 
 /** Image, place, region, guide link, then the tagline shown with that slide. */
@@ -58,7 +53,6 @@ export default function HomePage() {
   const month = new Date().getMonth() + 1;
   const seasonal = inSeason(month).filter((item) => item.popular).slice(0, 4);
   const popular = destinations.filter((item) => item.popular).slice(0, 8);
-  const featuredStyles = categories.filter((category) => categoryImage[category.id]);
   const gems = destinations.filter((item) => item.hiddenGem).slice(0, 4);
   const upcomingFestivals = festivals
     .filter((festival) => festival.months.some((value) => value === month || value === (month % 12) + 1))
@@ -97,41 +91,6 @@ export default function HomePage() {
           <div className="container-x"><h1 className="!text-white">Explore our India</h1></div>
         </section>
       )}
-
-      <section className="pt-10 pb-2" aria-label="Travel styles">
-        <div className="container-x">
-          <SectionHeading eyebrow="Discover" title="Choose how you like to travel" action={<Link prefetch={false} href="/discover" className="btn btn-outline">All {categories.length} styles <ArrowRight className="nudge size-4" aria-hidden /></Link>} />
-          <ul className="rail -mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-3">
-            {featuredStyles.map((category) => (
-              <li key={category.id} data-tilt className="zoom-media relative aspect-[3/4] w-40 shrink-0 snap-start overflow-hidden rounded-[var(--radius-md)] sm:w-48">
-                <Photo imageKey={categoryImage[category.id]} sizes="12rem" />
-                <div aria-hidden className="photo-scrim absolute inset-0" />
-                <Link prefetch={false} href={`/discover/${category.id}`} className="absolute inset-0 flex items-end p-3 text-[1.05rem] font-semibold text-white">
-                  {category.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section className="section lazy-render" aria-labelledby="map-title">
-        <div className="container-x">
-          <div className="reveal">
-            <div className="flex items-end justify-between gap-6">
-              <SectionHeading
-                eyebrow="The map"
-                title="Start with a state"
-                lede="All 28 states and 8 Union Territories, each with its seasons, food, festivals and guides."
-              />
-              <ElephantCharacter className="mb-6 hidden h-28 w-auto shrink-0 md:block" />
-            </div>
-              <MapExplorer previews={statePreviews()} initialSlug="kerala">
-                <IndiaMap className="h-auto w-full" />
-              </MapExplorer>
-          </div>
-        </div>
-      </section>
 
       <section className="section lazy-render bg-surface-2" aria-labelledby="popular">
         <div className="container-x">

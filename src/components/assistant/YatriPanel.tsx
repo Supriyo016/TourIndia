@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import type { AskMode } from "./ask";
 import styles from "./yatri.module.css";
 import { YatriChat } from "./YatriChat";
-import { YatriOrb } from "./YatriOrb";
+import { YatriAvatar, type YatriMood } from "./YatriAvatar";
 import { YatriTerminal } from "./YatriTerminal";
 
 type Tab = "chat" | "terminal";
@@ -15,6 +15,7 @@ type Tab = "chat" | "terminal";
 export default function YatriPanel({ onClose }: { onClose: () => void }) {
   const [tab, setTab] = useState<Tab>("chat");
   const [mode, setMode] = useState<AskMode | null>(null);
+  const [mood, setMood] = useState<YatriMood>("idle");
   const panel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function YatriPanel({ onClose }: { onClose: () => void }) {
   return (
     <div ref={panel} tabIndex={-1} role="dialog" aria-label="Yatri, the Tour India assistant" className={cn("no-print outline-none", styles.panel)}>
       <header className={styles.panelHead}>
-        <YatriOrb large />
+        <YatriAvatar large mood={mood} />
         <div className="min-w-0 flex-1">
           <p className="font-display text-lg leading-tight">Yatri</p>
           <p className="flex items-center gap-1.5 text-xs text-muted">
@@ -50,7 +51,7 @@ export default function YatriPanel({ onClose }: { onClose: () => void }) {
           <X className="size-5" aria-hidden />
         </button>
       </header>
-      {tab === "chat" ? <YatriChat onNavigate={onClose} onMode={setMode} /> : <YatriTerminal onClose={onClose} />}
+      {tab === "chat" ? <YatriChat onNavigate={onClose} onMode={setMode} onMood={setMood} /> : <YatriTerminal onClose={onClose} />}
     </div>
   );
 }
