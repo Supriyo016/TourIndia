@@ -42,8 +42,21 @@ const logRules = {
 const collections = {
   contact_messages: {
     required: ["name", "email", "subject", "message", "status", "createdAt"],
-    properties: { name: str(80), email: str(254), subject: str(120), message: str(3000), status: { enum: ["new", "read", "closed"] }, createdAt: { bsonType: "date" } },
-    indexes: [[{ createdAt: -1 }, {}]],
+    // Contact messages are support tickets. "read" is the pre-ticket status, kept for old records.
+    properties: {
+      name: str(80),
+      email: str(254),
+      subject: str(120),
+      message: str(3000),
+      reference: str(12),
+      category: { enum: ["general", "correction", "bug", "feature", "accessibility", "account", "privacy", "copyright", "other"] },
+      priority: { enum: ["low", "normal", "high", "urgent"] },
+      status: { enum: ["new", "under_review", "in_progress", "resolved", "closed", "read"] },
+      assignedTo: str(36),
+      notes: { bsonType: "array", maxItems: 100 },
+      createdAt: { bsonType: "date" },
+    },
+    indexes: [[{ createdAt: -1 }, {}], [{ reference: 1 }, { unique: true, partialFilterExpression: { reference: { $type: "string" } } }], [{ status: 1, createdAt: -1 }, {}], [{ assignedTo: 1, status: 1 }, {}]],
   },
   newsletter_subscribers: {
     required: ["email", "consentedAt", "status"],
@@ -218,6 +231,20 @@ try {
     for (const [keys, options] of indexes) await db.collection(name).createIndex(keys, options);
     console.log(`ready: ${name}`);
   }
+
+  // One-off migration: contact messages from before tickets get a reference, category and priority.
+  const tickets = db.collection("contact_messages");
+  const alphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const part = () => Array.from({ length: 4 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+  let migrated = 0;
+  for await (const old of tickets.find({ reference: { $exists: false } }, { projection: { _id: 1, status: 1 } })) {
+    await tickets.updateOne(
+      { _id: old._id },
+      { $set: { reference: `S-${part()}-${part()}`, category: "general", priority: "normal", notes: [], status: old.status === "read" ? "under_review" : old.status ?? "new" } },
+    );
+    migrated += 1;
+  }
+  if (migrated) console.log(`migrated: ${migrated} contact messages to tickets`);
 } catch (error) {
   // Only the error's name is printed, never the connection string.
   console.error(`db-setup failed: ${error?.name ?? "Error"}${error?.codeName ? ` (${error.codeName})` : ""}`);
