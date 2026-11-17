@@ -6,11 +6,13 @@ import { postJson, useAuth } from "@/components/auth/AuthProvider";
 import { COMMENT_KINDS, TARGET_LABELS, type CommentKind, type Target } from "@/features/community/targets";
 import { site } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { Avatar } from "@/components/profile/Avatar";
 
 interface Comment {
   id: string;
   parentId: string | null;
   authorName: string;
+  author?: { username: string; avatar: string };
   kind: CommentKind;
   body: string;
   helpful: number;
@@ -217,7 +219,14 @@ export function CommunityPanel({ target, title, path }: { target: Target; title:
   const renderComment = (comment: Comment, isReply = false) => (
     <article key={comment.id} className={cn("rounded-[var(--radius-md)] border border-line bg-surface p-4", isReply && "ml-6 border-dashed")}>
       <header className="flex flex-wrap items-center gap-x-2 text-sm">
-        <span className="font-semibold text-ink">{comment.authorName}</span>
+        {comment.author ? (
+          <a href={`/u/${comment.author.username}`} className="inline-flex items-center gap-1.5 font-semibold text-ink hover:underline">
+            <Avatar id={comment.author.avatar} size={24} />
+            {comment.authorName}
+          </a>
+        ) : (
+          <span className="font-semibold text-ink">{comment.authorName}</span>
+        )}
         {!isReply && <span className="tag tag-editorial">{COMMENT_KINDS[comment.kind]}</span>}
         <time dateTime={comment.createdAt} className="text-muted">
           {when(comment.createdAt)}
@@ -317,7 +326,7 @@ export function CommunityPanel({ target, title, path }: { target: Target; title:
                 <Composer onSubmit={post} />
               ) : (
                 <p className="text-sm">
-                  <a href="/account" className="link-text">Add your name to your profile</a> to post.
+                  <a href="/profile/details" className="link-text">Add your name to your profile</a> to post.
                 </p>
               )
             ) : (

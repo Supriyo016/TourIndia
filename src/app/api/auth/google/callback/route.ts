@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const meta = metaFrom(request);
     const session = await createSession(user._id, "user", meta);
     await securityEvent({ action: "login.google", outcome: "ok", actorId: user._id, country: meta.country, detail: meta.device });
-    const target = user.profileComplete ? saved.returnTo : `/account?welcome=1&next=${encodeURIComponent(saved.returnTo)}`;
+    const target = user.profileComplete ? saved.returnTo : `/profile/details?welcome=1&next=${encodeURIComponent(saved.returnTo)}`;
     const response = done(target);
     setSessionCookie(response, request, session);
     return response;

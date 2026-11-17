@@ -368,7 +368,9 @@ test.describe("accounts and community", () => {
     const robots = await (await page.request.get("/robots.txt")).text();
     expect(robots).toMatch(/Disallow: \/admin/);
     expect(robots).toMatch(/Disallow: \/account/);
+    expect(robots).toMatch(/Disallow: \/profile/);
     await page.goto("/account");
+    await expect(page).toHaveURL(/\/profile$/);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
   });
 });

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { profileSchema } from "@/features/auth/schemas";
+import { deleteProfile } from "@/features/profile/service";
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { clearSessionCookie, endAllSessions, sessionFromRequest, toPublicUser, type UserDoc } from "@/lib/auth/session";
 import { getStore, STORE_COLLECTIONS, type Doc } from "@/lib/database/store";
@@ -68,6 +69,7 @@ export async function DELETE(request: NextRequest) {
   for (const row of await restrictions.find({ userId: id }).toArray()) {
     await restrictions.updateOne({ _id: row._id }, { $set: { email: "deleted account" } });
   }
+  await deleteProfile(id);
   await store.collection(STORE_COLLECTIONS.users).deleteOne({ _id: id });
   await endAllSessions(id);
   const response = NextResponse.json({ ok: true });

@@ -39,6 +39,8 @@ export interface Store {
 
 export const STORE_COLLECTIONS = {
   users: "users",
+  /** Public-profile details, preferences and privacy choices, one per user (_id is the user id). */
+  profiles: "profiles",
   otps: "otp_codes",
   sessions: "sessions",
   comments: "comments",
@@ -124,7 +126,7 @@ function applyUpdate(doc: Doc, update: Update, inserted: boolean) {
 }
 
 /** Keys that must be unique, as unique indexes enforce in MongoDB. */
-const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"] };
+const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"] };
 
 class MemoryCollection<T extends Doc> implements StoreCollection<T> {
   private docs: T[] = [];

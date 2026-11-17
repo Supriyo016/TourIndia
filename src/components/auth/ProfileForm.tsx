@@ -5,7 +5,7 @@ import { INTERESTS, LANGUAGES, TRAVEL_STYLES } from "@/features/auth/schemas";
 import { STATE_NAMES } from "@/data/state-names";
 import { postJson, useAuth, type SessionUser } from "./AuthProvider";
 
-/** The profile: a display name and optional preferences that tailor suggestions. Shared by the dialog and /account. */
+/** The profile: a display name and optional preferences that tailor suggestions. Shared by the sign-in dialog and /profile/details. */
 export function ProfileForm({ onSaved, submitLabel = "Save profile" }: { onSaved?: (user: SessionUser) => void; submitLabel?: string }) {
   const { user, setUser } = useAuth();
   const [interests, setInterests] = useState<string[]>(user?.interests ?? []);
