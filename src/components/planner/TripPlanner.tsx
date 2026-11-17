@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import { BookmarkPlus, CalendarPlus, Check, Link2, Printer, Sparkles } from "lucide-react";
-import { BackpackerCharacter, DancerCharacter } from "@/components/characters/Characters";
+import { BackpackerCharacter, DancerCharacter } from "@/components/characters/lazy";
 import {
   generateItinerary,
   moveItem,

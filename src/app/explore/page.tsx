@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ElephantCharacter } from "@/components/characters/Characters";
+import { ElephantCharacter } from "@/components/characters/lazy";
 import { IndiaMap } from "@/components/maps/IndiaMap";
 import { MapExplorer } from "@/components/maps/MapExplorer";
 import { DestinationPins, statePreviews } from "@/components/maps/map-data";

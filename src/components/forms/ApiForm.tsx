@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { useForm, type FieldValues, type Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
-import { DancerCharacter } from "@/components/characters/Characters";
+import { DancerCharacter } from "@/components/characters/lazy";
 
 export interface FieldConfig {
   name: string;

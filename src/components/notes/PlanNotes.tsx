@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Download, Plus, Trash2, Undo2 } from "lucide-react";
-import { CompassCharacter } from "@/components/characters/Characters";
+import { CompassCharacter } from "@/components/characters/lazy";
 import { formatLongDate } from "@/features/calendar/calendar";
 import { isNoteList, STORAGE_KEYS, useStoredValue, type PlanNote } from "@/hooks/use-stored-value";
 

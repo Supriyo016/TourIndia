@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DancerCharacter } from "@/components/characters/Characters";
+import { DancerCharacter } from "@/components/characters/lazy";
 import { PageIntro, Photo } from "@/components/ui/primitives";
 import { getState } from "@/data";
 import { artForms } from "@/data/arts";

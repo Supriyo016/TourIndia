@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
 import { Shuffle } from "lucide-react";
-import { CompassCharacter } from "@/components/characters/Characters";
+import { CompassCharacter } from "@/components/characters/lazy";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { monthNames, regions } from "@/data/taxonomy";
 import type { CategoryId, RegionId } from "@/types/content";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { HistorianCharacter } from "@/components/characters/Characters";
+import { HistorianCharacter } from "@/components/characters/lazy";
 import { ExternalLink, Notice, PageIntro, Photo } from "@/components/ui/primitives";
 import { TranslateBar } from "@/components/translate/TranslateBar";
 import { getDestination, getState } from "@/data";

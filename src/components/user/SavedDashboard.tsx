@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Award, Lock, Trash2 } from "lucide-react";
-import { CompassCharacter } from "@/components/characters/Characters";
+import { CompassCharacter } from "@/components/characters/lazy";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { shareHash } from "@/features/itinerary/share";
 import { computeBadges } from "@/features/user/badges";

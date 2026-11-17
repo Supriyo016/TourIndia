@@ -1,4 +1,4 @@
-import { BoatCharacter, TrainCharacter } from "@/components/characters/Characters";
+import { BoatCharacter, TrainCharacter } from "@/components/characters/lazy";
 import styles from "./scenes.module.css";
 
 /**

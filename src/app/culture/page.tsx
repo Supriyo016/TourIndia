@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DiyaCharacter, FoodCharacter, HistorianCharacter, DancerCharacter } from "@/components/characters/Characters";
+import { DiyaCharacter, FoodCharacter, HistorianCharacter, DancerCharacter } from "@/components/characters/lazy";
 import { PageIntro } from "@/components/ui/primitives";
 import { artForms } from "@/data/arts";
 import { festivals } from "@/data/festivals";

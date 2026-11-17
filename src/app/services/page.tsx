@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Accessibility, Ambulance, BedDouble, Bus, CloudSun, FileCheck2, Hospital, Phone, Plane, Route, ShieldAlert, TrainFront, UserRound, UtensilsCrossed } from "lucide-react";
-import { GuideCharacter } from "@/components/characters/Characters";
+import { GuideCharacter } from "@/components/characters/lazy";
 import { ExternalLink, Notice, PageIntro } from "@/components/ui/primitives";
 
 export const metadata: Metadata = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { CompassCharacter } from "@/components/characters/Characters";
+import { CompassCharacter } from "@/components/characters/lazy";
 
 export default function ErrorPage({ reset }: { error: Error; reset: () => void }) {
   return (
