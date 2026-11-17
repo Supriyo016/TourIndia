@@ -1,4 +1,5 @@
 import "server-only";
+import { audit as appendAudit } from "@/lib/security/audit";
 import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { site } from "@/config/site";
@@ -272,7 +273,8 @@ export async function overridesFor(target: Target): Promise<Record<string, unkno
 // ---- Admin -------------------------------------------------------------------
 
 async function audit(db: Store, admin: UserDoc, action: string, subject: string, detail?: string) {
-  await db.collection(STORE_COLLECTIONS.audit).insertOne({ _id: randomUUID(), adminId: admin._id, adminEmail: admin.email, action, subject, detail, at: new Date() });
+  // The shared, tamper-evident admin log (lib/security/audit).
+  await appendAudit({ actorId: admin._id, actorEmail: admin.email, action, target: subject, detail, outcome: "ok" }, db);
 }
 
 export async function listEdits(status: EditDoc["status"] = "pending") {

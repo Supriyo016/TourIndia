@@ -21,6 +21,24 @@ if (!uri) {
 
 const str = (maxLength) => ({ bsonType: "string", maxLength });
 
+const logRules = {
+  required: ["seq", "action", "outcome", "at", "prevHash", "hash"],
+  properties: {
+    seq: { bsonType: ["int", "long", "double"] },
+    action: str(60),
+    outcome: { enum: ["ok", "denied", "failed"] },
+    actorId: str(36),
+    actorEmail: str(254),
+    target: str(120),
+    detail: str(300),
+    country: str(2),
+    at: { bsonType: "date" },
+    prevHash: str(64),
+    hash: str(64),
+  },
+  indexes: [[{ seq: -1 }, {}], [{ at: -1 }, {}], [{ actorId: 1, at: -1 }, {}]],
+};
+
 const collections = {
   contact_messages: {
     required: ["name", "email", "subject", "message", "status", "createdAt"],
@@ -72,8 +90,18 @@ const collections = {
   },
   sessions: {
     required: ["userId", "role", "createdAt", "expiresAt"],
-    properties: { userId: str(36), role: { enum: ["user", "admin"] }, createdAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },
-    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }], [{ userId: 1 }, {}]],
+    properties: {
+      userId: str(36),
+      role: { enum: ["user", "admin"] },
+      createdAt: { bsonType: "date" },
+      expiresAt: { bsonType: "date" },
+      publicId: str(20),
+      device: str(60),
+      country: str(2),
+      lastSeenAt: { bsonType: "date" },
+      mfaAt: { bsonType: "date" },
+    },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }], [{ userId: 1 }, {}], [{ publicId: 1 }, {}]],
   },
 
   // Community. Counts live in target_stats so pages never scan whole collections.
@@ -130,10 +158,20 @@ const collections = {
     properties: { commentId: str(36), userId: str(36), reason: str(20), createdAt: { bsonType: "date" } },
     indexes: [],
   },
-  audit_log: {
-    required: ["adminId", "action", "subject", "at"],
-    properties: { adminId: str(36), action: str(40), subject: str(100), at: { bsonType: "date" } },
-    indexes: [[{ at: -1 }, {}]],
+  // Admin actions and security events: append-only, each record chained to the one before by hash.
+  // Records from before the chain (adminId/subject, no seq) were written under the old rules and stay valid.
+  audit_log: logRules,
+  security_events: logRules,
+  // Admin roles beyond the built-in ones, and who holds which roles (plus their MFA record).
+  admin_roles: {
+    required: ["name", "permissions", "createdAt"],
+    properties: { name: str(40), description: str(200), permissions: { bsonType: "array", maxItems: 40, items: str(40) }, createdAt: { bsonType: "date" } },
+    indexes: [[{ name: 1 }, { unique: true }]],
+  },
+  admin_members: {
+    required: ["email", "roles", "createdAt"],
+    properties: { email: str(254), roles: { bsonType: "array", maxItems: 20, items: str(40) }, createdAt: { bsonType: "date" } },
+    indexes: [[{ email: 1 }, { unique: true }]],
   },
   booking_requests: {
     required: ["reference", "status", "createdAt"],

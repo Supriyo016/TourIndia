@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { AdminActions } from "@/components/admin/AdminActions";
 import { adminOverview, listComments, listEdits, type CommentDoc, type EditDoc } from "@/features/community/service";
-import { currentSession } from "@/lib/auth/session";
+import { requireAdminPage } from "@/features/admin/guard";
 import { isStoreAvailable } from "@/lib/database/store";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
@@ -61,8 +60,20 @@ export default async function AdminPage() {
   if (!isStoreAvailable()) {
     return <p className="container-x py-14">The database isn&apos;t connected, so there is nothing to moderate yet.</p>;
   }
-  const session = await currentSession();
-  if (!session || session.role !== "admin") redirect("/admin/login");
+  // The admin home: everyone with an admin role lands here; moderation needs its own permission.
+  const { session, access } = await requireAdminPage();
+  if (!access.permissions.has("moderation.manage")) {
+    return (
+      <div className="container-x py-14">
+        <h1>Admin</h1>
+        <p className="mt-2 text-ink-2">Your role doesn&apos;t include moderation. Use the links below for the areas you can manage.</p>
+        <p className="mt-4 flex flex-wrap gap-3">
+          {access.permissions.has("analytics.view") && <Link prefetch={false} href="/admin/dashboard" className="btn btn-primary">Dashboard</Link>}
+          <Link prefetch={false} href="/admin/mfa" className="btn btn-secondary">Authenticator and recovery codes</Link>
+        </p>
+      </div>
+    );
+  }
 
   const [overview, edits, held, hidden, reported] = await Promise.all([adminOverview(), listEdits("pending"), listComments("pending"), listComments("hidden"), listComments("reported")]);
   const queues: [string, string, CommentDoc[]][] = [
@@ -111,7 +122,7 @@ export default async function AdminPage() {
         <ul className="mt-3 divide-y divide-line text-sm">
           {overview.recentAudit.map((entry) => (
             <li key={entry._id} className="py-2">
-              {when(entry.at as Date)} · {String(entry.adminEmail)} · {String(entry.action)} · {String(entry.subject)}
+              {when(entry.at as Date)} · {String(entry.actorEmail ?? entry.adminEmail)} · {String(entry.action)} · {String(entry.target ?? entry.subject ?? "")}
             </li>
           ))}
         </ul>

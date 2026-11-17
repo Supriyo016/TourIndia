@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Dashboard } from "@/components/admin/dashboard/Dashboard";
 import { loadDashboard } from "@/features/admin/load";
-import { currentSession } from "@/lib/auth/session";
+import { requireAdminPage } from "@/features/admin/guard";
 
 export const metadata: Metadata = { title: "Admin dashboard", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 /** Read-only overview for admins. The admin check runs before any figure is read. */
 export default async function AdminDashboardPage() {
-  const session = await currentSession().catch(() => null);
-  if (!session || session.role !== "admin") redirect("/admin/login");
+  const { session } = await requireAdminPage("analytics.view");
 
   const data = await loadDashboard();
   return (

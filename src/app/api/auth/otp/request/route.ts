@@ -3,7 +3,8 @@ import { requestCodeSchema } from "@/features/auth/schemas";
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { isEmailConfigured, sendCodeEmail } from "@/lib/auth/email";
 import { issueCode } from "@/lib/auth/otp";
-import { adminEmails, hmac, isAuthConfigured } from "@/lib/auth/session";
+import { mayRequestAdminCode } from "@/features/admin/rbac";
+import { hmac, isAuthConfigured } from "@/lib/auth/session";
 import { isStoreAvailable } from "@/lib/database/store";
 import { isAllowed } from "@/lib/security/rate-limit";
 
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
   if (!(await isAllowed("otp-email", hmac(`email:${body.email}`), { max: 5, windowSeconds: 3600 }))) {
     return fail(429, "Too many codes for this address. Please wait an hour and try again.");
   }
-  if (body.purpose === "admin" && !adminEmails().has(body.email)) return NextResponse.json(SENT);
+  if (body.purpose === "admin" && !(await mayRequestAdminCode(body.email))) return NextResponse.json(SENT);
 
   try {
     const code = await issueCode(body.email, body.purpose);

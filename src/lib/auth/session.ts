@@ -24,12 +24,39 @@ export interface UserDoc extends Doc {
   lastLoginAt: Date;
 }
 
-interface SessionDoc extends Doc {
+export interface SessionDoc extends Doc {
   userId: string;
   role: Role;
   createdAt: Date;
   expiresAt: Date;
+  /** A random id the user may see (the _id is the token's hash and stays server-side). */
+  publicId?: string;
+  /** Browser family and OS, e.g. "Chrome on Android". Never the full user-agent string. */
+  device?: string;
+  /** Country code from the edge; no IP address is stored. */
+  country?: string;
+  lastSeenAt?: Date;
+  /** Admin sessions: when the authenticator code was last checked in this session. */
+  mfaAt?: Date;
 }
+
+export interface SessionMeta {
+  device?: string;
+  country?: string;
+}
+
+/** "Chrome on Android" from a user-agent header, without keeping the header itself. */
+export function deviceLabel(userAgent: string | null | undefined): string {
+  const ua = userAgent ?? "";
+  const browser = /Edg\//.test(ua) ? "Edge" : /OPR\/|Opera/.test(ua) ? "Opera" : /SamsungBrowser/.test(ua) ? "Samsung Internet" : /Firefox\//.test(ua) ? "Firefox" : /Chrome\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : "Browser";
+  const os = /Android/.test(ua) ? "Android" : /iPhone|iPad|iPod/.test(ua) ? "iOS" : /Windows/.test(ua) ? "Windows" : /Mac OS X|Macintosh/.test(ua) ? "macOS" : /Linux/.test(ua) ? "Linux" : "another system";
+  return `${browser} on ${os}`;
+}
+
+export const metaFrom = (request: NextRequest): SessionMeta => ({
+  device: deviceLabel(request.headers.get("user-agent")),
+  country: request.headers.get("x-vercel-ip-country")?.slice(0, 2) || undefined,
+});
 
 /** What the browser may see about the signed-in person. */
 export interface PublicUser {
@@ -85,7 +112,7 @@ export function adminEmails(): Set<string> {
   return new Set((process.env.ADMIN_EMAILS ?? "").split(",").map((email) => email.trim().toLowerCase()).filter(Boolean));
 }
 
-export async function createSession(userId: string, role: Role): Promise<{ token: string; maxAge: number }> {
+export async function createSession(userId: string, role: Role, meta: SessionMeta = {}): Promise<{ token: string; maxAge: number }> {
   const store = await getStore();
   if (!store) throw new Error("store unavailable");
   const token = randomBytes(32).toString("base64url");
@@ -97,6 +124,9 @@ export async function createSession(userId: string, role: Role): Promise<{ token
     role,
     createdAt: now,
     expiresAt: new Date(now.getTime() + maxAge * 1000),
+    publicId: randomBytes(9).toString("base64url"),
+    lastSeenAt: now,
+    ...meta,
   });
   return { token, maxAge };
 }
@@ -119,18 +149,47 @@ export function clearSessionCookie(response: NextResponse, request: NextRequest)
   response.cookies.set(isHttps(request) ? COOKIE_HOST : COOKIE_DEV, "", { httpOnly: true, secure: isHttps(request), sameSite: "lax", path: "/", maxAge: 0 });
 }
 
-async function resolve(token: string | undefined): Promise<{ user: UserDoc; role: Role; sessionId: string } | null> {
+export interface ResolvedSession {
+  user: UserDoc;
+  role: Role;
+  sessionId: string;
+  publicId?: string;
+  /** Admin sessions: when MFA was last completed, if ever. */
+  mfaAt?: Date;
+}
+
+/** Admin rights need the address on the bootstrap list or an admin_members record with roles. */
+async function stillAdmin(user: UserDoc): Promise<boolean> {
+  if (adminEmails().has(user.email)) return true;
+  const store = await getStore();
+  const member = store ? await store.collection<Doc & { roles?: string[] }>(STORE_COLLECTIONS.adminMembers).findOne({ _id: user._id }) : null;
+  return Boolean(member?.roles?.length);
+}
+
+const SEEN_EVERY_MS = 10 * 60_000;
+
+async function resolve(token: string | undefined): Promise<ResolvedSession | null> {
   if (!token || token.length > 100) return null;
   const store = await getStore();
   if (!store) return null;
   const sessionId = hashToken(token);
-  const session = await store.collection<SessionDoc>(STORE_COLLECTIONS.sessions).findOne({ _id: sessionId });
+  const sessions = store.collection<SessionDoc>(STORE_COLLECTIONS.sessions);
+  const session = await sessions.findOne({ _id: sessionId });
   if (!session || session.expiresAt.getTime() <= Date.now()) return null;
   const user = await store.collection<UserDoc>(STORE_COLLECTIONS.users).findOne({ _id: session.userId });
   if (!user || user.status !== "active") return null;
-  // An admin session needs the address to still be on the admin list.
-  const role: Role = session.role === "admin" && adminEmails().has(user.email) ? "admin" : "user";
-  return { user, role, sessionId };
+  const role: Role = session.role === "admin" && (await stillAdmin(user)) ? "admin" : "user";
+  // "Last active" for the session list, written at most every ten minutes.
+  if (!session.lastSeenAt || Date.now() - session.lastSeenAt.getTime() > SEEN_EVERY_MS) {
+    await sessions.updateOne({ _id: sessionId }, { $set: { lastSeenAt: new Date() } }).catch(() => undefined);
+  }
+  return { user, role, sessionId, publicId: session.publicId, mfaAt: session.mfaAt };
+}
+
+/** Records that this session has just passed the authenticator check. */
+export async function markSessionMfa(sessionId: string): Promise<void> {
+  const store = await getStore();
+  if (store) await store.collection<SessionDoc>(STORE_COLLECTIONS.sessions).updateOne({ _id: sessionId }, { $set: { mfaAt: new Date() } });
 }
 
 // Production reads only the __Host- cookie, which a subdomain can't set.
