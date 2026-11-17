@@ -14,7 +14,9 @@ import "./globals.css";
 
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" });
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree", display: "swap" });
-const wetPaint = Rubik_Wet_Paint({ subsets: ["latin"], weight: "400", variable: "--font-wet-paint", display: "swap" });
+// The wordmark font is 74 KB for two words, so it isn't preloaded: the logo shows in the fallback
+// for a moment rather than holding back the page's main photo on slow connections.
+const wetPaint = Rubik_Wet_Paint({ subsets: ["latin"], weight: "400", variable: "--font-wet-paint", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
