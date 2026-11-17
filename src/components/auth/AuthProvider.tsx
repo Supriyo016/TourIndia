@@ -25,6 +25,8 @@ const AuthContext = createContext<AuthState | null>(null);
 
 // The dialog's code only loads when someone opens it.
 const SignInDialog = dynamic(() => import("./SignInDialog").then((module) => module.SignInDialog), { ssr: false });
+// Keeps saved places on this device in step with the account; loaded after the page is up.
+const SavedSync = dynamic(() => import("@/components/user/SavedSync").then((module) => module.SavedSync), { ssr: false });
 
 /** POSTs JSON to our own API and returns the body, or throws with the server's message. */
 export async function postJson<T = Record<string, unknown>>(url: string, body: unknown, method = "POST"): Promise<T> {
@@ -72,6 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext value={value}>
       {children}
+      {!loading && <SavedSync />}
       {dialog && <SignInDialog reason={dialog.reason} onClose={() => setDialog(null)} />}
     </AuthContext>
   );

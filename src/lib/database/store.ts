@@ -41,6 +41,10 @@ export const STORE_COLLECTIONS = {
   users: "users",
   /** Public-profile details, preferences and privacy choices, one per user (_id is the user id). */
   profiles: "profiles",
+  /** Saved places and passport stamps, one document per user (_id is the user id). */
+  saved: "saved_lists",
+  /** Named lists of places, with optional read-only share links. */
+  collections: "collections",
   otps: "otp_codes",
   sessions: "sessions",
   comments: "comments",
@@ -126,7 +130,7 @@ function applyUpdate(doc: Doc, update: Update, inserted: boolean) {
 }
 
 /** Keys that must be unique, as unique indexes enforce in MongoDB. */
-const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"] };
+const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"], [STORE_COLLECTIONS.collections]: ["shareId"] };
 
 class MemoryCollection<T extends Doc> implements StoreCollection<T> {
   private docs: T[] = [];
@@ -181,7 +185,11 @@ class MemoryCollection<T extends Doc> implements StoreCollection<T> {
     applyUpdate(next, update, inserted);
     this.checkUnique(next, inserted ? undefined : doc);
     if (inserted) this.docs.push(next);
-    else Object.assign(doc, next);
+    else {
+      // Replace in place, so fields removed by $unset really go.
+      for (const key of Object.keys(doc)) if (!(key in next)) delete (doc as Doc)[key];
+      Object.assign(doc, next);
+    }
     return { doc: inserted ? next : doc, before };
   }
 

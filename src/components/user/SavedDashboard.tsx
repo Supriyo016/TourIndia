@@ -7,7 +7,8 @@ import { CompassCharacter } from "@/components/characters/lazy";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { shareHash } from "@/features/itinerary/share";
 import { computeBadges } from "@/features/user/badges";
-import { isSavedTripList, isStringList, STORAGE_KEYS, useFavourites, useStoredValue, type SavedTrip } from "@/hooks/use-stored-value";
+import { isSavedTripList, isStringList, STORAGE_KEYS, useFavourites, useStamps, useStoredValue, type SavedTrip } from "@/hooks/use-stored-value";
+import { Collections } from "./Collections";
 import { cn, formatDate } from "@/lib/utils";
 import type { RegionId } from "@/types/content";
 
@@ -16,14 +17,16 @@ const NO_TRIPS: SavedTrip[] = [];
 
 export function SavedDashboard({
   cards,
+  names,
   stateList,
 }: {
   cards: Record<string, ReactNode>;
+  names: Record<string, string>;
   stateList: { slug: string; name: string; region: RegionId }[];
 }) {
   const { favourites, ready } = useFavourites();
   const [recent] = useStoredValue<string[]>(STORAGE_KEYS.recent, NONE, isStringList);
-  const [stamps, setStamps] = useStoredValue<string[]>(STORAGE_KEYS.stamps, NONE, isStringList);
+  const { stamps, toggle: toggleStamp } = useStamps();
   const [trips, setTrips] = useStoredValue<SavedTrip[]>(STORAGE_KEYS.trips, NO_TRIPS, isSavedTripList);
 
   const badges = computeBadges(stamps, (slug) => stateList.find((state) => state.slug === slug)?.region);
@@ -45,11 +48,13 @@ export function SavedDashboard({
         )}
       </section>
 
+      <Collections names={names} />
+
       <section aria-labelledby="trips">
         <h2 id="trips" className="mb-5">Saved trips</h2>
         {trips.length === 0 ? (
           <p className="text-ink-2">
-            Trips you save from the <Link prefetch={false} href="/planner" className="link-text">planner</Link> will appear here.
+            Trips you save from the <Link prefetch={false} href="/planner" className="link-text">planner</Link> will appear here. They stay in this browser for now.
           </p>
         ) : (
           <ul className="grid gap-3 md:grid-cols-2">
@@ -98,7 +103,7 @@ export function SavedDashboard({
                   type="checkbox"
                   className="size-4 accent-[var(--brand)]"
                   checked={stamps.includes(state.slug)}
-                  onChange={() => setStamps((current) => (current.includes(state.slug) ? current.filter((item) => item !== state.slug) : [...current, state.slug]))}
+                  onChange={() => toggleStamp(state.slug)}
                 />
                 <span>{state.name}</span>
               </label>
