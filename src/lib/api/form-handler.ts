@@ -42,9 +42,9 @@ export function clientAddress(request: NextRequest): string {
 let warnedNoAddress = false;
 
 /** Stops reading as soon as the limit is passed, so a huge body is never held in memory. */
-async function readBody(request: NextRequest): Promise<string | null> {
+async function readBody(request: NextRequest, maxBytes = MAX_BODY_BYTES): Promise<string | null> {
   const declared = Number(request.headers.get("content-length") ?? 0);
-  if (declared > MAX_BODY_BYTES) return null;
+  if (declared > maxBytes) return null;
   if (!request.body) return "";
   const reader = request.body.getReader();
   const decoder = new TextDecoder();
@@ -54,7 +54,7 @@ async function readBody(request: NextRequest): Promise<string | null> {
     const { done, value } = await reader.read();
     if (done) return text + decoder.decode();
     total += value.byteLength;
-    if (total > MAX_BODY_BYTES) {
+    if (total > maxBytes) {
       await reader.cancel();
       return null;
     }
@@ -83,7 +83,7 @@ export function isSameOrigin(request: NextRequest): boolean {
 export async function guardJsonPost(
   request: NextRequest,
   bucket: string,
-  limit: { max: number; windowSeconds: number },
+  limit: { max: number; windowSeconds: number; /** Larger bodies for routes that need them, such as saved trips. */ maxBytes?: number },
 ): Promise<{ raw: string } | NextResponse> {
   if (!isSameOrigin(request)) return fail(403, "This request was not allowed.");
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
@@ -96,7 +96,7 @@ export async function guardJsonPost(
   if (!(await isAllowed(bucket, clientAddress(request), limit))) {
     return fail(429, "Too many attempts. Please wait a while and try again.");
   }
-  const raw = await readBody(request);
+  const raw = await readBody(request, limit.maxBytes);
   if (raw === null) return fail(413, "That submission is too long.");
   return { raw };
 }

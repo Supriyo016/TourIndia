@@ -45,6 +45,8 @@ export const STORE_COLLECTIONS = {
   saved: "saved_lists",
   /** Named lists of places, with optional read-only share links. */
   collections: "collections",
+  /** Trips saved from the planner, one document per trip. */
+  trips: "trips",
   otps: "otp_codes",
   sessions: "sessions",
   comments: "comments",
@@ -130,7 +132,7 @@ function applyUpdate(doc: Doc, update: Update, inserted: boolean) {
 }
 
 /** Keys that must be unique, as unique indexes enforce in MongoDB. */
-const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"], [STORE_COLLECTIONS.collections]: ["shareId"] };
+const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"], [STORE_COLLECTIONS.collections]: ["shareId"], [STORE_COLLECTIONS.trips]: ["shareId"] };
 
 class MemoryCollection<T extends Doc> implements StoreCollection<T> {
   private docs: T[] = [];

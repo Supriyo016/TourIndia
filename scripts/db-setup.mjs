@@ -146,6 +146,22 @@ const collections = {
     },
     indexes: [[{ userId: 1, updatedAt: -1 }, {}], [{ shareId: 1 }, { unique: true, partialFilterExpression: { shareId: { $type: "string" } } }]],
   },
+  // Trips saved from the planner: settings plus the order of items; everything else is rebuilt from the guide.
+  trips: {
+    required: ["userId", "name", "input", "layout", "expenses", "status", "createdAt", "updatedAt"],
+    properties: {
+      userId: str(36),
+      name: str(80),
+      input: { bsonType: "object" },
+      layout: { bsonType: "array", maxItems: 120 },
+      expenses: { bsonType: "object" },
+      status: { enum: ["active", "archived"] },
+      shareId: { bsonType: "string", pattern: "^[A-Za-z0-9_-]{16}$" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, updatedAt: -1 }, {}], [{ shareId: 1 }, { unique: true, partialFilterExpression: { shareId: { $type: "string" } } }]],
+  },
   otp_codes: {
     required: ["codeHash", "attempts", "sentAt", "expiresAt"],
     properties: { codeHash: str(64), attempts: { bsonType: "int" }, sentAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },

@@ -15,7 +15,7 @@ export async function readJson<S extends z.ZodType>(
   request: NextRequest,
   schema: S,
   bucket: string,
-  limit: { max: number; windowSeconds: number },
+  limit: { max: number; windowSeconds: number; maxBytes?: number },
 ): Promise<z.output<S> | NextResponse> {
   const guarded = await guardJsonPost(request, bucket, limit);
   if (guarded instanceof NextResponse) return guarded;

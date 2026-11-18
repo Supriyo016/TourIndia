@@ -11,7 +11,8 @@ const KEPT = [
   ["Anything optional you add", "Home state, interests, preferences and the details on your page. Clear any of it at any time."],
   ["Sign-in sessions", "The device type and country of each session, so you can spot one that isn't you. Sessions end after 30 days."],
   ["Sign-in history", "Recent sign-ins and failed attempts, for your security."],
-  ["What you save", "Saved places, passport stamps and collections. A collection is seen by others only while you keep its read-only link on, and the link never shows who made it."],
+  ["What you save", "Trips, saved places, passport stamps and collections. A trip or collection is seen by others only while you keep its read-only link on, and the link never shows who made it."],
+  ["Trip spending", "Expenses and the names you split them between. Only you see these; they never appear on a shared trip."],
   ["What you post", "Comments, ratings, loves and suggested edits."],
 ] as const;
 

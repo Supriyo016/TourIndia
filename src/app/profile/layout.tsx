@@ -20,7 +20,7 @@ export default async function ProfileLayout({ children }: { children: ReactNode 
   }
   return (
     <div className="container-x py-8 lg:grid lg:grid-cols-[13rem_1fr] lg:gap-8">
-      <aside className="mb-6 lg:mb-0">
+      <aside className="no-print mb-6 lg:mb-0">
         <ProfileNav />
       </aside>
       <div className="min-w-0">{children}</div>

@@ -31,7 +31,7 @@ export function AccountControls() {
       <section aria-labelledby="delete-title" className="card border-danger/40 p-6">
         <h2 id="delete-title" className="text-xl">Delete your account</h2>
         <p className="mt-1 text-sm text-ink-2">
-          Removes your profile, preferences, saved places, collections and their share links, loves, ratings, planning requests and sign-in sessions. Comments you published stay, credited to &ldquo;Former member&rdquo;, so conversations still make sense. This can&apos;t be undone.
+          Removes your profile, preferences, trips, saved places, collections and their share links, loves, ratings, planning requests and sign-in sessions. Comments you published stay, credited to &ldquo;Former member&rdquo;, so conversations still make sense. This can&apos;t be undone.
         </p>
         <form
           className="mt-4 flex flex-wrap items-end gap-3"

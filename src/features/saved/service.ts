@@ -182,8 +182,12 @@ export async function sharedCollection(shareId: string): Promise<{ name: string;
 export async function savedCounts(userId: string) {
   const db = await getStore();
   if (!db) return null;
-  const [saved, collections] = await Promise.all([getSaved(userId), db.collection(STORE_COLLECTIONS.collections).countDocuments({ userId })]);
-  return { places: saved.places.length, stamps: saved.stamps.length, collections };
+  const [saved, collections, trips] = await Promise.all([
+    getSaved(userId),
+    db.collection(STORE_COLLECTIONS.collections).countDocuments({ userId }),
+    db.collection(STORE_COLLECTIONS.trips).countDocuments({ userId, status: "active" }),
+  ]);
+  return { places: saved.places.length, stamps: saved.stamps.length, collections, trips };
 }
 
 export async function deleteSaved(userId: string) {

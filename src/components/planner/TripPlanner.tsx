@@ -15,7 +15,8 @@ import {
   type Diet,
   type TripDay,
 } from "@/features/itinerary/generate";
-import { decodeShared, isValidTripDate, shareHash } from "@/features/itinerary/share";
+import { decodeShared, isValidTripDate, shareHash, storedInput } from "@/features/itinerary/share";
+import { postJson, useAuth } from "@/components/auth/AuthProvider";
 import { isSavedTripList, STORAGE_KEYS, useStoredValue, type SavedTrip } from "@/hooks/use-stored-value";
 import { startCities } from "@/data/start-cities";
 import { interests as interestOptions } from "@/data/taxonomy";
@@ -106,11 +107,16 @@ function subscribeToHash(listener: () => void) {
 export function TripPlanner(props: PlannerProps) {
   const params = useSearchParams();
   const hash = useSyncExternalStore(subscribeToHash, () => window.location.hash, () => "");
-  return <Planner key={`${params.toString()}${hash}`} {...props} initial={readInitialState(params, hash, props.catalogue)} />;
+  // ?trip=<id> means the plan came from "My trips", so saving updates that trip.
+  const editing = /^[0-9a-f-]{36}$/.test(params.get("trip") ?? "") ? params.get("trip") : null;
+  return <Planner key={`${params.toString()}${hash}`} {...props} editing={editing} initial={readInitialState(params, hash, props.catalogue)} />;
 }
 
-function Planner({ catalogue, festivals, states, mapBase, map, initial }: PlannerProps & { initial: InitialState }) {
+function Planner({ catalogue, festivals, states, mapBase, map, initial, editing }: PlannerProps & { initial: InitialState; editing: string | null }) {
   const router = useRouter();
+  const { user } = useAuth();
+  const [savedId, setSavedId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<FormState>(initial.form);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [trip, setTrip] = useState<Itinerary | null>(initial.trip);
@@ -179,6 +185,36 @@ function Planner({ catalogue, festivals, states, mapBase, map, initial }: Planne
     link.download = "tour-india-trip.ics";
     link.click();
     URL.revokeObjectURL(link.href);
+  };
+
+  /** Signed in: saves to the account (or updates the trip being edited). Otherwise: this browser. */
+  const saveTrip = async () => {
+    if (!trip) return;
+    const name = trip.input.destinationSlugs
+      .map((slug) => catalogue.find((item) => item.slug === slug)?.name)
+      .filter(Boolean)
+      .join(", ");
+    if (user) {
+      setSaving(true);
+      try {
+        const plan = { input: storedInput(trip.input), layout: days.map((day) => day.items.map((item) => item.id)) };
+        if (editing) {
+          await postJson("/api/trips", { action: "update-plan", id: editing, ...plan });
+          setSavedId(editing);
+        } else {
+          const { trip: created } = await postJson<{ trip: { id: string } }>("/api/trips", { action: "create", name: name.slice(0, 80), ...plan });
+          setSavedId(created.id);
+        }
+        setStatus("Trip saved to your account.");
+      } catch (problem) {
+        setStatus((problem as Error).message);
+      } finally {
+        setSaving(false);
+      }
+      return;
+    }
+    const stored = setSaved((current) => [{ id: `${Date.now()}`, name, input: trip.input, days, savedAt: new Date().toISOString() }, ...current].slice(0, 20));
+    setStatus(stored ? "Trip saved on this device." : "This browser wouldn't let us save the trip. Use Copy share link to keep it.");
   };
 
   const months = trip?.input.startDate ? [Number(trip.input.startDate.slice(5, 7))] : [];
@@ -373,38 +409,24 @@ function Planner({ catalogue, festivals, states, mapBase, map, initial }: Planne
               >
                 <Link2 className="size-4" aria-hidden /> Copy share link
               </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => {
-                  const name = trip.input.destinationSlugs
-                    .map((slug) => catalogue.find((item) => item.slug === slug)?.name)
-                    .filter(Boolean)
-                    .join(", ");
-                  const stored = setSaved((current) => [
-                    { id: `${Date.now()}`, name, input: trip.input, days, savedAt: new Date().toISOString() },
-                    ...current,
-                  ].slice(0, 20));
-                  setStatus(stored ? "Trip saved on this device." : "This browser wouldn't let us save the trip. Use Copy share link to keep it.");
-                }}
-              >
-                <BookmarkPlus className="size-4" aria-hidden /> Save trip
+              <button type="button" className="btn btn-primary" disabled={saving} onClick={() => void saveTrip()}>
+                <BookmarkPlus className="size-4" aria-hidden /> {user && editing ? "Save changes" : "Save trip"}
               </button>
             </div>
           </div>
 
-          {status.startsWith("Trip saved") && (
+          {status.startsWith("Trip saved") ? (
             <div role="status" className="no-print anim-pop mt-4 flex items-center gap-3 rounded-[var(--radius-md)] bg-brand-soft p-3">
               <DancerCharacter className="h-14 w-auto" />
               <p>
                 <Check className="mr-1 inline size-4" aria-hidden />
-                Saved on this device.{" "}
-                <button type="button" onClick={() => router.push("/saved")} className="link-text cursor-pointer">
-                  View saved trips
+                {savedId ? "Saved to your trips." : "Saved on this device."}{" "}
+                <button type="button" onClick={() => router.push(savedId ? `/profile/trips/${savedId}` : "/saved")} className="link-text cursor-pointer">
+                  {savedId ? "Open the trip" : "View saved trips"}
                 </button>
               </p>
             </div>
-          )}
+          ) : null}
 
           {trip.warnings.length > 0 && (
             <ul className="mt-5 space-y-2">
