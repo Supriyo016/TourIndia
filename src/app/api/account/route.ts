@@ -8,6 +8,7 @@ import { deleteProfile } from "@/features/profile/service";
 import { deleteAttempts } from "@/features/quiz/history";
 import { deleteSaved } from "@/features/saved/service";
 import { deleteTrips } from "@/features/trips/service";
+import { deleteNotifications } from "@/features/notifications/service";
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { clearSessionCookie, endAllSessions, sessionFromRequest, toPublicUser, type UserDoc } from "@/lib/auth/session";
 import { getStore, STORE_COLLECTIONS, type Doc } from "@/lib/database/store";
@@ -82,6 +83,7 @@ export async function DELETE(request: NextRequest) {
   await deleteMemories(id);
   await deleteAttempts(id);
   await deleteAchievements(id);
+  await deleteNotifications(id, store);
   await store.collection(STORE_COLLECTIONS.users).deleteOne({ _id: id });
   await endAllSessions(id);
   const response = NextResponse.json({ ok: true });

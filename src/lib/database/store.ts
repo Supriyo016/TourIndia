@@ -79,6 +79,12 @@ export const STORE_COLLECTIONS = {
   analyticsVisitors: "analytics_visitors",
   /** Core Web Vitals per UTC day, metric and page, written by the analytics beacon and read by the Health page. */
   webVitals: "web_vitals",
+  /** In-app notifications for signed-in people (P8). */
+  notifications: "user_notifications",
+  /** Server error counts for the health page: source and error name only, expire after 30 days (P8). */
+  appErrors: "app_errors",
+  /** History of downloaded backups: counts and checksum, never the data (P8). */
+  backups: "backups",
 } as const;
 
 // ---- In-memory implementation -------------------------------------------------

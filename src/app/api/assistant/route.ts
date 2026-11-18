@@ -6,6 +6,7 @@ import { answerLocally } from "@/features/assistant/knowledge";
 import { guardJsonPost } from "@/lib/api/form-handler";
 import { isAllowed } from "@/lib/security/rate-limit";
 import { createSessionValue, isSessionConfigured, readSession, sessionCookieHeader, verifySessionValue } from "@/lib/security/session";
+import { recordError } from "@/lib/monitoring/errors";
 
 export const maxDuration = 60;
 
@@ -74,6 +75,7 @@ export async function POST(request: NextRequest) {
         finish(reply.text, "ai", reply.toolOutput);
       } catch (error) {
         console.error("[assistant] AI reply failed; answering from the guides:", error instanceof Error ? `${error.name}: ${error.message}` : "unknown error");
+        void recordError("assistant", error);
         if (!request.signal.aborted) finish(answerLocally(question), "guide");
       } finally {
         controller.close();

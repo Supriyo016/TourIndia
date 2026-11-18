@@ -4,6 +4,7 @@ import { isDenied, requireAdminApi } from "@/features/admin/guard";
 import { addNote, TicketError, updateTicket } from "@/features/support/tickets";
 import { CATEGORY_IDS, PRIORITY_IDS, STATUS_IDS } from "@/features/support/types";
 import { readJson, unavailable } from "@/lib/api/json";
+import { reportError } from "@/lib/monitoring/errors";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof TicketError) return NextResponse.json({ error: error.message }, { status: error.status });
-    console.error("[admin support]", error instanceof Error ? error.name : "");
+    void reportError("admin support", error);
     return unavailable();
   }
 }

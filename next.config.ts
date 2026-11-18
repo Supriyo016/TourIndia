@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { redirects } from "./src/config/redirects";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -55,12 +56,8 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
   async redirects() {
-    // Addresses used by the original static site.
-    return [
-      { source: "/index.html", destination: "/", permanent: true },
-      { source: "/AboutUs.html", destination: "/about", permanent: true },
-      { source: "/ContactUs.html", destination: "/contact", permanent: true },
-    ];
+    // Kept in src/config/redirects.ts so the admin SEO centre lists the same ones.
+    return redirects;
   },
 };
 

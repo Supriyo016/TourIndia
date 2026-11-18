@@ -9,6 +9,7 @@ import { contentFor, currentFieldValue } from "./content";
 import { moderate } from "./moderation";
 import { commentLinks } from "@/features/profile/service";
 import { EDITABLE_FIELDS, targetKey, textToField, type CommentKind, type Target } from "./targets";
+import { notify } from "@/features/notifications/service";
 
 export type CommentStatus = "visible" | "pending" | "hidden" | "removed";
 
@@ -309,6 +310,13 @@ export async function decideEdit(id: string, admin: UserDoc, approve: boolean, n
     }
   }
   await audit(db, admin, approve ? "edit.approve" : "edit.reject", edit._id, `${edit.target} ${edit.field}`);
+  await notify(
+    edit.userId,
+    approve
+      ? { kind: "edit", title: `Your suggested edit to ${edit.title} was accepted`, body: "It's live on the page now. Thank you for helping other travellers.", href: edit.path }
+      : { kind: "edit", title: `Your suggested edit to ${edit.title} wasn't accepted`, body: "Editors check every suggestion against sources; this one didn't make it this time.", href: edit.path },
+    db,
+  );
   return edit;
 }
 
@@ -323,6 +331,9 @@ export async function moderateComment(id: string, admin: UserDoc, status: "visib
   const comment = await db.collection<CommentDoc>(STORE_COLLECTIONS.comments).findOne({ _id: id });
   if (!comment) throw new CommunityError("That comment doesn't exist.", 404);
   await setCommentStatus(db, comment, status, note);
+  if (status === "removed" && comment.status !== "removed") {
+    await notify(comment.userId, { kind: "comment", title: "One of your comments was removed", body: "A moderator found it didn't follow the content policy.", href: "/content-policy" }, db);
+  }
   if (status === "visible") await db.collection(STORE_COLLECTIONS.comments).updateOne({ _id: id }, { $set: { reports: 0 } });
   await audit(db, admin, `comment.${status}`, id, note);
 }
