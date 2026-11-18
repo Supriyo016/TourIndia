@@ -236,6 +236,40 @@ const collections = {
     properties: { day: str(10), expiresAt: { bsonType: "date" } },
     indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
   },
+  // Travel memories: private unless one is shared by link. Photos are keys of the site's own gallery images.
+  memories: {
+    required: ["userId", "title", "body", "date", "place", "tags", "photos", "createdAt", "updatedAt"],
+    properties: {
+      userId: str(36),
+      title: str(100),
+      body: str(4000),
+      date: { bsonType: "string", pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+      place: { bsonType: "string", pattern: "^(?:(?:place|state):[a-z0-9-]{1,60})?$" },
+      tags: { bsonType: "array", maxItems: 10, items: str(30) },
+      photos: { bsonType: "array", maxItems: 6, items: str(120) },
+      shareId: { bsonType: "string", pattern: "^[A-Za-z0-9_-]{16}$" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, date: -1 }, {}], [{ shareId: 1 }, { unique: true, partialFilterExpression: { shareId: { $type: "string" } } }]],
+  },
+  // Travel quiz results: the answers, and the matches worked out on the server.
+  quiz_attempts: {
+    required: ["userId", "answers", "matches", "createdAt"],
+    properties: {
+      userId: str(36),
+      answers: str(400),
+      matches: { bsonType: "array", maxItems: 12, items: str(80) },
+      createdAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, createdAt: -1 }, {}]],
+  },
+  // When each achievement was first earned, one document per user (_id is the user id).
+  achievements: {
+    required: ["earned", "updatedAt"],
+    properties: { earned: { bsonType: "object" }, updatedAt: { bsonType: "date" } },
+    indexes: [],
+  },
   otp_codes: {
     required: ["codeHash", "attempts", "sentAt", "expiresAt"],
     properties: { codeHash: str(64), attempts: { bsonType: "int" }, sentAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },

@@ -20,6 +20,7 @@ const FIELDS: Record<Showable, string> = {
   interests: "Interests",
   activity: "How many comments you've posted",
   joined: "When you joined",
+  achievements: "Achievements you've earned",
 };
 
 /** Who can see the public page, and which parts of it. */

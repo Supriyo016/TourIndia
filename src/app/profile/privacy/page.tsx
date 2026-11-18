@@ -15,7 +15,9 @@ const KEPT = [
   ["Your travel passport", "The states you mark as want to visit, exploring or visited, and any visit months you add. Only you see it. Nothing is worked out from your location."],
   ["Plan notes", "The notes you write on the calendar, in the planner or through Yatri. Only you see them; there is no way to share a note."],
   ["Trip spending", "Expenses and the names you split them between. Only you see these; they never appear on a shared trip."],
-  ["What you post", "Comments, ratings, loves and suggested edits."],
+  ["Memories", "Your travel memories: titles, words, dates, places, tags and the gallery photos you pick. Private unless you turn on a read-only link for one, and the link never shows who wrote it."],
+  ["Quiz results and achievements", "Travel quiz answers saved while you're signed in, and the date each achievement was first earned. Achievements show on your page only if you tick them in the choices above."],
+  ["What you post", "Comments, ratings, loves and suggested edits, and the reports you file. My contributions lists them for you."],
 ] as const;
 
 export default async function ProfilePrivacyPage() {
