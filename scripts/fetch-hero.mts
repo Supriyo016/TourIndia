@@ -32,17 +32,56 @@ export const slides: [string, string, string][] = [
   ["amritsar", "Golden Temple (Harmandir Sahib) at night, Amritsar, Punjab, India (2017) 5.jpg", "The Golden Temple at Amritsar lit up at night"],
   ["konark", "Suryamandir at Konark, an unique example of artful stone carving.jpg", "The carved Sun Temple at Konark in Odisha"],
   ["munnar", "Panorama of Munnar Tea Gardens.jpg", "Tea gardens on the hills of Munnar"],
+  // Heritage
+  ["hawa-mahal", "Hawa Mahal in Jaipur in 2016 01.jpg", "The pink sandstone face of the Hawa Mahal over a Jaipur street"],
+  ["mysore-palace", "Glorious Illumination.jpg", "Mysore Palace lit by thousands of bulbs at night"],
+  ["khajuraho", "Vishwanath N-MP-23.jpg", "The carved Vishvanatha Temple at Khajuraho"],
+  ["meenakshi", "Meenakshi Amman West Tower.jpg", "Painted gopurams of the Meenakshi Amman Temple at Madurai"],
+  ["airavatesvara", "Main building of Airavatesvara Temple.jpg", "The Chola-era Airavatesvara Temple at Darasuram under a blue sky"],
+  ["victoria-memorial", "Victoria Memorial situated in Kolkata.jpg", "The white marble Victoria Memorial in Kolkata"],
+  ["red-fort", "Red Fort - Delhi 2014-05-13 3143-3147 Compress.JPG", "The red sandstone walls and Lahori Gate of the Red Fort in Delhi"],
+  ["shore-temple", "Shore temple-Mahabalipuram-Kancheepuram District-Tamil Nadu.jpg", "The Shore Temple at Mahabalipuram by the sea"],
+  // Festivals and traditions
+  ["durga-idol", "Durga Family - Durga Puja Pandal - Singhi Park - Dover Lane - Kolkata 2015-10-21 6208-6210.tif", "Goddess Durga and her family inside a Kolkata Durga Puja pandal"],
+  ["durga-pandal", "Durga Puja Pandal - Ballygunge Sarbojanin Durgotsab - Deshapriya Park - Kolkata 2014-10-02 9096-9099.TIF", "A lit Durga Puja pandal at dusk in Kolkata"],
+  ["holi-vrindavan", "Vrindavan holi 02.jpg", "Flower petals and colour over a Holi crowd in Vrindavan"],
+  ["holi-barsana", "Festival of colors 04.jpg", "Women in red at the Lathmar Holi celebrations near Mathura"],
+  ["kathakali", "Kathakali artists in costume 2023.jpg", "Kathakali artists in full costume and make-up in Kerala"],
+  ["khajuraho-dance", "Khajuraho Dance Festival.jpg", "Classical dancers on stage before the temples at the Khajuraho Dance Festival"],
+  // Food
+  ["kerala-thali", "Kerala thali.jpg", "A Kerala thali of rice and curries on a steel plate"],
+  ["tamil-thali", "Vegetarian Thali (Saapadu) from Tamil Nadu.jpg", "A Tamil Nadu vegetarian saapadu served on a banana leaf"],
+  ["masala-dosa", "Ghee Masala Dosa.jpg", "A crisp ghee masala dosa with chutney and sambar"],
+  ["malpua", "A street vendor preparing Malpua Sweet in Kolkata, India.jpg", "A street cook frying malpua in Kolkata"],
 ];
 
 const stripHtml = (value = "") => value.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function info(file: string) {
+  // Commons throttles bursts, so pause between files and retry when it says so.
+  for (let attempt = 0; attempt < 6; attempt++) {
+    await wait(3000);
+    try {
+      return await lookup(file);
+    } catch (error) {
+      if (!String(error).includes("throttled")) throw error;
+      await wait(15000 * (attempt + 1));
+    }
+  }
+  throw new Error(`Commons kept refusing ${file}`);
+}
+
+async function lookup(file: string) {
   const params = new URLSearchParams({
     action: "query", format: "json", titles: `File:${file}`, prop: "imageinfo",
     iiprop: "url|size|extmetadata", iiextmetadatafilter: "LicenseShortName|LicenseUrl|Artist",
   });
   const response = await fetch(`https://commons.wikimedia.org/w/api.php?${params}`, { headers: { "User-Agent": USER_AGENT } });
-  const page = Object.values((await response.json()).query.pages)[0] as { imageinfo?: { url: string; width: number; extmetadata: Record<string, { value: string }> }[] };
+  const text = await response.text();
+  if (!text.startsWith("{")) throw new Error("throttled");
+  const page = Object.values(JSON.parse(text).query.pages)[0] as { imageinfo?: { url: string; width: number; extmetadata: Record<string, { value: string }> }[] };
   const image = page.imageinfo?.[0];
   if (!image) throw new Error(`Not found: ${file}`);
   return image;
@@ -65,7 +104,7 @@ for (const [key, file, alt] of slides) {
   const response = await fetch(image.url, { headers: { "User-Agent": USER_AGENT } });
   if (!response.ok) throw new Error(`Download failed for ${file}: ${response.status}`);
   const input = Buffer.from(await response.arrayBuffer());
-  const output = await sharp(input, { limitInputPixels: false }).rotate().resize({ width: 3840, withoutEnlargement: true }).webp({ quality: 78 }).toBuffer({ resolveWithObject: true });
+  const output = await sharp(input, { limitInputPixels: false, failOn: "none" }).rotate().resize({ width: 3840, withoutEnlargement: true }).webp({ quality: 78 }).toBuffer({ resolveWithObject: true });
   writeFileSync(join(directory, `${key}.webp`), output.data);
   const blur = await sharp(output.data).resize(16).webp({ quality: 40 }).toBuffer();
 
@@ -81,6 +120,9 @@ for (const [key, file, alt] of slides) {
     licenseUrl: meta("LicenseUrl") || undefined,
     sourceUrl: `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file.replace(/ /g, "_"))}`,
   };
+  // Saved after every photo, so a later failure never loses the credits of finished ones.
+  writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}
+`);
   console.log(`${key}: ${image.width} px original, ${(output.data.length / 1024).toFixed(0)} KB stored`);
   await new Promise((resolve) => setTimeout(resolve, 800));
 }

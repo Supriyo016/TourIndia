@@ -20,22 +20,51 @@ import { foods } from "@/data/food";
 import { stories } from "@/data/stories";
 import { formatMonthRange, monthName } from "@/data/taxonomy";
 import { getImage, type ImageKey } from "@/lib/images";
+import { heroRotation } from "@/lib/rotation";
 
-/** Image, place, region, guide link, then the tagline shown with that slide. */
-const heroSlides: [ImageKey, string, string, string, string][] = [
+/**
+ * The slider's pool: places, heritage, festivals, traditions and food, every photo from an 8K
+ * original (see scripts/fetch-hero.mts). Mixed in this order so each set of slides covers a bit of
+ * everything. The slider shows 12 at a time; half change every 10 days and all within 20 (`heroRotation`).
+ * Image, place, region, guide link, then the tagline shown with that slide.
+ */
+const heroPool: [ImageKey, string, string, string, string][] = [
   ["hero:taj-mahal", "Taj Mahal", "Agra", "/destinations/agra", "Marble that changes colour with the light"],
   ["hero:kerala", "Kumarakom backwaters", "Kerala", "/destinations/alappuzha", "Slow days on palm-lined canals"],
-  ["hero:rajasthan", "Jaisalmer Fort", "Rajasthan", "/destinations/jaisalmer", "A golden fort at the edge of the Thar"],
+  ["hero:durga-idol", "Durga Puja", "Kolkata", "/culture/festivals/durga-puja", "Five days when the city becomes a gallery"],
+  ["hero:kerala-thali", "Kerala thali", "Kerala", "/explore/kerala", "Rice, curries and pickles on one plate"],
   ["hero:ladakh", "Pangong Tso", "Ladakh", "/destinations/leh", "A high lake that changes blue by the hour"],
-  ["hero:varanasi", "The ghats", "Varanasi", "/destinations/varanasi", "Evenings of lamps on the Ganga"],
   ["hero:hampi", "Virupaksha Temple", "Hampi", "/destinations/hampi", "A kingdom's capital, carved in granite"],
+  ["hero:holi-vrindavan", "Holi", "Vrindavan", "/culture/festivals/holi", "Petals and colour in Krishna's town"],
+  ["hero:masala-dosa", "Masala dosa", "South India", "/culture/food/masala-dosa", "Crisp, golden and made to order"],
+  ["hero:rajasthan", "Jaisalmer Fort", "Rajasthan", "/destinations/jaisalmer", "A golden fort at the edge of the Thar"],
+  ["hero:meenakshi", "Meenakshi Amman Temple", "Madurai", "/destinations/madurai", "Towers crowded with painted gods"],
+  ["hero:kathakali", "Kathakali", "Kerala", "/culture/arts/kathakali", "Stories told in paint, silk and gesture"],
   ["hero:goa", "Coco Beach", "Goa", "/destinations/goa", "Sea, spice and Konkan sunsets"],
-  ["hero:amritsar", "The Golden Temple", "Amritsar", "/destinations/amritsar", "A shrine where everyone eats together"],
-  ["hero:northeast", "Mawphlang", "Meghalaya", "/destinations/shillong-sohra", "Hills where the clouds come to rest"],
-  ["hero:udaipur", "Lake Pichola", "Udaipur", "/destinations/udaipur", "Palaces that float on a lake"],
-  ["hero:konark", "Sun Temple", "Konark", "/destinations/puri-konark", "A stone chariot for the sun god"],
+  ["hero:varanasi", "The ghats", "Varanasi", "/destinations/varanasi", "Evenings of lamps on the Ganga"],
+  ["hero:hawa-mahal", "Hawa Mahal", "Jaipur", "/destinations/jaipur", "A palace of windows built for the breeze"],
+  ["hero:durga-pandal", "A Durga Puja pandal", "Kolkata", "/culture/festivals/durga-puja", "Lights, crowds and art on every street"],
+  ["hero:tamil-thali", "Saapadu", "Tamil Nadu", "/explore/tamil-nadu", "A banana-leaf feast from the south"],
   ["hero:munnar", "Tea gardens", "Munnar", "/destinations/munnar", "Hills combed green with tea"],
+  ["hero:khajuraho", "Vishvanatha Temple", "Khajuraho", "/destinations/khajuraho", "Stone that tells a thousand stories"],
+  ["hero:holi-barsana", "Holi in Braj", "Uttar Pradesh", "/culture/festivals/holi", "Colour, songs and play in the lanes of Braj"],
+  ["hero:malpua", "Malpua", "Kolkata", "/culture/food", "Sweet fritters, fresh from the pan"],
+  ["hero:northeast", "Mawphlang", "Meghalaya", "/destinations/shillong-sohra", "Hills where the clouds come to rest"],
+  ["hero:mysore-palace", "Mysore Palace", "Mysuru", "/destinations/mysuru", "Lit by thousands of bulbs on festival nights"],
+  ["hero:khajuraho-dance", "Khajuraho Dance Festival", "Madhya Pradesh", "/destinations/khajuraho", "Classical dance before lit temples"],
+  ["hero:udaipur", "Lake Pichola", "Udaipur", "/destinations/udaipur", "Palaces that float on a lake"],
+  ["hero:red-fort", "Red Fort", "Delhi", "/destinations/delhi", "Where Mughal Delhi kept court"],
+  ["hero:amritsar", "The Golden Temple", "Amritsar", "/destinations/amritsar", "A shrine where everyone eats together"],
+  ["hero:victoria-memorial", "Victoria Memorial", "Kolkata", "/destinations/kolkata", "White marble beside the Maidan"],
+  ["hero:konark", "Sun Temple", "Konark", "/destinations/puri-konark", "A stone chariot for the sun god"],
+  ["hero:shore-temple", "Shore Temple", "Mahabalipuram", "/destinations/mahabalipuram", "A temple facing the Bay of Bengal"],
+  ["hero:airavatesvara", "Airavatesvara Temple", "Darasuram, Tamil Nadu", "/culture/heritage", "A Chola masterpiece in granite"],
 ];
+
+/** Slides on screen at once. */
+const SLIDES_SHOWN = 12;
+/** Rebuilt every six hours, so the slider moves on within hours of each 10-day change (India time). */
+export const revalidate = 21600;
 
 
 const tips = [
@@ -45,10 +74,12 @@ const tips = [
 ] as const;
 
 export default function HomePage() {
-  const slides: HeroSlide[] = heroSlides.flatMap(([key, place, region, href, tagline]) => {
+  // Only slides whose photo is in the library, so a missing file never leaves a gap.
+  const pool = heroPool.flatMap(([key, place, region, href, tagline]) => {
     const image = getImage(key);
     return image ? [{ src: image.src, blur: image.blur, alt: image.alt, place, region, href, tagline, credit: `${image.author}, ${image.license}` }] : [];
   });
+  const slides: HeroSlide[] = heroRotation(pool.length, SLIDES_SHOWN).map((index) => pool[index]!);
 
   const month = new Date().getMonth() + 1;
   const seasonal = inSeason(month).filter((item) => item.popular).slice(0, 4);
