@@ -3,31 +3,46 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import type { PassportEntry } from "@/features/saved/passport";
 import { setSyncAccount } from "@/features/saved/sync";
 import { storedInput } from "@/features/itinerary/share";
-import { isSavedTripList, isStringList, readStored, STORAGE_KEYS, writeStored, type SavedTrip } from "@/hooks/use-stored-value";
+import { isNoteList, isSavedTripList, isStringList, readPassport, readStored, STORAGE_KEYS, writeStored, type PlanNote, type SavedTrip } from "@/hooks/use-stored-value";
 
-type Lists = { places: string[]; stamps: string[] };
+type Lists = { places: string[]; passport: PassportEntry[]; notes: PlanNote[] };
 type Offer = { extra: Lists; account: Lists; trips: SavedTrip[] };
 
-const post = async (body: unknown) => {
-  const response = await fetch(body && typeof body === "object" && "trips" in body ? "/api/trips" : "/api/saved", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+const EMPTY: Lists = { places: [], passport: [], notes: [] };
+
+const post = async (url: string, body: unknown) => {
+  const response = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const data = (await response.json().catch(() => ({}))) as Record<string, unknown> & { error?: string };
   if (!response.ok) throw new Error(data.error ?? "That didn't work. Please try again.");
   return data;
 };
 
-const local = (): Lists => ({ places: readStored<string[]>(STORAGE_KEYS.favourites, [], isStringList), stamps: readStored<string[]>(STORAGE_KEYS.stamps, [], isStringList) });
+async function getJson<T>(url: string): Promise<T | null> {
+  const response = await fetch(url, { cache: "no-store" });
+  return response.ok ? ((await response.json()) as T) : null;
+}
+
+const local = (): Lists => ({
+  places: readStored<string[]>(STORAGE_KEYS.favourites, [], isStringList),
+  passport: readPassport(),
+  notes: readStored<PlanNote[]>(STORAGE_KEYS.notes, [], isNoteList),
+});
 
 function mirror(lists: Lists, owner: string | undefined) {
   writeStored(STORAGE_KEYS.favourites, lists.places);
-  writeStored(STORAGE_KEYS.stamps, lists.stamps);
+  writeStored(STORAGE_KEYS.passport, lists.passport);
+  writeStored(STORAGE_KEYS.notes, lists.notes);
   writeStored(STORAGE_KEYS.savedOwner, owner);
 }
 
+const count = (n: number, one: string, many: string) => (n ? `${n} ${n === 1 ? one : many}` : "");
+
 /**
- * Keeps saved places and passport stamps on this device in step with the signed-in account, and
- * offers to move trips saved in this browser into it.
+ * Keeps saved places, the passport and plan notes on this device in step with the signed-in
+ * account, and offers to move trips saved in this browser into it.
  *
  * - Signed in: the device shows the account's lists. If a guest had saved things here first,
  *   it asks before adding them, so a shared computer never mixes two people's lists silently.
@@ -48,23 +63,33 @@ export function SavedSync() {
     const owner = readStored<string>(STORAGE_KEYS.savedOwner, "");
     if (!userId) {
       setSyncAccount(null);
-      if (owner) mirror({ places: [], stamps: [] }, undefined);
+      if (owner) mirror(EMPTY, undefined);
       return;
     }
     let cancelled = false;
-    fetch("/api/saved", { cache: "no-store" })
-      .then((response) => (response.ok ? (response.json() as Promise<Lists>) : null))
-      .then((account) => {
-        if (cancelled || !account) return;
-        const device = owner ? { places: [], stamps: [] } : local();
-        const extra = owner === userId ? { places: [], stamps: [] } : { places: device.places.filter((s) => !account.places.includes(s)), stamps: device.stamps.filter((s) => !account.stamps.includes(s)) };
+    Promise.all([getJson<{ places: string[]; passport: PassportEntry[] }>("/api/saved"), getJson<{ notes: PlanNote[] }>("/api/notes")])
+      .then(([saved, notes]) => {
+        if (cancelled || !saved || !notes) return;
+        const account: Lists = { places: saved.places, passport: saved.passport, notes: notes.notes };
+        // A device holding another account's copy has nothing of its own to offer.
+        const device = owner ? EMPTY : local();
+        const states = new Set(account.passport.map((entry) => entry.state));
+        const noteIds = new Set(account.notes.map((note) => note.id));
+        const extra: Lists =
+          owner === userId
+            ? EMPTY
+            : {
+                places: device.places.filter((s) => !account.places.includes(s)),
+                passport: device.passport.filter((entry) => !states.has(entry.state)),
+                notes: device.notes.filter((note) => !noteIds.has(note.id) && Boolean(note.title.trim() || note.body.trim())),
+              };
         // Trips saved in this browser before trips were kept in accounts are offered whoever saved them.
         const trips = readStored<SavedTrip[]>(STORAGE_KEYS.trips, [], isSavedTripList);
-        if (!extra.places.length && !extra.stamps.length && !trips.length) {
-          mirror({ places: account.places, stamps: account.stamps }, userId);
+        if (!extra.places.length && !extra.passport.length && !extra.notes.length && !trips.length) {
+          mirror(account, userId);
           setSyncAccount(userId);
         } else {
-          setOffer({ extra, account: { places: account.places, stamps: account.stamps }, trips });
+          setOffer({ extra, account, trips });
         }
       })
       .catch(() => undefined);
@@ -82,15 +107,24 @@ export function SavedSync() {
       let lists = offer.account;
       if (add) {
         const merged: Lists = { ...lists };
-        for (const kind of ["places", "stamps"] as const) {
-          if (!offer.extra[kind].length) continue;
-          const data = (await post({ action: "merge", kind, slugs: offer.extra[kind] })) as Partial<Lists>;
-          merged[kind] = data[kind] ?? merged[kind];
+        if (offer.extra.places.length) {
+          const data = (await post("/api/saved", { action: "merge", kind: "places", slugs: offer.extra.places })) as { places?: string[] };
+          merged.places = data.places ?? merged.places;
+        }
+        if (offer.extra.passport.length) {
+          const data = (await post("/api/saved", { action: "passport-merge", entries: offer.extra.passport })) as { passport?: PassportEntry[] };
+          merged.passport = data.passport ?? merged.passport;
+        }
+        if (offer.extra.notes.length) {
+          // Five at a time keeps each request small; past the 100-note limit the rest are skipped.
+          const notes = offer.extra.notes.map(({ id, title, body, date }) => ({ id, title: title.slice(0, 120), body: body.slice(0, 5000), date }));
+          for (let i = 0; i < notes.length; i += 5) await post("/api/notes", { action: "import", notes: notes.slice(i, i + 5) });
+          merged.notes = (await getJson<{ notes: PlanNote[] }>("/api/notes"))?.notes ?? merged.notes;
         }
         lists = merged;
         // Five at a time keeps each request small; a trip that can't be rebuilt is skipped by the server.
         const plans = offer.trips.map((trip) => ({ name: (trip.name || "Trip").slice(0, 80), input: storedInput(trip.input), layout: trip.days.map((day) => day.items.map((item) => item.id)) }));
-        for (let i = 0; i < plans.length; i += 5) await post({ action: "import", trips: plans.slice(i, i + 5) });
+        for (let i = 0; i < plans.length; i += 5) await post("/api/trips", { action: "import", trips: plans.slice(i, i + 5) });
       }
       mirror(lists, userId);
       if (offer.trips.length) {
@@ -108,11 +142,12 @@ export function SavedSync() {
   };
 
   const parts = [
-    offer.extra.places.length ? `${offer.extra.places.length} ${offer.extra.places.length === 1 ? "place" : "places"}` : "",
-    offer.extra.stamps.length ? `${offer.extra.stamps.length} passport ${offer.extra.stamps.length === 1 ? "stamp" : "stamps"}` : "",
-    offer.trips.length ? `${offer.trips.length} ${offer.trips.length === 1 ? "trip" : "trips"}` : "",
+    count(offer.extra.places.length, "place", "places"),
+    count(offer.extra.passport.length, "passport state", "passport states"),
+    count(offer.extra.notes.length, "note", "notes"),
+    count(offer.trips.length, "trip", "trips"),
   ].filter(Boolean);
-  const total = offer.extra.places.length + offer.extra.stamps.length + offer.trips.length;
+  const total = offer.extra.places.length + offer.extra.passport.length + offer.extra.notes.length + offer.trips.length;
   const list = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}` : parts[0];
 
   return (

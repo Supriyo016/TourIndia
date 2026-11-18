@@ -16,7 +16,7 @@ export function IndiaMap({ className, linked = true }: { className?: string; lin
         );
         if (!linked) {
           return (
-            <g key={item.slug} className="map-state" data-region={state?.region}>
+            <g key={item.slug} className="map-state" data-slug={item.slug} data-region={state?.region}>
               {shape}
             </g>
           );
