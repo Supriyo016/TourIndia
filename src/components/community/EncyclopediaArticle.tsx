@@ -116,7 +116,7 @@ export function EncyclopediaArticle({ target, title, summary, source, path, guid
             {imageKey && (
               <figure>
                 <div className="relative aspect-[4/3]">
-                  <Photo imageKey={imageKey} sizes="(min-width: 1024px) 20rem, 92vw" />
+                  <Photo imageKey={imageKey} sizes="(min-width: 1024px) 20rem, 92vw" fixed />
                 </div>
                 {lead && <figcaption className="border-b border-line px-4 py-2 text-center text-sm text-ink-2">{lead.alt}</figcaption>}
               </figure>

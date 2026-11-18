@@ -93,3 +93,12 @@ describe("monthly page photos", () => {
     }
   });
 });
+
+describe("the encyclopedia lead photo", () => {
+  it("is always fixed, so its picture, caption and credit match and never repeat a reference photo", async () => {
+    const { readFileSync } = await import("node:fs");
+    const source = readFileSync("src/components/community/EncyclopediaArticle.tsx", "utf8");
+    for (const call of source.match(/<Photo\b[^>]*\/>|<PhotoCredit\b[^>]*\/>/g) ?? []) expect(call, call).toMatch(/\bfixed\b/);
+    expect(source).toMatch(/getImage\(imageKey, \{ fixed: true \}\)/);
+  });
+});
