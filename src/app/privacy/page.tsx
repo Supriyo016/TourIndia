@@ -32,7 +32,7 @@ export default function PrivacyPage() {
             </p>
           ),
         },
-        { heading: "How long we keep it", body: <p>Contact messages and story submissions are kept for as long as needed to deal with them. Newsletter addresses are kept until you ask to be removed through the contact form. Rate-limit records expire automatically within hours.</p> },
+        { heading: "How long we keep it", body: <p>Contact messages and story submissions are kept for as long as needed to deal with them. Newsletter addresses are kept until you ask to be removed through the contact form. Rate-limit records expire automatically within hours. In-app notifications are cleared after six months. We keep private backup copies of the database so it can be recovered after a fault; when you delete your account it is removed from the site at once, but stays in backups made before then until those copies are deleted.</p> },
         { heading: "Your choices", body: <p>You can ask to see, correct or delete information you have sent us through the <Link prefetch={false} className="link-text" href="/contact">contact form</Link>. Rights under the laws that apply to you, including India&apos;s Digital Personal Data Protection Act, 2023, are unaffected by this policy.</p> },
       ]}
     />

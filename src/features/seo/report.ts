@@ -224,7 +224,7 @@ export function metadataIssues(pages: PageMeta[]): Issue[] {
   for (const page of pages) {
     if (page.inheritsTitle && page.path !== "/") issues.push({ path: page.path, problem: "No title of its own (uses the site's default)" });
     else if (page.fullTitle.length > TITLE_MAX) issues.push({ path: page.path, problem: `Title longer than ${TITLE_MAX} characters`, detail: `${page.fullTitle.length}: ${page.fullTitle}` });
-    else if (page.title.length < TITLE_MIN && page.path !== "/") issues.push({ path: page.path, problem: `Title shorter than ${TITLE_MIN} characters`, detail: page.title });
+    else if (page.fullTitle.length < TITLE_MIN && page.path !== "/") issues.push({ path: page.path, problem: `Title shorter than ${TITLE_MIN} characters`, detail: page.fullTitle });
     if (page.inheritsDescription && page.path !== "/") issues.push({ path: page.path, problem: "No description of its own (uses the site's default)" });
     else if (page.description && page.description.length > DESCRIPTION_MAX) issues.push({ path: page.path, problem: `Description longer than ${DESCRIPTION_MAX} characters`, detail: `${page.description.length} characters` });
     else if (page.description && page.description.length < DESCRIPTION_MIN) issues.push({ path: page.path, problem: `Description shorter than ${DESCRIPTION_MIN} characters`, detail: page.description });

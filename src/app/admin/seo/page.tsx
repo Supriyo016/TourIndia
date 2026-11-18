@@ -64,7 +64,7 @@ export default async function AdminSeoPage() {
         Worked out just now from the site&apos;s own pages and data: {report.pagesChecked} pages, {report.sitemapUrls} addresses in the sitemap and {report.imagesChecked} images. This is a report; fixes are made in the content files for now.
       </p>
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-6 grid gap-5 [&>*]:min-w-0">
         <IssueTable
           id="meta-title"
           title="Titles and descriptions"

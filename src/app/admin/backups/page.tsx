@@ -26,7 +26,7 @@ export default async function AdminBackupsPage() {
         The free database plan has no automatic backups, and the site has no file storage, so a backup is a file you download and keep. Make one at least weekly and before any big change. It&apos;s compressed JSON with a checksum, so you can check later that it&apos;s complete and unchanged.
       </p>
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-6 grid gap-5 [&>*]:min-w-0">
         <section aria-labelledby="create-title" className="card p-5">
           <h2 id="create-title" className="text-xl">
             Create a backup

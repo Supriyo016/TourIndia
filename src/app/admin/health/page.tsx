@@ -37,7 +37,7 @@ export default async function AdminHealthPage() {
       <h1>Health</h1>
       <p className="mt-1 max-w-prose text-ink-2">Checked when you open this page. Vercel runs and restarts the servers itself, so there&apos;s nothing to restart here; this is what can be measured.</p>
 
-      <div className="mt-6 grid gap-5 xl:grid-cols-2">
+      <div className="mt-6 grid gap-5 xl:grid-cols-2 [&>*]:min-w-0">
         <Panel id="db-title" title="Database" Icon={Database}>
           {database.mode === "memory" && <p>Running on the in-memory store (development). Nothing is kept after the server stops.</p>}
           {database.mode === "none" && <p className="font-semibold text-danger">Not connected: {database.problem}</p>}

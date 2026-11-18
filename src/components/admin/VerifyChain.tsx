@@ -42,7 +42,7 @@ export function VerifyChain({ kind }: { kind: "audit" | "security" }) {
         {result && result.checked === 0 && <p className="text-ink-2">There are no chained records to check yet.</p>}
         {result && result.checked > 0 && result.problems.length === 0 && (
           <p>
-            <strong>All {result.checked} records check out.</strong> <span className="text-ink-2">No edits or gaps{result.checked >= result.limit ? ` in the latest ${result.limit}` : ""}.</span>
+            <strong>{result.checked === 1 ? "The 1 record checks out." : `All ${result.checked} records check out.`}</strong> <span className="text-ink-2">No edits or gaps{result.checked >= result.limit ? ` in the latest ${result.limit}` : ""}.</span>
           </p>
         )}
         {result && result.problems.length > 0 && (
