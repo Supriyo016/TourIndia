@@ -17,9 +17,10 @@ const preferenceKeys = [
 
 const featureKeys = [
   ["ti-favourites", "Places on your wishlist"],
-  ["ti-passport", "States you have marked as visited"],
+  ["ti-passport-v2", "Your travel passport: states you want to visit, are exploring or have visited"],
   ["ti-trips", "Itineraries you saved"],
   ["ti-notes", "Your plan notes"],
+  ["ti-saved-owner", "Which account the saved places, passport and notes on this device belong to"],
   ["ti-packing", "Your packing checklist"],
   ["ti-expenses", "Trip expenses you entered"],
 ];
@@ -68,7 +69,7 @@ export default function CookiesPage() {
         ) },
         { heading: "Things you choose to save", body: (
           <>
-            <p>When you press save, or write a note, the result is kept in your browser&apos;s local storage so the feature can work. It never leaves your device unless you share a trip link.</p>
+            <p>When you press save, or write a note, the result is kept in your browser&apos;s local storage so the feature can work. If you&apos;re not signed in, it never leaves your device unless you share a trip link. If you are, saved places, your passport and notes are also kept in your account, and the browser holds a copy so the page responds straight away; signing out removes that copy.</p>
             <KeyList items={featureKeys} />
           </>
         ) },

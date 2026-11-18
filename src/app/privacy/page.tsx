@@ -21,7 +21,7 @@ export default function PrivacyPage() {
             </>
           ),
         },
-        { heading: "What stays on your device", body: <p>Your wishlist, saved trips, notes, passport stamps, packing list, expenses, and, if you allow it, recently viewed places, theme and Yatri chat are kept in your browser&apos;s local storage. They are not sent to us. Clearing your browser data removes them. See <Link prefetch={false} className="link-text" href="/cookies">cookies and storage</Link>.</p> },
+        { heading: "What stays on your device", body: <p>If you&apos;re not signed in, your wishlist, saved trips, notes, travel passport, packing list, expenses, and, if you allow it, recently viewed places, theme and Yatri chat are kept in your browser&apos;s local storage. They are not sent to us. Clearing your browser data removes them. Once you sign in, saved places, collections, trips, notes and your passport are kept in your account instead, so you can see them on any device; only you can see your notes and passport, and deleting your account deletes them. See <Link prefetch={false} className="link-text" href="/cookies">cookies and storage</Link>.</p> },
         { heading: "The Yatri assistant", body: <p>The messages you send to Yatri pass through our server to Groq, which runs the AI model that writes the reply and processes them under its own terms. We do not store your conversations on our server. Please don&apos;t share personal, payment or passport details with Yatri. Replies can be wrong, so check anything important.</p> },
         { heading: "Abuse prevention", body: <p>To limit automated abuse of forms, we store a salted hash of your IP address for a short period. We do not store the address itself.</p> },
         {

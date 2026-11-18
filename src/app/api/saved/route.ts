@@ -7,11 +7,14 @@ import {
   LIMITS,
   listCollections,
   mergeItems,
+  mergePassport,
   SavedError,
+  setPassport,
   setItem,
   shareCollection,
   updateCollection,
 } from "@/features/saved/service";
+import { MONTH_PATTERN, PASSPORT_STATUSES } from "@/features/saved/passport";
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { sessionFromRequest } from "@/lib/auth/session";
 import { getStore } from "@/lib/database/store";
@@ -24,11 +27,17 @@ const kind = z.enum(["places", "stamps"]);
 const id = z.string().uuid();
 const name = z.string().trim().min(1, "Give it a name.").max(60, "Keep the name under 60 characters.");
 const note = z.string().trim().max(300, "Keep the note under 300 characters.");
+const status = z.enum(PASSPORT_STATUSES);
+const month = z.string().regex(MONTH_PATTERN, "Choose a month and a year.");
 const places = z.array(slug).max(LIMITS.perCollection, `A collection can hold up to ${LIMITS.perCollection} places.`);
 
 const schema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("set"), kind, slug, on: z.boolean() }).strict(),
   z.object({ action: z.literal("merge"), kind, slugs: z.array(slug).max(LIMITS.places) }).strict(),
+  z.object({ action: z.literal("passport-set"), state: slug, status: status.nullable(), month: month.nullable().default(null) }).strict(),
+  z
+    .object({ action: z.literal("passport-merge"), entries: z.array(z.object({ state: slug, status, month: month.optional() }).strict()).max(LIMITS.stamps) })
+    .strict(),
   z.object({ action: z.literal("collection-create"), name, note: note.default(""), places: places.default([]) }).strict(),
   z.object({ action: z.literal("collection-update"), id, name: name.optional(), note: note.optional(), places: places.optional() }).strict(),
   z.object({ action: z.literal("collection-delete"), id }).strict(),
@@ -56,6 +65,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ [body.kind]: await setItem(userId, body.kind, body.slug, body.on) }, { headers: PRIVATE });
       case "merge":
         return NextResponse.json({ [body.kind]: await mergeItems(userId, body.kind, body.slugs) }, { headers: PRIVATE });
+      case "passport-set":
+        return NextResponse.json({ passport: await setPassport(userId, body.state, body.status, body.month) }, { headers: PRIVATE });
+      case "passport-merge":
+        return NextResponse.json({ passport: await mergePassport(userId, body.entries) }, { headers: PRIVATE });
       case "collection-create":
         return NextResponse.json({ collection: await createCollection(userId, body) }, { status: 201, headers: PRIVATE });
       case "collection-update":

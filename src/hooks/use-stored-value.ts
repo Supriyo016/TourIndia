@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useMemo, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
 import type { Expense, TripDay, TripInput } from "@/features/itinerary/generate";
-import { pushChange, type SavedKind } from "@/features/saved/sync";
+import { applyPassport, fromStamps, isPassportList, visitedStates, type PassportEntry, type PassportStatus } from "@/features/saved/passport";
+import { pushChange, pushPassport, type SavedKind } from "@/features/saved/sync";
 
 const listeners = new Map<string, Set<() => void>>();
 
@@ -99,7 +100,10 @@ export function useStoredValue<T>(
 export const STORAGE_KEYS = {
   favourites: "ti-favourites",
   recent: "ti-recent",
+  /** The passport before statuses: a list of visited states. Moved into `passport` on first use. */
   stamps: "ti-passport",
+  /** Passport entries: a status (and optional visit month) per state. */
+  passport: "ti-passport-v2",
   trips: "ti-trips",
   packing: "ti-packing",
   expenses: "ti-expenses",
@@ -222,7 +226,41 @@ export function useFavourites() {
   return { favourites: items, toggle, ready };
 }
 
-export function useStamps() {
-  const { items, toggle, ready } = useSyncedList("stamps", STORAGE_KEYS.stamps, false);
-  return { stamps: items, toggle, ready };
+const NO_ENTRIES: PassportEntry[] = [];
+
+/** Moves stamps from before the passport had statuses: each one was a visit. */
+export function migrateStamps() {
+  const old = readStored<string[] | null>(STORAGE_KEYS.stamps, null, isStringList);
+  if (old === null) return;
+  const current = readStored<PassportEntry[]>(STORAGE_KEYS.passport, NO_ENTRIES, isPassportList);
+  const have = new Set(current.map((entry) => entry.state));
+  writeStored(STORAGE_KEYS.passport, [...current, ...fromStamps(old).filter((entry) => !have.has(entry.state))]);
+  writeStored(STORAGE_KEYS.stamps, undefined);
+}
+
+export const readPassport = () => {
+  migrateStamps();
+  return readStored<PassportEntry[]>(STORAGE_KEYS.passport, NO_ENTRIES, isPassportList);
+};
+
+/**
+ * The travel passport on this device; once someone signs in it mirrors their account, and each
+ * change is also sent to the server (and undone here if refused).
+ */
+export function usePassport() {
+  useEffect(migrateStamps, []);
+  const [entries, setEntries, ready] = useStoredValue<PassportEntry[]>(STORAGE_KEYS.passport, NO_ENTRIES, isPassportList);
+  const stamps = useMemo(() => visitedStates(entries), [entries]);
+  const set = useCallback(
+    (state: string, status: PassportStatus | null, month: string | null = null) => {
+      const before = readStored<PassportEntry[]>(STORAGE_KEYS.passport, NO_ENTRIES, isPassportList);
+      setEntries((current) => applyPassport(current, state, status, month));
+      const previous = before.find((entry) => entry.state === state);
+      pushPassport(state, status, month, () =>
+        setEntries((current) => (previous ? applyPassport(current, state, previous.status, previous.month ?? null) : applyPassport(current, state, null, null))),
+      );
+    },
+    [setEntries],
+  );
+  return { entries, stamps, set, ready };
 }

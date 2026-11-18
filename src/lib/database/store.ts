@@ -47,6 +47,8 @@ export const STORE_COLLECTIONS = {
   collections: "collections",
   /** Trips saved from the planner, one document per trip. */
   trips: "trips",
+  /** Private plan notes (calendar, planner, Yatri), one document per note. */
+  notes: "user_notes",
   otps: "otp_codes",
   sessions: "sessions",
   comments: "comments",

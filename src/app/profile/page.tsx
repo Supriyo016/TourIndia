@@ -2,7 +2,9 @@ import Link from "next/link";
 import { CheckCircle2, Circle } from "lucide-react";
 import { DeviceCounts } from "@/components/profile/DeviceCounts";
 import { MyRequests } from "@/components/profile/MyRequests";
+import { PassportSummary } from "@/components/profile/PassportSummary";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { noteCount } from "@/features/notes/service";
 import { getProfile } from "@/features/profile/service";
 import { savedCounts } from "@/features/saved/service";
 import { currentSession } from "@/lib/auth/session";
@@ -20,7 +22,7 @@ export default async function ProfileOverviewPage() {
   const session = await currentSession().catch(() => null);
   if (!session) return null;
   const { user } = session;
-  const [profile, counts] = await Promise.all([getProfile(user._id), savedCounts(user._id).catch(() => null)]);
+  const [profile, counts, notes] = await Promise.all([getProfile(user._id), savedCounts(user._id).catch(() => null), noteCount(user._id).catch(() => null)]);
   const visible = profile.privacy.visibility !== "private" && profile.username;
 
   const steps = [
@@ -78,7 +80,8 @@ export default async function ProfileOverviewPage() {
         </section>
       )}
 
-      <DeviceCounts account={counts} />
+      <DeviceCounts account={counts && { places: counts.places, stamps: counts.stamps, collections: counts.collections, trips: counts.trips, notes: notes ?? 0 }} />
+      {counts && <PassportSummary entries={counts.passport} />}
       <MyRequests />
     </div>
   );

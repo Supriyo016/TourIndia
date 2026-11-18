@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { profileSchema } from "@/features/auth/schemas";
+import { deleteNotes } from "@/features/notes/service";
 import { deleteProfile } from "@/features/profile/service";
 import { deleteSaved } from "@/features/saved/service";
 import { deleteTrips } from "@/features/trips/service";
@@ -74,6 +75,7 @@ export async function DELETE(request: NextRequest) {
   await deleteProfile(id);
   await deleteSaved(id);
   await deleteTrips(id);
+  await deleteNotes(id);
   await store.collection(STORE_COLLECTIONS.users).deleteOne({ _id: id });
   await endAllSessions(id);
   const response = NextResponse.json({ ok: true });

@@ -121,16 +121,40 @@ const collections = {
     },
     indexes: [[{ username: 1 }, { unique: true, partialFilterExpression: { username: { $type: "string" } } }]],
   },
-  // Saved places and passport stamps, one per user (_id is the user id).
+  // Saved places and the passport, one per user (_id is the user id). stamps = the visited states.
   saved_lists: {
     required: ["places", "stamps", "updatedAt"],
     properties: {
       _id: { bsonType: "string" },
       places: { bsonType: "array", maxItems: 500, items: str(80) },
       stamps: { bsonType: "array", maxItems: 60, items: str(80) },
+      passport: {
+        bsonType: "array",
+        maxItems: 60,
+        items: {
+          bsonType: "object",
+          required: ["state", "status"],
+          additionalProperties: false,
+          properties: { state: str(80), status: { enum: ["want", "exploring", "visited"] }, month: { bsonType: "string", pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$" } },
+        },
+      },
       updatedAt: { bsonType: "date" },
     },
     indexes: [],
+  },
+  // Private plan notes, one per note. noteId is made by the browser and is unique per person.
+  user_notes: {
+    required: ["userId", "noteId", "title", "body", "date", "createdAt", "updatedAt"],
+    properties: {
+      userId: str(36),
+      noteId: { bsonType: "string", pattern: "^[A-Za-z0-9_-]{1,40}$" },
+      title: str(120),
+      body: str(5000),
+      date: { bsonType: ["string", "null"], pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, noteId: 1 }, { unique: true }], [{ userId: 1, createdAt: -1 }, {}]],
   },
   // Named lists of places. shareId is the read-only link's address while sharing is on.
   collections: {
@@ -310,6 +334,16 @@ try {
     migrated += 1;
   }
   if (migrated) console.log(`migrated: ${migrated} contact messages to tickets`);
+
+  // One-off migration: passport stamps from before statuses become visits.
+  const saved = db.collection("saved_lists");
+  let passports = 0;
+  for await (const old of saved.find({ passport: { $exists: false } }, { projection: { _id: 1, stamps: 1 } })) {
+    const stamps = [...new Set(Array.isArray(old.stamps) ? old.stamps : [])].filter((state) => typeof state === "string");
+    await saved.updateOne({ _id: old._id, passport: { $exists: false } }, { $set: { passport: stamps.map((state) => ({ state, status: "visited" })) } });
+    passports += 1;
+  }
+  if (passports) console.log(`migrated: ${passports} passports to statuses`);
 } catch (error) {
   // Only the error's name is printed, never the connection string.
   console.error(`db-setup failed: ${error?.name ?? "Error"}${error?.codeName ? ` (${error.codeName})` : ""}`);

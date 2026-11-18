@@ -4,18 +4,19 @@ import { useMemo, useState } from "react";
 import { Download, Plus, Trash2, Undo2 } from "lucide-react";
 import { CompassCharacter } from "@/components/characters/lazy";
 import { formatLongDate } from "@/features/calendar/calendar";
-import { isNoteList, STORAGE_KEYS, useStoredValue, type PlanNote } from "@/hooks/use-stored-value";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { newNoteId, useNoteProblem, usePlanNotes } from "@/hooks/use-plan-notes";
+import type { PlanNote } from "@/hooks/use-stored-value";
 
-const NONE: PlanNote[] = [];
+export { usePlanNotes };
+
 const MAX_NOTES = 100;
 
-export function usePlanNotes() {
-  return useStoredValue<PlanNote[]>(STORAGE_KEYS.notes, NONE, isNoteList);
-}
-
-/** Free-form trip notes, autosaved in this browser. Used on the calendar and in the planner. */
+/** Free-form trip notes, autosaved (in the account when signed in). Used on the calendar and in the planner. */
 export function PlanNotes({ selectedDate = null, compact = false }: { selectedDate?: string | null; compact?: boolean }) {
   const [notes, setNotes, ready] = usePlanNotes();
+  const syncProblem = useNoteProblem();
+  const { user } = useAuth();
   const [query, setQuery] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -41,7 +42,7 @@ export function PlanNotes({ selectedDate = null, compact = false }: { selectedDa
       return;
     }
     const stored = setNotes((current) => [
-      { id: `${Date.now()}`, title: title.trim() || "Untitled plan", body: body.trim(), date: selectedDate, updatedAt: new Date().toISOString() },
+      { id: newNoteId(), title: title.trim() || "Untitled plan", body: body.trim(), date: selectedDate, updatedAt: new Date().toISOString() },
       ...current,
     ]);
     setProblem(stored ? "" : "This browser wouldn't let us save the note.");
@@ -83,6 +84,7 @@ export function PlanNotes({ selectedDate = null, compact = false }: { selectedDa
         </div>
         {selectedDate && <p className="field-hint">This note will be attached to {formatLongDate(selectedDate)}.</p>}
         {problem && <p role="alert" className="field-error">{problem}</p>}
+        {syncProblem && <p role="alert" className="field-error">{syncProblem} Your notes now show what&apos;s saved in your account.</p>}
         <button type="submit" className="btn btn-primary"><Plus className="size-4" aria-hidden /> Add note</button>
       </form>
 
@@ -122,7 +124,10 @@ export function PlanNotes({ selectedDate = null, compact = false }: { selectedDa
         {ready && notes.length === 0 ? (
           <div className="flex items-center gap-3 text-[0.97rem] text-ink-2">
             <CompassCharacter className="h-14 w-14 shrink-0" />
-            <p>No notes yet. Everything you write here is saved in this browser as you type.</p>
+            <p>
+              No notes yet.{" "}
+              {user ? "Everything you write here is saved to your account as you type, and only you can see it." : "Everything you write here is saved in this browser as you type. Sign in to keep your notes on every device."}
+            </p>
           </div>
         ) : visible.length === 0 && ready ? (
           <p className="text-ink-2">No notes match.</p>

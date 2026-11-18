@@ -3,6 +3,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { destinations, states } from "@/data";
 import { moderate } from "@/features/community/moderation";
 import { getStore, STORE_COLLECTIONS, type Doc } from "@/lib/database/store";
+import { applyPassport, fromStamps, isVisitMonth, visitedStates, type PassportEntry, type PassportStatus } from "./passport";
 
 /**
  * Saved places, passport stamps and collections for signed-in people. Guests keep the same
@@ -19,7 +20,10 @@ export const isKnown = (kind: SavedKind, slug: string) => (kind === "places" ? P
 
 export interface SavedDoc extends Doc {
   places: string[];
+  /** The visited states, kept alongside the passport for anything that only needs visits. */
   stamps: string[];
+  /** Per-state status. Missing on lists saved before the passport had statuses (see fromStamps). */
+  passport?: PassportEntry[];
   updatedAt: Date;
 }
 
@@ -60,39 +64,82 @@ async function store() {
 
 const view = (c: CollectionDoc): CollectionView => ({ id: c._id, name: c.name, note: c.note, places: c.places, shareId: c.shareId ?? null, updatedAt: c.updatedAt.toISOString() });
 
-export async function getSaved(userId: string): Promise<{ places: string[]; stamps: string[] }> {
+export async function getSaved(userId: string): Promise<{ places: string[]; stamps: string[]; passport: PassportEntry[] }> {
   const doc = await (await store()).collection<SavedDoc>(STORE_COLLECTIONS.saved).findOne({ _id: userId });
   // Drops anything whose guide has since been removed.
-  return { places: (doc?.places ?? []).filter((s) => isKnown("places", s)), stamps: (doc?.stamps ?? []).filter((s) => isKnown("stamps", s)) };
+  const passport = (doc?.passport ?? fromStamps(doc?.stamps ?? [])).filter((entry) => isKnown("stamps", entry.state));
+  return { places: (doc?.places ?? []).filter((s) => isKnown("places", s)), stamps: visitedStates(passport), passport };
 }
 
-async function write(userId: string, kind: SavedKind, next: string[]) {
-  if (next.length > LIMITS[kind]) throw new SavedError(kind === "places" ? `You can save up to ${LIMITS.places} places.` : "That's more stamps than there are states.", 422);
+async function writePlaces(userId: string, next: string[]) {
+  if (next.length > LIMITS.places) throw new SavedError(`You can save up to ${LIMITS.places} places.`, 422);
   await (await store())
     .collection<SavedDoc>(STORE_COLLECTIONS.saved)
-    .updateOne({ _id: userId }, { $set: { [kind]: next, updatedAt: new Date() }, $setOnInsert: { [kind === "places" ? "stamps" : "places"]: [] } }, { upsert: true });
+    .updateOne({ _id: userId }, { $set: { places: next, updatedAt: new Date() }, $setOnInsert: { stamps: [] } }, { upsert: true });
+}
+
+async function writePassport(userId: string, next: PassportEntry[]) {
+  if (next.length > LIMITS.stamps) throw new SavedError("That's more states than there are.", 422);
+  await (await store())
+    .collection<SavedDoc>(STORE_COLLECTIONS.saved)
+    .updateOne({ _id: userId }, { $set: { passport: next, stamps: visitedStates(next), updatedAt: new Date() }, $setOnInsert: { places: [] } }, { upsert: true });
+}
+
+function checkEntry(state: string, status: PassportStatus | null, month: string | null | undefined) {
+  if (!isKnown("stamps", state)) throw new SavedError("That isn't a state or Union Territory.", 422);
+  if (month && status !== "visited") throw new SavedError("Only a visit can have a month.", 422);
+  if (month && !isVisitMonth(month)) throw new SavedError("Choose a month between 1950 and now.", 422);
+}
+
+/** Sets one state's passport status, or removes it with null. */
+export async function setPassport(userId: string, state: string, status: PassportStatus | null, month: string | null = null) {
+  checkEntry(state, status, month);
+  const next = applyPassport((await getSaved(userId)).passport, state, status, month);
+  await writePassport(userId, next);
+  return next;
+}
+
+/** Adds a browser's passport to the account. States the account already has keep the account's status. */
+export async function mergePassport(userId: string, entries: PassportEntry[]) {
+  const current = (await getSaved(userId)).passport;
+  const have = new Set(current.map((entry) => entry.state));
+  const incoming: PassportEntry[] = [];
+  for (const entry of entries) {
+    if (have.has(entry.state) || !isKnown("stamps", entry.state)) continue;
+    // A bad month is dropped rather than losing the visit.
+    const month = entry.status === "visited" && entry.month && isVisitMonth(entry.month) ? entry.month : null;
+    incoming.push(applyPassport([], entry.state, entry.status, month)[0]!);
+    have.add(entry.state);
+  }
+  if (!incoming.length) return current;
+  const next = [...current, ...incoming].slice(0, LIMITS.stamps);
+  await writePassport(userId, next);
+  return next;
 }
 
 /** Adds or removes one item. Newest places go first, like the heart button on this device. */
 export async function setItem(userId: string, kind: SavedKind, slug: string, on: boolean) {
   if (!isKnown(kind, slug)) throw new SavedError(kind === "places" ? "That place isn't in the guide." : "That isn't a state or Union Territory.", 422);
+  // A stamp is a visit in the passport (kept for browsers still running the older page).
+  if (kind === "stamps") return visitedStates(await setPassport(userId, slug, on ? "visited" : null));
   const current = (await getSaved(userId))[kind];
   const has = current.includes(slug);
   if (has === on) return current;
-  const next = on ? (kind === "places" ? [slug, ...current] : [...current, slug]) : current.filter((item) => item !== slug);
-  await write(userId, kind, next);
+  const next = on ? [slug, ...current] : current.filter((item) => item !== slug);
+  await writePlaces(userId, next);
   return next;
 }
 
 /** Adds a browser's list to the account, keeping what the account already has. Unknown items are ignored. */
 export async function mergeItems(userId: string, kind: SavedKind, slugs: string[]) {
+  if (kind === "stamps") return visitedStates(await mergePassport(userId, fromStamps(slugs)));
   const current = (await getSaved(userId))[kind];
   const have = new Set(current);
   const incoming = [...new Set(slugs)].filter((slug) => isKnown(kind, slug) && !have.has(slug));
   if (!incoming.length) return current;
-  const next = kind === "places" ? [...incoming, ...current] : [...current, ...incoming];
-  await write(userId, kind, next.slice(0, LIMITS[kind]));
-  return next.slice(0, LIMITS[kind]);
+  const next = [...incoming, ...current].slice(0, LIMITS.places);
+  await writePlaces(userId, next);
+  return next;
 }
 
 function cleanText(label: string, value: string) {
@@ -187,7 +234,7 @@ export async function savedCounts(userId: string) {
     db.collection(STORE_COLLECTIONS.collections).countDocuments({ userId }),
     db.collection(STORE_COLLECTIONS.trips).countDocuments({ userId, status: "active" }),
   ]);
-  return { places: saved.places.length, stamps: saved.stamps.length, collections, trips };
+  return { places: saved.places.length, stamps: saved.stamps.length, collections, trips, passport: saved.passport };
 }
 
 export async function deleteSaved(userId: string) {
