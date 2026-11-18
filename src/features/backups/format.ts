@@ -21,7 +21,8 @@ export const BACKUP_FORMAT = "tour-india-backup";
 export const BACKUP_VERSION = 1;
 
 /** Never exported: sign-in codes, session token hashes, rate-limit counters, caches and the backup history itself. */
-export const EXCLUDED_COLLECTIONS = new Set<string>([STORE_COLLECTIONS.otps, STORE_COLLECTIONS.sessions, COLLECTIONS.rateLimits, STORE_COLLECTIONS.translations, STORE_COLLECTIONS.appErrors, STORE_COLLECTIONS.backups]);
+// Today's analytics visitor keys are left out too: they expire in two days and only exist to count unique visitors.
+export const EXCLUDED_COLLECTIONS = new Set<string>([STORE_COLLECTIONS.otps, STORE_COLLECTIONS.sessions, COLLECTIONS.rateLimits, STORE_COLLECTIONS.translations, STORE_COLLECTIONS.appErrors, STORE_COLLECTIONS.backups, STORE_COLLECTIONS.analyticsVisitors]);
 
 /** Fields removed before export because they are secrets: admins' encrypted authenticator secrets and recovery-code hashes. */
 export const STRIPPED_FIELDS: Record<string, string[]> = { [STORE_COLLECTIONS.adminMembers]: ["mfa"] };

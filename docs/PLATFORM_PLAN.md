@@ -46,10 +46,10 @@ Each phase ends with type check, lint, unit and security tests, browser tests, a
 - [x] **P4 Profile core:** `/profile` dashboard, personal information (avatar and cover once storage exists), preferences and personalisation, privacy settings, saved items server-side with guest migration, collections with read-only share links. *(P4a: identity, preferences, privacy, public page. P4b: saved items, collections, share links.)*
 - [x] **P5 Trips and passport:** Trip Planner saved server-side, My Trips (states, day plans, expenses vs estimates, duplicate, archive, PDF and calendar export, read-only sharing), personal calendar and notes, Travel Passport (want to visit / visited / exploring, India map colours, original stamp designs, progress). *(P5a: trips. P5b: calendar, notes and the passport.)*
 - [x] **P6 Analytics:** consent-aware beacon, collection API, aggregates, admin dashboards (traffic, geography, devices, pages, features, search including zero-result searches, journeys), CSV export.
-- [ ] **P7 Memories and achievements:** memories (private by default, photos, tags, timeline and gallery, scrapbook PDF), quiz history and achievements, My Contributions.
-- [ ] **P8 Monitoring:** application and security log centre, health (uptime check, error rate, Core Web Vitals from the beacon), SEO centre (metadata, alt text, broken links, redirects), notifications (in-app; email once a domain exists), backups (daily export, history, verify, guarded restore).
+- [x] **P7 Memories and achievements:** memories (private by default, photos, tags, timeline and gallery, scrapbook PDF), quiz history and achievements, My Contributions.
+- [x] **P8 Monitoring:** application and security log centre, health (uptime check, error rate, Core Web Vitals from the beacon), SEO centre (metadata, alt text, broken links, redirects), notifications (in-app; email once a domain exists), backups (daily export, history, verify, guarded restore).
 - [x] **P9 Advanced:** CMS (versioned layer, workflow, scheduling, preview), media manager, improvement engine (evidence-based recommendations with review states), Yatri administration (feedback, unanswered questions, usage), settings and feature flags, maintenance mode.
-- [ ] **P10 Integration and final testing:** cross-module flows, permissions matrix tests, cross-user access tests, accessibility, performance, documentation (API, permissions, deployment, maintenance).
+- [x] **P10 Integration and final testing:** cross-module flows, permissions matrix tests, cross-user access tests, accessibility, performance, documentation (API, permissions, deployment, maintenance).
 
 ## 5. Owner decisions (2026-11-17)
 
@@ -201,3 +201,13 @@ Each phase ends with type check, lint, unit and security tests, browser tests, a
 **Owner notes**
 - Set `CRON_SECRET` (a long random value) in Vercel and add the cron when merging, or scheduled versions go live only when the page is next rebuilt or an admin presses "Publish due versions now".
 - Maintenance mode blocks the public site and public APIs; to undo it, sign in at `/admin/login` and use Settings. If you're ever locked out, delete the `maintenance` field of the `site` document in `site_settings` in Atlas.
+
+### P10: integration and final testing (2026-11-18)
+
+- **Merged** P5b, P6, P7, P8 and P9, built in parallel, onto one branch. The overlaps were all "both added something" (collections, database rules, account deletion, admin and profile menus, the overview page, the plan) and keep both sides; the profile overview now shows the account counts, notes, the passport summary and achievements together.
+- **Found and fixed while integrating:** the SEO centre's noindex list didn't know about shared memories (`/m/…`) or the maintenance page; backups would have included today's analytics visitor keys (now left out, like sign-in codes and sessions). Checked that achievements count only passport states marked visited, now that P5b keeps per-state statuses.
+- **New cross-module tests** (`tests/security/integration.test.ts`): every admin and cron route (18 routes, every method) refuses signed-out visitors and ordinary members; the passport feeds achievements correctly; deleting an account leaves nothing personal in any collection (only the append-only logs and ban history keep a record, without the address).
+- **Scheduled publishing:** `vercel.json` adds the daily job for `/api/cron/content` (00:30 UTC). It needs `CRON_SECRET` in Vercel.
+- **Documentation:** [OPERATIONS.md](OPERATIONS.md) (deploys, settings, the daily job, routine checks, what to do when something goes wrong, privacy commitments); [PERMISSIONS.md](PERMISSIONS.md) and [ROUTES.md](ROUTES.md), generated from the code by `npx tsx scripts/gen-platform-docs.mts` so they can't drift.
+- **Checks:** type check, lint, 518 unit and security tests, the production build and all 81 browser tests pass on the combined code (two browser tests updated for the version-2 consent cookie and the passport status picker).
+

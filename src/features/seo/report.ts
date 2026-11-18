@@ -79,6 +79,8 @@ export const NOINDEX_PAGES: { path: string; why: string }[] = [
   { path: "/admin/*", why: "Admin area" },
   { path: "/appeal", why: "Account appeals" },
   { path: "/c/[shareId]", why: "Shared collections (private links)" },
+  { path: "/m/[shareId]", why: "Shared memories (private links)" },
+  { path: "/maintenance", why: "Maintenance notice" },
   { path: "/profile/*", why: "Personal profile" },
   { path: "/saved", why: "Personal saved places" },
   { path: "/t/[shareId]", why: "Shared trips (private links)" },
