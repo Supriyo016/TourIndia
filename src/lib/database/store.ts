@@ -67,6 +67,12 @@ export const STORE_COLLECTIONS = {
   tickets: "contact_messages",
   bookings: "booking_requests",
   translations: "translations",
+  /** Analytics: raw beacon events (expire after 90 days), daily totals (kept), and today's visitor hashes (expire after 2 days). */
+  analyticsEvents: "analytics_events",
+  analyticsDaily: "analytics_daily",
+  analyticsVisitors: "analytics_visitors",
+  /** Core Web Vitals per UTC day, metric and page, written by the analytics beacon and read by the Health page. */
+  webVitals: "web_vitals",
 } as const;
 
 // ---- In-memory implementation -------------------------------------------------

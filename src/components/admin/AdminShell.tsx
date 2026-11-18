@@ -1,10 +1,11 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Gauge, Inbox, KeyRound, LayoutDashboard, LifeBuoy, MessageSquareWarning, Users, UsersRound } from "lucide-react";
+import { BarChart3, Gauge, Inbox, KeyRound, LayoutDashboard, LifeBuoy, MessageSquareWarning, Users, UsersRound } from "lucide-react";
 import type { Permission } from "@/features/admin/permissions";
 
 const SECTIONS: { href: string; label: string; needs?: Permission; Icon: typeof Gauge }[] = [
   { href: "/admin/dashboard", label: "Dashboard", needs: "analytics.view", Icon: LayoutDashboard },
+  { href: "/admin/analytics", label: "Analytics", needs: "analytics.view", Icon: BarChart3 },
   { href: "/admin/users", label: "Users", needs: "users.view", Icon: Users },
   { href: "/admin/queue", label: "Moderation queue", needs: "moderation.manage", Icon: Inbox },
   { href: "/admin", label: "Comments and edits", needs: "moderation.manage", Icon: MessageSquareWarning },

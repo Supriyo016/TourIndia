@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/ui/LegalPage";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = { title: "Cookies and storage", description: `How ${site.name} uses cookies and browser storage, and the choices you have.`, alternates: { canonical: "/cookies" } };
 
 const cookies = [
-  ["ti_consent", "Essential", "Records your cookie choice and the policy version. Readable by the site's scripts so pages can respect it. Holds no personal data.", "180 days"],
+  ["ti_consent", "Essential", "Records your cookie choices (preferences and analytics) and the policy version. Readable by the site's scripts so pages can respect it. Holds no personal data.", "180 days"],
   ["__Host-ti_sid", "Essential", "Set only if you use Yatri. A random, signed, anonymous session that limits abuse of the assistant. HttpOnly, Secure and SameSite=Strict.", "24 hours"],
 ];
 
@@ -35,7 +36,7 @@ export default function CookiesPage() {
   return (
     <LegalPage
       title="Cookies and storage"
-      intro="This site sets no advertising or tracking cookies. You can change your choice at any time with Cookie settings in the footer."
+      intro="This site sets no advertising or tracking cookies, and its own analytics only run if you allow them. You can change your choice at any time with Cookie settings in the footer."
       sections={[
         { heading: "Cookies", body: (
           <div className="overflow-x-auto">
@@ -65,6 +66,12 @@ export default function CookiesPage() {
           <>
             <p>These are kept in your browser only if you allow Preferences. If you turn them off, they are deleted.</p>
             <KeyList items={preferenceKeys} />
+          </>
+        ) },
+        { heading: "Optional analytics", body: (
+          <>
+            <p>Analytics is off unless you turn it on. When it&apos;s on, our own small script counts the pages you open, the features you use and how fast pages load, and sends that to our server. It sets no cookies and uses no browser storage: it remembers only, while the tab is open, the first page of your visit so we can see where people go next.</p>
+            <p>We never store your IP address, your full browser details or any identifier. The <Link prefetch={false} className="link-text" href="/privacy">privacy policy</Link> lists exactly what is recorded and for how long.</p>
           </>
         ) },
         { heading: "Things you choose to save", body: (

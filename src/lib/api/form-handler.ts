@@ -42,7 +42,7 @@ export function clientAddress(request: NextRequest): string {
 let warnedNoAddress = false;
 
 /** Stops reading as soon as the limit is passed, so a huge body is never held in memory. */
-async function readBody(request: NextRequest, maxBytes = MAX_BODY_BYTES): Promise<string | null> {
+export async function readBody(request: NextRequest, maxBytes = MAX_BODY_BYTES): Promise<string | null> {
   const declared = Number(request.headers.get("content-length") ?? 0);
   if (declared > maxBytes) return null;
   if (!request.body) return "";
