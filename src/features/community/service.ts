@@ -1,10 +1,10 @@
 import "server-only";
 import { audit as appendAudit } from "@/lib/security/audit";
 import { randomUUID } from "node:crypto";
-import { revalidatePath } from "next/cache";
 import { site } from "@/config/site";
 import type { UserDoc } from "@/lib/auth/session";
 import { getStore, STORE_COLLECTIONS, type Doc, type Store } from "@/lib/database/store";
+import { effectiveOverrides, publishCommunityEdit } from "@/features/content/cms";
 import { contentFor, currentFieldValue } from "./content";
 import { moderate } from "./moderation";
 import { commentLinks } from "@/features/profile/service";
@@ -270,10 +270,8 @@ export async function proposeEdit(target: Target, user: UserDoc, input: { field:
 
 /** Approved changes for a page, keyed by field. Empty when there is no database. */
 export async function overridesFor(target: Target): Promise<Record<string, unknown>> {
-  const db = await getStore().catch(() => null);
-  if (!db) return {};
-  const rows = await db.collection<Doc & { field: string; value: unknown }>(STORE_COLLECTIONS.overrides).find({ target: targetKey(target) }).toArray();
-  return Object.fromEntries(rows.map((row) => [row.field, row.value]));
+  // Published CMS versions and older community edits, plus any scheduled version that's due.
+  return effectiveOverrides(target).catch(() => ({}));
 }
 
 // ---- Admin -------------------------------------------------------------------
@@ -297,18 +295,8 @@ export async function decideEdit(id: string, admin: UserDoc, approve: boolean, n
     { returnDocument: "after" },
   );
   if (!edit) throw new CommunityError("That suggestion was already reviewed.", 409);
-  if (approve) {
-    await db.collection(STORE_COLLECTIONS.overrides).updateOne(
-      { _id: `${edit.target}:${edit.field}` },
-      { $set: { target: edit.target, field: edit.field, value: edit.proposed, editId: edit._id, approvedBy: admin._id, approvedAt: new Date() } },
-      { upsert: true },
-    );
-    try {
-      revalidatePath(edit.path.split("#")[0]!);
-    } catch {
-      // Outside a request (tests), there is no cache to clear.
-    }
-  }
+  // An approved suggestion becomes a published CMS version, so it shows in the page's history.
+  if (approve) await publishCommunityEdit(db, admin, edit);
   await audit(db, admin, approve ? "edit.approve" : "edit.reject", edit._id, `${edit.target} ${edit.field}`);
   await notify(
     edit.userId,

@@ -1,3 +1,4 @@
+import { featureOff } from "@/features/settings/gate";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { fail, readJson, unavailable } from "@/lib/api/json";
@@ -69,6 +70,8 @@ export async function GET(request: NextRequest) {
 /** Everything that writes needs a signed-in account. */
 export async function POST(request: NextRequest) {
   if (!isStoreAvailable()) return unavailable();
+  const paused = await featureOff("comments");
+  if (paused) return paused;
   const body = await readJson(request, actionSchema, "community", { max: 120, windowSeconds: 600 });
   if (body instanceof NextResponse) return body;
   const session = await sessionFromRequest(request).catch(() => null);

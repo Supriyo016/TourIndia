@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Activity, BarChart3, DatabaseBackup, Gauge, Inbox, KeyRound, LayoutDashboard, LifeBuoy, MessageSquareWarning, ScrollText, SearchCheck, Users, UsersRound } from "lucide-react";
+import { Activity, BarChart3, Bot, DatabaseBackup, FilePenLine, Gauge, Images, Inbox, KeyRound, LayoutDashboard, LifeBuoy, Lightbulb, MessageSquareWarning, ScrollText, SearchCheck, Settings, Users, UsersRound } from "lucide-react";
 import type { Permission } from "@/features/admin/permissions";
 
 const SECTIONS: { href: string; label: string; needs?: Permission; Icon: typeof Gauge }[] = [
@@ -14,6 +14,11 @@ const SECTIONS: { href: string; label: string; needs?: Permission; Icon: typeof 
   { href: "/admin/health", label: "Health", needs: "logs.view", Icon: Activity },
   { href: "/admin/seo", label: "SEO", needs: "seo.manage", Icon: SearchCheck },
   { href: "/admin/backups", label: "Backups", needs: "backup.create", Icon: DatabaseBackup },
+  { href: "/admin/content", label: "Content", needs: "content.edit", Icon: FilePenLine },
+  { href: "/admin/media", label: "Media", needs: "media.manage", Icon: Images },
+  { href: "/admin/yatri", label: "Yatri", needs: "yatri.manage", Icon: Bot },
+  { href: "/admin/improve", label: "Improvements", needs: "content.edit", Icon: Lightbulb },
+  { href: "/admin/settings", label: "Settings", needs: "settings.manage", Icon: Settings },
   { href: "/admin/team", label: "Team and roles", needs: "admins.manage", Icon: UsersRound },
   { href: "/admin/mfa", label: "Your authenticator", Icon: KeyRound },
 ];

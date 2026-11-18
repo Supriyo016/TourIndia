@@ -63,6 +63,9 @@ export const STORE_COLLECTIONS = {
   stats: "target_stats",
   edits: "edit_proposals",
   overrides: "content_overrides",
+  /** CMS: one record per editable page, and the drafts and versions of its fields. */
+  contentItems: "content_items",
+  contentVersions: "content_versions",
   reports: "reports",
   audit: "audit_log",
   securityEvents: "security_events",
@@ -85,6 +88,13 @@ export const STORE_COLLECTIONS = {
   appErrors: "app_errors",
   /** History of downloaded backups: counts and checksum, never the data (P8). */
   backups: "backups",
+  /** Yatri: questions kept briefly (with consent) for review, and daily usage counts. */
+  yatriQuestions: "yatri_questions",
+  yatriUsage: "yatri_usage",
+  /** The improvement engine's recommendations and their review state. */
+  recommendations: "recommendations",
+  /** Site settings, feature flags and maintenance mode (one document). */
+  settings: "site_settings",
 } as const;
 
 // ---- In-memory implementation -------------------------------------------------
