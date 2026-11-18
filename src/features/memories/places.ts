@@ -88,7 +88,8 @@ export interface PhotoCredit {
 /** Full details (with credit) for the photos on a memory, skipping any that have since gone. */
 export function photoDetails(keys: string[]): PhotoCredit[] {
   return keys.flatMap((key) => {
-    const image = getImage(key as ImageKey);
+    // The exact photo the person picked for their memory.
+    const image = getImage(key as ImageKey, { fixed: true });
     return image ? [{ key, src: image.src, alt: image.alt, width: image.width, height: image.height, blur: image.blur, author: image.author, license: image.license, sourceUrl: image.sourceUrl }] : [];
   });
 }

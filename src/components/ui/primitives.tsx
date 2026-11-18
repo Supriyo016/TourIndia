@@ -121,20 +121,28 @@ export function PageIntro({
 }
 
 /** A licensed photo, or a quiet branded panel when none has been sourced. */
+/** Photos shown across the whole width somewhere (a `sizes` ending in 100vw) only rotate to alternatives as big as the original. */
+const isLarge = (sizes: string) => /(^|,)\s*100vw\s*$/.test(sizes);
+/** Large photos keep their full resolution: alternatives must be at least as wide as the page's own photo. */
+const largeWidth = (imageKey: ImageKey) => getImage(imageKey, { fixed: true })?.width ?? 0;
+
 export function Photo({
   imageKey,
   sizes,
   className,
   priority,
   alt,
+  fixed,
 }: {
   imageKey: ImageKey;
   sizes: string;
   className?: string;
   priority?: boolean;
   alt?: string;
+  /** An admin chose this photo, so it never rotates. */
+  fixed?: boolean;
 }) {
-  const image = getImage(imageKey);
+  const image = getImage(imageKey, { fixed, minWidth: isLarge(sizes) ? largeWidth(imageKey) : undefined });
   if (!image) {
     return (
       <div className={cn("absolute inset-0 flex items-center justify-center bg-brand-soft text-brand", className)} aria-hidden>
@@ -158,8 +166,9 @@ export function Photo({
   );
 }
 
-export function PhotoCredit({ imageKey, className }: { imageKey: ImageKey; className?: string }) {
-  const image = getImage(imageKey);
+/** Credit for a page's header photo; follows the same rotation rule as a full-width `Photo`. */
+export function PhotoCredit({ imageKey, className, fixed }: { imageKey: ImageKey; className?: string; fixed?: boolean }) {
+  const image = getImage(imageKey, { fixed, minWidth: largeWidth(imageKey) });
   if (!image) return null;
   return (
     <p className={cn("text-xs text-muted", className)}>

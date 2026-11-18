@@ -97,6 +97,8 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
   const linkedFestivals = festivals.filter((festival) => item.festivalSlugs?.includes(festival.slug));
   // The media manager can choose a different licensed photo for the page (read when the page is built).
   const heroImage = await pageImage({ type: "place", id: slug }, `destination:${item.slug}`);
+  // A photo an admin picked in the media manager stays put; the page's own photo can rotate monthly.
+  const chosen = heroImage !== `destination:${item.slug}`;
 
   return (
     <article>
@@ -126,7 +128,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
       />
 
       <header className="relative isolate flex min-h-[26rem] items-end overflow-hidden sm:min-h-[32rem]">
-        <Photo imageKey={heroImage} sizes="100vw" priority className="-z-20" />
+        <Photo imageKey={heroImage} sizes="100vw" priority className="-z-20" fixed={chosen} />
         <div className="photo-scrim absolute inset-0 -z-10" />
         <div className="container-x pt-24 pb-8 text-white">
           <p className="eyebrow !text-[#f7c26b]">{state?.name}</p>
@@ -144,7 +146,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
               { label: item.name },
             ]}
           />
-          <PhotoCredit imageKey={heroImage} />
+          <PhotoCredit imageKey={heroImage} fixed={chosen} />
         </div>
 
         <dl className="grid grid-cols-2 gap-3 rounded-[var(--radius-lg)] border border-line bg-surface p-4 sm:grid-cols-4">

@@ -23,7 +23,8 @@ export default async function PageImagePage({ params }: { params: Promise<{ type
   const fallback = defaultImage(target);
   const current = await pageImage(target, fallback);
   const options = [...new Set([current, ...candidatesFor(target)])].flatMap((key) => {
-    const image = getImage(key);
+    // The library itself, not this month's rotation.
+    const image = getImage(key, { fixed: true });
     return image ? [{ key, src: image.src, alt: image.alt, credit: `${image.author ?? "Unknown"} · ${image.license ?? "licence not recorded"}` }] : [];
   });
   const publicPath = type === "place" ? `/destinations/${slug}` : `/encyclopedia/states/${slug}`;

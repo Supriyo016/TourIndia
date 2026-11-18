@@ -19,6 +19,12 @@ const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree", displa
 // for a moment rather than holding back the page's main photo on slow connections.
 const wetPaint = Rubik_Wet_Paint({ subsets: ["latin"], weight: "400", variable: "--font-wet-paint", display: "swap", preload: false });
 
+/**
+ * Static pages are rebuilt once a day, so each page's monthly photo change (src/lib/rotation.ts)
+ * shows up without a new deploy. Pages can ask for more often; dynamic pages are unaffected.
+ */
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: `${site.name}: discover and plan travel across India`, template: `%s | ${site.name}` },

@@ -29,7 +29,8 @@ interface Props {
 /** One encyclopedia entry: an infobox, editable sections, sources, and the community panel. */
 export function EncyclopediaArticle({ target, title, summary, source, path, guide, imageKey, referenceStem, infobox, extra, sources, lastReviewed, preview = false }: Props) {
   const fields = EDITABLE_FIELDS[target.type] ?? {};
-  const lead = imageKey ? getImage(imageKey) : undefined;
+  // The encyclopedia keeps its lead photo fixed, so it never repeats one of the reference photos below it.
+  const lead = imageKey ? getImage(imageKey, { fixed: true }) : undefined;
   const references = referenceStem
     ? referenceImages(referenceStem).map((image) => ({
         src: image.src,
@@ -129,7 +130,7 @@ export function EncyclopediaArticle({ target, title, summary, source, path, guid
               ))}
             </dl>
           </div>
-          {imageKey && <PhotoCredit imageKey={imageKey} className="mt-2" />}
+          {imageKey && <PhotoCredit imageKey={imageKey} className="mt-2" fixed />}
         </aside>
       </div>
 
