@@ -18,6 +18,7 @@ import {
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { sessionFromRequest } from "@/lib/auth/session";
 import { getStore } from "@/lib/database/store";
+import { reportError } from "@/lib/monitoring/errors";
 
 export const dynamic = "force-dynamic";
 const PRIVATE = { "Cache-Control": "private, no-store" };
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true }, { headers: PRIVATE });
   } catch (error) {
     if (error instanceof TripError) return fail(error.status, error.message);
-    console.error("[trips]", error instanceof Error ? error.name : "");
+    void reportError("trips", error);
     return unavailable();
   }
 }

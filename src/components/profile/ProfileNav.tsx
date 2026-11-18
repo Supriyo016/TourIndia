@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Eye, IdCard, LayoutDashboard, Route, ShieldCheck } from "lucide-react";
+import { Bell, Compass, Eye, IdCard, LayoutDashboard, Route, ShieldCheck } from "lucide-react";
 
 const LINKS = [
   { href: "/profile", label: "Overview", Icon: LayoutDashboard },
   { href: "/profile/trips", label: "My trips", Icon: Route },
+  { href: "/profile/notifications", label: "Notifications", Icon: Bell },
   { href: "/profile/details", label: "Details", Icon: IdCard },
   { href: "/profile/preferences", label: "Preferences", Icon: Compass },
   { href: "/profile/privacy", label: "Privacy", Icon: Eye },

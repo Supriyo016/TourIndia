@@ -3,7 +3,8 @@ import { getStore, STORE_COLLECTIONS, type Filter, type Store } from "@/lib/data
 import type { UserDoc } from "@/lib/auth/session";
 import { audit } from "@/lib/security/audit";
 import { accessFor, type AdminAccess } from "@/features/admin/rbac";
-import { CATEGORY_IDS, PRIORITY_IDS, STATUS_IDS, type Priority, type TicketCategory, type TicketStatus } from "./types";
+import { CATEGORY_IDS, PRIORITY_IDS, STATUS_IDS, TICKET_STATUSES, type Priority, type TicketCategory, type TicketStatus } from "./types";
+import { notifyEmail } from "@/features/notifications/service";
 
 /**
  * Support tickets: contact-form messages with a reference, category, priority, status,
@@ -129,6 +130,11 @@ export async function updateTicket(actor: Actor, reference: string, change: { st
   if (Object.keys(after).length === 0) return ticket;
   await collection.updateOne({ _id: ticket._id }, { $set: set, ...(Object.keys(unset).length ? { $unset: unset } : {}) });
   await audit({ actorId: actor.user._id, actorEmail: actor.user.email, action: "ticket.update", target: reference, outcome: "ok", before, after }, store);
+  // The person who wrote in hears about status changes, if they have an account with that address.
+  // Only the reference and status: the subject stays out, in case someone else used their address.
+  if (after.status) {
+    await notifyEmail(ticket.email, { kind: "support", title: `Your support request ${reference} is now ${TICKET_STATUSES[change.status!].toLowerCase()}`, body: change.status === "resolved" || change.status === "closed" ? "Reply to our email if you need anything else." : undefined }, store);
+  }
   return ticketByReference(reference);
 }
 

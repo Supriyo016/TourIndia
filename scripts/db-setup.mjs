@@ -274,6 +274,33 @@ const collections = {
     properties: { reference: str(12), status: { enum: ["new", "contacted", "closed"] }, createdAt: { bsonType: "date" } },
     indexes: [[{ reference: 1 }, { unique: true }], [{ userId: 1, createdAt: -1 }, {}]],
   },
+  // In-app notifications (P8): short fixed wording written by the app, expire after 180 days.
+  user_notifications: {
+    required: ["userId", "kind", "title", "createdAt", "expiresAt"],
+    properties: {
+      userId: str(36),
+      kind: { enum: ["support", "appeal", "account", "edit", "comment"] },
+      title: str(140),
+      body: str(400),
+      href: { bsonType: "string", maxLength: 200, pattern: "^/" },
+      createdAt: { bsonType: "date" },
+      readAt: { bsonType: "date" },
+      expiresAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, createdAt: -1 }, {}], [{ userId: 1, readAt: 1 }, {}], [{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
+  },
+  // Server errors for the health page (P8): where and what kind, never messages or people; 30 days.
+  app_errors: {
+    required: ["at", "source", "name", "expiresAt"],
+    properties: { at: { bsonType: "date" }, source: str(40), name: str(60), expiresAt: { bsonType: "date" } },
+    indexes: [[{ at: -1 }, {}], [{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
+  },
+  // Backup history (P8): who made a download, when, counts and checksum. The data itself isn't kept.
+  backups: {
+    required: ["createdAt", "createdBy", "status"],
+    properties: { createdAt: { bsonType: "date" }, createdBy: str(36), createdByEmail: str(254), status: { enum: ["started", "complete"] }, checksum: str(64), finishedAt: { bsonType: "date" } },
+    indexes: [[{ createdAt: -1 }, {}], [{ checksum: 1 }, {}]],
+  },
   // Cached page translations, keyed by a hash of language and source text; they expire after 180 days.
   translations: {
     required: ["lang", "text", "createdAt", "expiresAt"],

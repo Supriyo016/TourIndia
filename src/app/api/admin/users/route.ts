@@ -3,6 +3,7 @@ import { z } from "zod";
 import { isDenied, requireAdminApi } from "@/features/admin/guard";
 import { decideAppeal, lift, REASONS, restrict, RestrictionError, type Reason } from "@/features/admin/restrictions";
 import { readJson, unavailable } from "@/lib/api/json";
+import { reportError } from "@/lib/monitoring/errors";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof RestrictionError) return NextResponse.json({ error: error.message }, { status: error.status });
-    console.error("[admin users]", error instanceof Error ? error.name : "");
+    void reportError("admin users", error);
     return unavailable();
   }
 }

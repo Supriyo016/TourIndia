@@ -15,6 +15,7 @@ import {
 import { fail, readJson, unavailable } from "@/lib/api/json";
 import { sessionFromRequest } from "@/lib/auth/session";
 import { getStore } from "@/lib/database/store";
+import { reportError } from "@/lib/monitoring/errors";
 
 export const dynamic = "force-dynamic";
 const PRIVATE = { "Cache-Control": "private, no-store" };
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     if (error instanceof SavedError) return fail(error.status, error.message);
-    console.error("[saved]", error instanceof Error ? error.name : "");
+    void reportError("saved", error);
     return unavailable();
   }
 }

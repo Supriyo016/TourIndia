@@ -5,6 +5,7 @@ import { PERMISSIONS } from "@/features/admin/permissions";
 import { allRoles } from "@/features/admin/rbac";
 import { deleteRole, listTeam, saveRole, setMemberRoles, TeamError } from "@/features/admin/team";
 import { readJson, unavailable } from "@/lib/api/json";
+import { reportError } from "@/lib/monitoring/errors";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ roles: await deleteRole(actor, body.id) });
   } catch (error) {
     if (error instanceof TeamError) return NextResponse.json({ error: error.message }, { status: error.status });
-    console.error("[admin team]", error instanceof Error ? error.name : "");
+    void reportError("admin team", error);
     return unavailable();
   }
 }

@@ -16,6 +16,7 @@ import {
   toggleLove,
 } from "@/features/community/service";
 import { COMMENT_KINDS, TARGET_TYPES } from "@/features/community/targets";
+import { reportError } from "@/lib/monitoring/errors";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,7 @@ const actionSchema = z.discriminatedUnion("action", [
 ]);
 
 const errorResponse = (error: unknown) =>
-  error instanceof CommunityError ? fail(error.status, error.message) : (console.error("[community]", error), unavailable());
+  error instanceof CommunityError ? fail(error.status, error.message) : (void reportError("community", error), unavailable());
 
 /** Public: counts, visible comments and, when signed in, your own love and rating. */
 export async function GET(request: NextRequest) {

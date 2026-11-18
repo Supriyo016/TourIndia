@@ -65,6 +65,12 @@ export const STORE_COLLECTIONS = {
   tickets: "contact_messages",
   bookings: "booking_requests",
   translations: "translations",
+  /** In-app notifications for signed-in people (P8). */
+  notifications: "user_notifications",
+  /** Server error counts for the health page: source and error name only, expire after 30 days (P8). */
+  appErrors: "app_errors",
+  /** History of downloaded backups: counts and checksum, never the data (P8). */
+  backups: "backups",
 } as const;
 
 // ---- In-memory implementation -------------------------------------------------

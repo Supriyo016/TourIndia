@@ -29,3 +29,31 @@ export async function adminPost<T = Reply>(url: string, body: unknown, method = 
   if (!response.ok) throw new Error(data.error ?? "Something went wrong. Please try again.");
   return data as T;
 }
+
+/**
+ * Like adminPost, for requests that send or receive files: returns the raw response after the same
+ * fresh-code handling, so the caller can read a download or send bytes. `body` is re-sent on retry.
+ */
+export async function adminRequest(url: string, init: { body: BodyInit; headers?: Record<string, string> }): Promise<Response> {
+  const go = () => fetch(url, { method: "POST", headers: init.headers, body: init.body });
+  let response = await go();
+  if (response.status === 401) {
+    const data = (await response.clone().json().catch(() => ({}))) as Reply;
+    if (data.code === "mfa") {
+      window.location.assign("/admin/mfa");
+      throw new Error("Confirm your authenticator code first.");
+    }
+    if (data.code === "reauth") {
+      const code = window.prompt("This action needs a fresh code. Enter the 6-digit code from your authenticator app (or a recovery code).");
+      if (!code) throw new Error("Cancelled. Nothing was changed.");
+      const check = await send("/api/admin/mfa", { action: "verify", code: code.trim() }, "POST");
+      if (!check.response.ok) throw new Error(check.data.error ?? "That code isn't right.");
+      response = await go();
+    }
+  }
+  if (!response.ok) {
+    const data = (await response.json().catch(() => ({}))) as Reply;
+    throw new Error(data.error ?? "Something went wrong. Please try again.");
+  }
+  return response;
+}
