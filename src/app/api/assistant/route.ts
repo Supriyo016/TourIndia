@@ -2,7 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { isAssistantConnected, runYatri } from "@/features/assistant/agent";
 import { answerExtras } from "@/features/assistant/extras";
+import { recordAnswer } from "@/features/assistant/insights";
 import { answerLocally } from "@/features/assistant/knowledge";
+import { CONSENT_COOKIE, parseConsent } from "@/lib/consent";
 import { guardJsonPost } from "@/lib/api/form-handler";
 import { isAllowed } from "@/lib/security/rate-limit";
 import { createSessionValue, isSessionConfigured, readSession, sessionCookieHeader, verifySessionValue } from "@/lib/security/session";
@@ -53,28 +55,33 @@ export async function POST(request: NextRequest) {
 
   const connected = isAssistantConnected() && (await isAllowed("assistant-daily", "site", { max: dailyLimit(), windowSeconds: 86_400 }));
   const question = messages[messages.length - 1]!.content;
+  // The question's words are kept for review only with consent to optional storage.
+  const consent = parseConsent(request.cookies.get(CONSENT_COOKIE)?.value)?.preferences === true;
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       const send = (event: Record<string, unknown>) => controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
-      const finish = (text: string, mode: "ai" | "guide", toolOutput = "") => {
+      const finish = async (text: string, mode: "ai" | "guide", toolOutput = "") => {
         // The answer goes out in short pieces so it appears progressively, then the cards and suggestions.
         for (const piece of text.match(/[\s\S]{1,48}(\s|$)/g) ?? [text]) send({ t: "text", v: piece });
         send({ t: "extras", v: answerExtras(text, toolOutput) });
+        // An id and a private token, so only this browser can rate the answer.
+        const record = await recordAnswer({ question, text, toolOutput, mode, consent });
+        if (record) send({ t: "meta", id: record.id, token: record.token });
         send({ t: "done", mode });
       };
 
       try {
         if (!connected) {
-          finish(answerLocally(question), "guide");
+          await finish(answerLocally(question), "guide");
           return;
         }
         const reply = await runYatri({ messages, signal: request.signal, onTool: (name) => send({ t: "tool", v: name }) });
-        finish(reply.text, "ai", reply.toolOutput);
+        await finish(reply.text, "ai", reply.toolOutput);
       } catch (error) {
         console.error("[assistant] AI reply failed; answering from the guides:", error instanceof Error ? `${error.name}: ${error.message}` : "unknown error");
-        if (!request.signal.aborted) finish(answerLocally(question), "guide");
+        if (!request.signal.aborted) await finish(answerLocally(question), "guide");
       } finally {
         controller.close();
       }

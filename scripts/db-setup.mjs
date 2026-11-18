@@ -257,6 +257,25 @@ const collections = {
     },
     indexes: [[{ target: 1, number: -1 }, { unique: true }], [{ status: 1, publishAt: 1 }, {}], [{ status: 1, updatedAt: -1 }, {}]],
   },
+  // Yatri: one record per answer (words only with consent, redacted), deleted after 30 days; daily counts.
+  yatri_questions: {
+    required: ["mode", "confidence", "tokenHash", "status", "createdAt", "expiresAt"],
+    properties: {
+      _id: { bsonType: "string" },
+      question: { bsonType: ["string", "null"], maxLength: 300 },
+      mode: { enum: ["ai", "guide"] },
+      confidence: { enum: ["ok", "low", "unanswered"] },
+      tokenHash: str(64),
+      feedback: { enum: ["up", "down", null] },
+      status: { enum: ["new", "handled"] },
+      handledBy: str(36),
+      handledNote: str(300),
+      createdAt: { bsonType: "date" },
+      expiresAt: { bsonType: "date" },
+    },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }], [{ status: 1, createdAt: -1 }, {}], [{ confidence: 1, createdAt: -1 }, {}]],
+  },
+  yatri_usage: { required: [], properties: { _id: str(10) }, indexes: [] },
   reports: {
     required: ["commentId", "userId", "reason", "createdAt"],
     properties: { commentId: str(36), userId: str(36), reason: str(20), createdAt: { bsonType: "date" } },

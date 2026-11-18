@@ -3,11 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUp, CalendarDays, Check, Compass, MapPinned, Plus, RotateCcw, Search, Square, UtensilsCrossed, X } from "lucide-react";
+import { ArrowUp, CalendarDays, Check, Compass, MapPinned, Plus, RotateCcw, Search, Square, ThumbsDown, ThumbsUp, UtensilsCrossed, X } from "lucide-react";
 import { isChatHistory, STORAGE_KEYS } from "@/hooks/use-stored-value";
 import { hasPreferenceConsent } from "@/lib/consent";
 import { cn } from "@/lib/utils";
-import { askYatri, googleSearchUrl, type AnswerExtras, type AskMode, type ChatMessage, type PlaceCard } from "./ask";
+import { askYatri, googleSearchUrl, rateAnswer, type AnswerExtras, type AnswerMeta, type AskMode, type ChatMessage, type PlaceCard } from "./ask";
 import { RichText } from "./RichText";
 import styles from "./yatri.module.css";
 import { YatriAvatar, type YatriMood } from "./YatriAvatar";
@@ -38,6 +38,8 @@ const TOOL_LABELS: Record<string, string> = {
 
 interface Turn extends ChatMessage {
   extras?: AnswerExtras;
+  meta?: AnswerMeta;
+  vote?: "up" | "down";
 }
 
 const remember = (key: string, value: unknown) => {
@@ -110,6 +112,7 @@ export function YatriChat({ onNavigate, onMode, onMood }: { onNavigate: () => vo
           update((last) => ({ ...last, content: last.content + chunk }));
         },
         onExtras: (extras) => update((last) => ({ ...last, extras })),
+        onMeta: (meta) => update((last) => ({ ...last, meta })),
       });
       onMode(mode);
     } catch (error) {
@@ -119,6 +122,17 @@ export function YatriChat({ onNavigate, onMode, onMood }: { onNavigate: () => vo
       setStatus("");
       setTurns((current) => current.filter((turn) => turn.content));
       field.current?.focus();
+    }
+  };
+
+  const vote = async (index: number, value: "up" | "down") => {
+    const turn = turns[index];
+    if (!turn?.meta) return;
+    setTurns((current) => current.map((item, i) => (i === index ? { ...item, vote: value } : item)));
+    try {
+      await rateAnswer(turn.meta, value);
+    } catch (error) {
+      setProblem(error instanceof Error ? error.message : "That rating couldn't be saved.");
     }
   };
 
@@ -206,6 +220,17 @@ export function YatriChat({ onNavigate, onMode, onMood }: { onNavigate: () => vo
                             </Link>
                           ))}
                         </p>
+                      )}
+                      {turn.meta && !(busy && index === turns.length - 1) && (
+                        <div className="mt-2 flex items-center gap-1 text-xs text-muted" role="group" aria-label="Was this answer helpful?">
+                          <span>{turn.vote ? "Thanks for the feedback." : "Helpful?"}</span>
+                          <button type="button" className={styles.followUp} aria-pressed={turn.vote === "up"} aria-label="Yes, this answer helped" onClick={() => void vote(index, "up")}>
+                            <ThumbsUp className="size-3.5" aria-hidden />
+                          </button>
+                          <button type="button" className={styles.followUp} aria-pressed={turn.vote === "down"} aria-label="No, this answer didn't help" onClick={() => void vote(index, "down")}>
+                            <ThumbsDown className="size-3.5" aria-hidden />
+                          </button>
+                        </div>
                       )}
                       {index === turns.length - 1 && !busy && turn.extras && (
                         <div className="mt-3 flex flex-wrap gap-1.5">
