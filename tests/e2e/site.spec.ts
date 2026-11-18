@@ -386,7 +386,8 @@ test.describe("cookies", () => {
     await banner.getByRole("button", { name: "Essential only" }).click();
     await expect(banner).toHaveCount(0);
     const cookies = await page.context().cookies();
-    expect(cookies.find((cookie) => cookie.name === "ti_consent")?.value).toMatch(/^1\.0\./);
+    // Version 2 records preferences and analytics separately; "Essential only" refuses both.
+    expect(cookies.find((cookie) => cookie.name === "ti_consent")?.value).toMatch(/^2\.0\.0\./);
     await page.reload();
     await expect(banner).toHaveCount(0);
   });
@@ -780,8 +781,13 @@ test.describe("other tools", () => {
 
   test("the passport awards a badge", async ({ page }) => {
     await page.goto("/saved");
-    await page.getByLabel("Kerala").check();
-    await expect(page.getByText(/1 of 36 stamped/)).toBeVisible();
+    // The passport becomes interactive once the page has hydrated, so keep choosing until it counts.
+    await expect
+      .poll(async () => {
+        await page.getByLabel("Status for Kerala").selectOption({ label: "Visited" });
+        return page.getByText(/1 of 36 visited/).count();
+      }, { timeout: 15_000 })
+      .toBe(1);
     await expect(page.getByText("First stamp (earned)")).toHaveCount(1);
   });
 });

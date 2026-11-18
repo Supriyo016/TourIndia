@@ -7,12 +7,13 @@ import { mayRequestAdminCode } from "@/features/admin/rbac";
 import { hmac, isAuthConfigured } from "@/lib/auth/session";
 import { isStoreAvailable } from "@/lib/database/store";
 import { isAllowed } from "@/lib/security/rate-limit";
+import { recordError } from "@/lib/monitoring/errors";
 
 // The same reply whether or not the address has an account, so the form can't be used to find out.
 const SENT = { ok: true, message: "If that address can receive email, a 6-digit code is on its way. It expires in 10 minutes." };
 
 function runAfterResponse(task: () => Promise<unknown>) {
-  const logged = () => task().then((ok) => ok || console.error("[auth] a sign-in email could not be sent"));
+  const logged = () => task().then((ok) => ok || (console.error("[auth] a sign-in email could not be sent"), recordError("auth email", "EmailNotSent")));
   try {
     after(logged);
   } catch {

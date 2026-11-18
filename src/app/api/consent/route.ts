@@ -3,7 +3,7 @@ import { z } from "zod";
 import { guardJsonPost } from "@/lib/api/form-handler";
 import { CONSENT_COOKIE, CONSENT_MAX_AGE, encodeConsent } from "@/lib/consent";
 
-const schema = z.object({ preferences: z.boolean() }).strict();
+const schema = z.object({ preferences: z.boolean(), analytics: z.boolean().default(false) }).strict();
 
 export async function POST(request: NextRequest) {
   const guarded = await guardJsonPost(request, "consent", { max: 60, windowSeconds: 3600 });
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   const response = NextResponse.json({ ok: true });
   response.cookies.set({
     name: CONSENT_COOKIE,
-    value: encodeConsent(parsed.data.preferences),
+    value: encodeConsent(parsed.data.preferences, parsed.data.analytics),
     maxAge: CONSENT_MAX_AGE,
     path: "/",
     sameSite: "lax",

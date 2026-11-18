@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactN
 import Link from "next/link";
 import { ListChecks } from "lucide-react";
 import { QuizResults, type QuizDetail } from "@/components/quiz/QuizResults";
+import { QuizSaver } from "@/components/quiz/QuizSaver";
 import { QuizStep } from "@/components/quiz/QuizStep";
 import { answerValues, readAnswers, readStep, writeQuery, type QuizStep as Step } from "@/features/quiz/params";
 import { questions, type QuizAnswers, type QuestionId } from "@/features/quiz/questions";
@@ -162,6 +163,7 @@ export function TravelQuiz({
         {announcement}
       </p>
       <div className={step === "results" ? "" : "card mx-auto max-w-3xl p-5 sm:p-8"}>{body}</div>
+      {step === "results" && <QuizSaver answers={writeQuery(answers, "intro")} />}
     </div>
   );
 }

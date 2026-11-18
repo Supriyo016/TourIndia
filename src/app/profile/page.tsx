@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { CheckCircle2, Circle } from "lucide-react";
+import { BadgeArt } from "@/components/achievements/BadgeArt";
 import { DeviceCounts } from "@/components/profile/DeviceCounts";
 import { MyRequests } from "@/components/profile/MyRequests";
+import { PassportSummary } from "@/components/profile/PassportSummary";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { noteCount } from "@/features/notes/service";
+import { achievementsFor } from "@/features/achievements/service";
+import { memoryCount } from "@/features/memories/service";
 import { getProfile } from "@/features/profile/service";
 import { savedCounts } from "@/features/saved/service";
 import { currentSession } from "@/lib/auth/session";
@@ -20,7 +25,14 @@ export default async function ProfileOverviewPage() {
   const session = await currentSession().catch(() => null);
   if (!session) return null;
   const { user } = session;
-  const [profile, counts] = await Promise.all([getProfile(user._id), savedCounts(user._id).catch(() => null)]);
+  const [profile, counts, notes, achievements, memories] = await Promise.all([
+    getProfile(user._id),
+    savedCounts(user._id).catch(() => null),
+    noteCount(user._id).catch(() => null),
+    achievementsFor(user._id, { record: true }).catch(() => null),
+    memoryCount(user._id).catch(() => null),
+  ]);
+  const earned = achievements?.filter((item) => item.earned) ?? [];
   const visible = profile.privacy.visibility !== "private" && profile.username;
 
   const steps = [
@@ -78,7 +90,45 @@ export default async function ProfileOverviewPage() {
         </section>
       )}
 
-      <DeviceCounts account={counts} />
+      <DeviceCounts account={counts && { places: counts.places, stamps: counts.stamps, collections: counts.collections, trips: counts.trips, notes: notes ?? 0 }} />
+      {counts && <PassportSummary entries={counts.passport} />}
+
+      {achievements && (
+        <section aria-labelledby="achievements-title" className="card p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 id="achievements-title" className="text-xl">
+              Achievements
+            </h2>
+            <Link prefetch={false} href="/profile/achievements" className="link-text text-sm">
+              See all {achievements.length}
+            </Link>
+          </div>
+          {earned.length ? (
+            <>
+              <p className="mt-1 text-sm text-ink-2">
+                {earned.length} earned{profile.privacy.show.includes("achievements") && visible ? ", shown on your page" : ", only you can see them"}.
+              </p>
+              <ul className="mt-4 flex flex-wrap gap-3">
+                {earned.slice(0, 10).map((item) => (
+                  <li key={item.id} title={item.name}>
+                    <BadgeArt art={item.art} group={item.group} size={52} />
+                    <span className="sr-only">{item.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p className="mt-1 text-sm text-ink-2">None yet. Mark a state as visited, save a trip, write a memory or take the quiz to earn your first.</p>
+          )}
+          <p className="mt-4 text-sm text-ink-2">
+            {memories ? `${memories} ${memories === 1 ? "memory" : "memories"} kept. ` : ""}
+            <Link prefetch={false} href={memories ? "/profile/memories" : "/profile/memories/new"} className="link-text">
+              {memories ? "Open your memories" : "Write your first memory"}
+            </Link>
+          </p>
+        </section>
+      )}
+
       <MyRequests />
     </div>
   );

@@ -17,9 +17,14 @@ export default async function AdminDashboardPage() {
     <AdminShell permissions={access.permissions} current="/admin/dashboard" email={session.user.email}>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h1>Dashboard</h1>
-        <Link prefetch={false} href="/admin" className="link-text text-sm">
-          Back to moderation
-        </Link>
+        <span className="flex flex-wrap gap-4">
+          <Link prefetch={false} href="/admin/analytics" className="link-text text-sm">
+            Visitor analytics
+          </Link>
+          <Link prefetch={false} href="/admin" className="link-text text-sm">
+            Back to moderation
+          </Link>
+        </span>
       </div>
       <p className="mt-1 text-sm text-ink-2">Signed in as {session.user.email}. Figures are read when the page loads.</p>
       <div className="mt-6">

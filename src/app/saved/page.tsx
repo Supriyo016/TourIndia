@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { toBrowserProps } from "@/components/discovery/discover-data";
+import { IndiaMap } from "@/components/maps/IndiaMap";
 import { PageIntro } from "@/components/ui/primitives";
 import { SavedDashboard } from "@/components/user/SavedDashboard";
 import { destinations, states } from "@/data";
@@ -19,6 +20,7 @@ export default function SavedPage() {
         <SavedDashboard
           cards={toBrowserProps(destinations).cards}
           names={Object.fromEntries(destinations.map((d) => [d.slug, d.name]))}
+          map={<IndiaMap className="h-auto w-full" linked={false} />}
           stateList={[...states].sort((a, b) => a.name.localeCompare(b.name)).map(({ slug, name, region }) => ({ slug, name, region }))}
         />
       </div>

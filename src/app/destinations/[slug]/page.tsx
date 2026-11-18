@@ -13,6 +13,7 @@ import { site } from "@/config/site";
 import { destinations, getDestination, getState, similarDestinations } from "@/data";
 import { festivals } from "@/data/festivals";
 import { categoryName, formatMonthRange, monthNames, regionName } from "@/data/taxonomy";
+import { pageImage } from "@/features/content/cms";
 import { formatDate, formatINRRange } from "@/lib/utils";
 import type { Destination } from "@/types/content";
 
@@ -94,6 +95,8 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
     attraction.coordinates ? [{ name: attraction.name, coordinates: attraction.coordinates }] : [],
   );
   const linkedFestivals = festivals.filter((festival) => item.festivalSlugs?.includes(festival.slug));
+  // The media manager can choose a different licensed photo for the page (read when the page is built).
+  const heroImage = await pageImage({ type: "place", id: slug }, `destination:${item.slug}`);
 
   return (
     <article>
@@ -123,7 +126,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
       />
 
       <header className="relative isolate flex min-h-[26rem] items-end overflow-hidden sm:min-h-[32rem]">
-        <Photo imageKey={`destination:${item.slug}`} sizes="100vw" priority className="-z-20" />
+        <Photo imageKey={heroImage} sizes="100vw" priority className="-z-20" />
         <div className="photo-scrim absolute inset-0 -z-10" />
         <div className="container-x pt-24 pb-8 text-white">
           <p className="eyebrow !text-[#f7c26b]">{state?.name}</p>
@@ -141,7 +144,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinatio
               { label: item.name },
             ]}
           />
-          <PhotoCredit imageKey={`destination:${item.slug}`} />
+          <PhotoCredit imageKey={heroImage} />
         </div>
 
         <dl className="grid grid-cols-2 gap-3 rounded-[var(--radius-lg)] border border-line bg-surface p-4 sm:grid-cols-4">

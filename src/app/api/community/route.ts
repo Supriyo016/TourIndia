@@ -1,3 +1,4 @@
+import { featureOff } from "@/features/settings/gate";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { fail, readJson, unavailable } from "@/lib/api/json";
@@ -16,6 +17,7 @@ import {
   toggleLove,
 } from "@/features/community/service";
 import { COMMENT_KINDS, TARGET_TYPES } from "@/features/community/targets";
+import { reportError } from "@/lib/monitoring/errors";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +51,7 @@ const actionSchema = z.discriminatedUnion("action", [
 ]);
 
 const errorResponse = (error: unknown) =>
-  error instanceof CommunityError ? fail(error.status, error.message) : (console.error("[community]", error), unavailable());
+  error instanceof CommunityError ? fail(error.status, error.message) : (void reportError("community", error), unavailable());
 
 /** Public: counts, visible comments and, when signed in, your own love and rating. */
 export async function GET(request: NextRequest) {
@@ -68,6 +70,8 @@ export async function GET(request: NextRequest) {
 /** Everything that writes needs a signed-in account. */
 export async function POST(request: NextRequest) {
   if (!isStoreAvailable()) return unavailable();
+  const paused = await featureOff("comments");
+  if (paused) return paused;
   const body = await readJson(request, actionSchema, "community", { max: 120, windowSeconds: 600 });
   if (body instanceof NextResponse) return body;
   const session = await sessionFromRequest(request).catch(() => null);

@@ -3,6 +3,7 @@ import type { UserDoc } from "@/lib/auth/session";
 import { getStore, STORE_COLLECTIONS, type Doc } from "@/lib/database/store";
 import { moderate } from "@/features/community/moderation";
 import { activeRestriction } from "@/features/admin/restrictions";
+import { earnedAchievements, type PublicAchievement } from "@/features/achievements/service";
 import { defaultAvatar, type AvatarId } from "./avatars";
 import { DEFAULT_COVER, type CoverKey } from "./covers";
 import { DEFAULT_PREFERENCES, DEFAULT_PRIVACY, usernameProblem, type IdentityInput, type Preferences, type Privacy, type Showable } from "./schema";
@@ -139,6 +140,7 @@ export interface PublicProfile {
   interests?: string[];
   joined?: string;
   activity?: { comments: number };
+  achievements?: PublicAchievement[];
 }
 
 /**
@@ -168,6 +170,7 @@ export async function publicProfile(username: string, viewerSignedIn: boolean): 
     const comments = await store.collection(STORE_COLLECTIONS.comments).find({ userId: user._id, status: "visible" }, { limit: 1000 }).toArray();
     view.activity = { comments: comments.length };
   }
+  if (show.has("achievements")) view.achievements = await earnedAchievements(user._id);
   return view;
 }
 

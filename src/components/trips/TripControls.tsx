@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { Archive, ArchiveRestore, CalendarPlus, Check, Copy, CopyPlus, Link2, Link2Off, Map, Pencil, Printer, Trash2 } from "lucide-react";
 import { postJson } from "@/components/auth/AuthProvider";
 import { toIcs, type TripDay } from "@/features/itinerary/generate";
+import { track } from "@/lib/analytics/track";
 
 interface Props {
   id: string;
@@ -135,7 +136,10 @@ export function TripControls({ id, name, status, shareId: initialShare, plannerH
             </button>
           </div>
         ) : (
-          <button type="button" className="btn btn-outline mt-2" disabled={disabled} onClick={() => void run({ action: "share", on: true }, (result) => setShareId(result.shareId as string))}>
+          <button type="button" className="btn btn-outline mt-2" disabled={disabled} onClick={() => void run({ action: "share", on: true }, (result) => {
+            setShareId(result.shareId as string);
+            track("share_link", { k: "trip" });
+          })}>
             <Link2 className="size-4" aria-hidden /> Make a read-only link
           </button>
         )}

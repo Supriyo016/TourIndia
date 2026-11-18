@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/ui/LegalPage";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = { title: "Cookies and storage", description: `How ${site.name} uses cookies and browser storage, and the choices you have.`, alternates: { canonical: "/cookies" } };
 
 const cookies = [
-  ["ti_consent", "Essential", "Records your cookie choice and the policy version. Readable by the site's scripts so pages can respect it. Holds no personal data.", "180 days"],
+  ["ti_consent", "Essential", "Records your cookie choices (preferences and analytics) and the policy version. Readable by the site's scripts so pages can respect it. Holds no personal data.", "180 days"],
   ["__Host-ti_sid", "Essential", "Set only if you use Yatri. A random, signed, anonymous session that limits abuse of the assistant. HttpOnly, Secure and SameSite=Strict.", "24 hours"],
 ];
 
@@ -17,9 +18,10 @@ const preferenceKeys = [
 
 const featureKeys = [
   ["ti-favourites", "Places on your wishlist"],
-  ["ti-passport", "States you have marked as visited"],
+  ["ti-passport-v2", "Your travel passport: states you want to visit, are exploring or have visited"],
   ["ti-trips", "Itineraries you saved"],
   ["ti-notes", "Your plan notes"],
+  ["ti-saved-owner", "Which account the saved places, passport and notes on this device belong to"],
   ["ti-packing", "Your packing checklist"],
   ["ti-expenses", "Trip expenses you entered"],
 ];
@@ -34,7 +36,7 @@ export default function CookiesPage() {
   return (
     <LegalPage
       title="Cookies and storage"
-      intro="This site sets no advertising or tracking cookies. You can change your choice at any time with Cookie settings in the footer."
+      intro="This site sets no advertising or tracking cookies, and its own analytics only run if you allow them. You can change your choice at any time with Cookie settings in the footer."
       sections={[
         { heading: "Cookies", body: (
           <div className="overflow-x-auto">
@@ -66,9 +68,15 @@ export default function CookiesPage() {
             <KeyList items={preferenceKeys} />
           </>
         ) },
+        { heading: "Optional analytics", body: (
+          <>
+            <p>Analytics is off unless you turn it on. When it&apos;s on, our own small script counts the pages you open, the features you use and how fast pages load, and sends that to our server. It sets no cookies and uses no browser storage: it remembers only, while the tab is open, the first page of your visit so we can see where people go next.</p>
+            <p>We never store your IP address, your full browser details or any identifier. The <Link prefetch={false} className="link-text" href="/privacy">privacy policy</Link> lists exactly what is recorded and for how long.</p>
+          </>
+        ) },
         { heading: "Things you choose to save", body: (
           <>
-            <p>When you press save, or write a note, the result is kept in your browser&apos;s local storage so the feature can work. It never leaves your device unless you share a trip link.</p>
+            <p>When you press save, or write a note, the result is kept in your browser&apos;s local storage so the feature can work. If you&apos;re not signed in, it never leaves your device unless you share a trip link. If you are, saved places, your passport and notes are also kept in your account, and the browser holds a copy so the page responds straight away; signing out removes that copy.</p>
             <KeyList items={featureKeys} />
           </>
         ) },

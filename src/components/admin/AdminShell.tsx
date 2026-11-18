@@ -1,14 +1,24 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Gauge, Inbox, KeyRound, LayoutDashboard, LifeBuoy, MessageSquareWarning, Users, UsersRound } from "lucide-react";
+import { Activity, BarChart3, Bot, DatabaseBackup, FilePenLine, Gauge, Images, Inbox, KeyRound, LayoutDashboard, LifeBuoy, Lightbulb, MessageSquareWarning, ScrollText, SearchCheck, Settings, Users, UsersRound } from "lucide-react";
 import type { Permission } from "@/features/admin/permissions";
 
 const SECTIONS: { href: string; label: string; needs?: Permission; Icon: typeof Gauge }[] = [
   { href: "/admin/dashboard", label: "Dashboard", needs: "analytics.view", Icon: LayoutDashboard },
+  { href: "/admin/analytics", label: "Analytics", needs: "analytics.view", Icon: BarChart3 },
   { href: "/admin/users", label: "Users", needs: "users.view", Icon: Users },
   { href: "/admin/queue", label: "Moderation queue", needs: "moderation.manage", Icon: Inbox },
   { href: "/admin", label: "Comments and edits", needs: "moderation.manage", Icon: MessageSquareWarning },
   { href: "/admin/support", label: "Support tickets", needs: "support.manage", Icon: LifeBuoy },
+  { href: "/admin/logs", label: "Logs", needs: "logs.view", Icon: ScrollText },
+  { href: "/admin/health", label: "Health", needs: "logs.view", Icon: Activity },
+  { href: "/admin/seo", label: "SEO", needs: "seo.manage", Icon: SearchCheck },
+  { href: "/admin/backups", label: "Backups", needs: "backup.create", Icon: DatabaseBackup },
+  { href: "/admin/content", label: "Content", needs: "content.edit", Icon: FilePenLine },
+  { href: "/admin/media", label: "Media", needs: "media.manage", Icon: Images },
+  { href: "/admin/yatri", label: "Yatri", needs: "yatri.manage", Icon: Bot },
+  { href: "/admin/improve", label: "Improvements", needs: "content.edit", Icon: Lightbulb },
+  { href: "/admin/settings", label: "Settings", needs: "settings.manage", Icon: Settings },
   { href: "/admin/team", label: "Team and roles", needs: "admins.manage", Icon: UsersRound },
   { href: "/admin/mfa", label: "Your authenticator", Icon: KeyRound },
 ];

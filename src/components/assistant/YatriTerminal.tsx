@@ -5,13 +5,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { completeCommand, runCommand, type TerminalData, type TerminalEffect, type TerminalLine } from "@/features/assistant/terminal";
 import { todayInIndia } from "@/features/calendar/calendar";
-import { isNoteList, STORAGE_KEYS, useStoredValue, type PlanNote } from "@/hooks/use-stored-value";
+import { newNoteId, usePlanNotes } from "@/hooks/use-plan-notes";
 import { setThemeChoice } from "@/components/layout/ThemeToggle";
 import { askYatri } from "./ask";
 
 const PROMPT = "yatri@tourindia:~$";
 const EMPTY_DATA: TerminalData = { destinations: [], festivals: [], holidays: [] };
-const NO_NOTES: PlanNote[] = [];
 const WELCOME: TerminalLine[] = [
   { text: "Yatri terminal. Type help to see what I can do.", tone: "accent" },
   { text: "Tab completes, and the up and down keys recall earlier commands.", tone: "muted" },
@@ -42,7 +41,7 @@ export function YatriTerminal({ onClose }: { onClose: () => void }) {
   const [cursor, setCursor] = useState(-1);
   const [busy, setBusy] = useState(false);
   const [data, setData] = useState<TerminalData | null>(null);
-  const [notes, setNotes] = useStoredValue<PlanNote[]>(STORAGE_KEYS.notes, NO_NOTES, isNoteList);
+  const [notes, setNotes] = usePlanNotes();
   const screen = useRef<HTMLDivElement>(null);
   const field = useRef<HTMLInputElement>(null);
 
@@ -75,7 +74,7 @@ export function YatriTerminal({ onClose }: { onClose: () => void }) {
         print(commandHistory.map((command, index) => ({ text: `${String(index + 1).padStart(3)}  ${command}`, tone: "muted" as const })));
         return;
       case "note":
-        setNotes((current) => [{ id: `${Date.now()}`, title: effect.text.slice(0, 60), body: effect.text, date: null, updatedAt: new Date().toISOString() }, ...current]);
+        setNotes((current) => [{ id: newNoteId(), title: effect.text.slice(0, 60), body: effect.text, date: null, updatedAt: new Date().toISOString() }, ...current]);
         return;
       case "notes":
         print(notes.length ? notes.slice(0, 20).map((note) => ({ text: `- ${note.title}`, href: "/calendar#notes" })) : [{ text: "No notes yet. Try: note Book the Jaipur hotel", tone: "muted" }]);

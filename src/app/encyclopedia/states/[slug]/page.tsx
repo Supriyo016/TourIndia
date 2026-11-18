@@ -9,6 +9,7 @@ import { states } from "@/data/states";
 import { formatMonthRange, regionName } from "@/data/taxonomy";
 import { overridesFor } from "@/features/community/service";
 import { applyOverrides } from "@/features/community/targets";
+import { chosenImage } from "@/lib/images";
 
 export function generateStaticParams() {
   return states.map(({ slug }) => ({ slug }));
@@ -44,7 +45,7 @@ export default async function StateEncyclopediaPage({ params }: PageProps<"/ency
         source={item}
         path={path}
         guide={{ href: `/explore/${slug}`, label: `Explore ${item.name} on the map` }}
-        imageKey={`state:${slug}`}
+        imageKey={chosenImage((item as { image?: unknown }).image, `state:${slug}`)}
         referenceStem={`state-${slug}`}
         infobox={[
           ["Type", item.kind === "state" ? "State" : "Union Territory"],

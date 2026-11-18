@@ -1,8 +1,10 @@
+import { gated } from "@/features/settings/gate";
 import { createFormHandler } from "@/lib/api/form-handler";
 import { COLLECTIONS } from "@/lib/database/mongo";
 import { newsletterSchema } from "@/lib/validation/forms";
 
-export const POST = createFormHandler({
+// Admins can pause this from the settings page.
+export const POST = gated("newsletter", createFormHandler({
   schema: newsletterSchema,
   bucket: "newsletter",
   limit: { max: 5, windowSeconds: 3600 },
@@ -14,4 +16,4 @@ export const POST = createFormHandler({
       { upsert: true },
     );
   },
-});
+}));

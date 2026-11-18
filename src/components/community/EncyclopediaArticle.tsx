@@ -22,10 +22,12 @@ interface Props {
   extra?: React.ReactNode;
   sources: { label: string; url: string }[];
   lastReviewed: string;
+  /** An admin preview of a draft: no suggest-edit buttons or community panel. */
+  preview?: boolean;
 }
 
 /** One encyclopedia entry: an infobox, editable sections, sources, and the community panel. */
-export function EncyclopediaArticle({ target, title, summary, source, path, guide, imageKey, referenceStem, infobox, extra, sources, lastReviewed }: Props) {
+export function EncyclopediaArticle({ target, title, summary, source, path, guide, imageKey, referenceStem, infobox, extra, sources, lastReviewed, preview = false }: Props) {
   const fields = EDITABLE_FIELDS[target.type] ?? {};
   const lead = imageKey ? getImage(imageKey) : undefined;
   const references = referenceStem
@@ -64,7 +66,7 @@ export function EncyclopediaArticle({ target, title, summary, source, path, guid
                   <h2 id={`${field.replace(".", "-")}-title`} className="text-2xl">
                     {label}
                   </h2>
-                  <SuggestEdit target={target} field={field} label={label} kind={kind} current={fieldToText(value, kind)} />
+                  {!preview && <SuggestEdit target={target} field={field} label={label} kind={kind} current={fieldToText(value, kind)} />}
                 </div>
                 {empty ? (
                   <p className="text-muted">Nothing written here yet. If you know this well, suggest an edit.</p>
@@ -131,7 +133,7 @@ export function EncyclopediaArticle({ target, title, summary, source, path, guid
         </aside>
       </div>
 
-      <CommunityPanel target={target} title={title} path={path} />
+      {!preview && <CommunityPanel target={target} title={title} path={path} />}
     </article>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Mail, X } from "lucide-react";
 import { postJson, useAuth, type SessionUser } from "./AuthProvider";
 import { ProfileForm } from "./ProfileForm";
+import { track } from "@/lib/analytics/track";
 
 type Step = "email" | "code" | "profile";
 
@@ -68,6 +69,7 @@ export function SignInDialog({ reason, onClose }: { reason?: string; onClose: ()
     try {
       const { user } = await postJson<{ user: SessionUser }>("/api/auth/otp/verify", { email, code: value });
       setUser(user);
+      track("sign_in", { k: "email" });
       if (user.profileComplete) onClose();
       else setStep("profile");
     } catch (problem) {

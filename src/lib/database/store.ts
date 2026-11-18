@@ -47,6 +47,14 @@ export const STORE_COLLECTIONS = {
   collections: "collections",
   /** Trips saved from the planner, one document per trip. */
   trips: "trips",
+  /** Private plan notes (calendar, planner, Yatri), one document per note. */
+  notes: "user_notes",
+  /** Travel memories, private unless one is shared by link. */
+  memories: "memories",
+  /** Travel quiz results saved by signed-in people. */
+  quizAttempts: "quiz_attempts",
+  /** When each achievement was first earned, one document per user (_id is the user id). */
+  achievements: "achievements",
   otps: "otp_codes",
   sessions: "sessions",
   comments: "comments",
@@ -55,6 +63,9 @@ export const STORE_COLLECTIONS = {
   stats: "target_stats",
   edits: "edit_proposals",
   overrides: "content_overrides",
+  /** CMS: one record per editable page, and the drafts and versions of its fields. */
+  contentItems: "content_items",
+  contentVersions: "content_versions",
   reports: "reports",
   audit: "audit_log",
   securityEvents: "security_events",
@@ -65,6 +76,25 @@ export const STORE_COLLECTIONS = {
   tickets: "contact_messages",
   bookings: "booking_requests",
   translations: "translations",
+  /** Analytics: raw beacon events (expire after 90 days), daily totals (kept), and today's visitor hashes (expire after 2 days). */
+  analyticsEvents: "analytics_events",
+  analyticsDaily: "analytics_daily",
+  analyticsVisitors: "analytics_visitors",
+  /** Core Web Vitals per UTC day, metric and page, written by the analytics beacon and read by the Health page. */
+  webVitals: "web_vitals",
+  /** In-app notifications for signed-in people (P8). */
+  notifications: "user_notifications",
+  /** Server error counts for the health page: source and error name only, expire after 30 days (P8). */
+  appErrors: "app_errors",
+  /** History of downloaded backups: counts and checksum, never the data (P8). */
+  backups: "backups",
+  /** Yatri: questions kept briefly (with consent) for review, and daily usage counts. */
+  yatriQuestions: "yatri_questions",
+  yatriUsage: "yatri_usage",
+  /** The improvement engine's recommendations and their review state. */
+  recommendations: "recommendations",
+  /** Site settings, feature flags and maintenance mode (one document). */
+  settings: "site_settings",
 } as const;
 
 // ---- In-memory implementation -------------------------------------------------
@@ -132,7 +162,7 @@ function applyUpdate(doc: Doc, update: Update, inserted: boolean) {
 }
 
 /** Keys that must be unique, as unique indexes enforce in MongoDB. */
-const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"], [STORE_COLLECTIONS.collections]: ["shareId"], [STORE_COLLECTIONS.trips]: ["shareId"] };
+const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"], [STORE_COLLECTIONS.collections]: ["shareId"], [STORE_COLLECTIONS.trips]: ["shareId"], [STORE_COLLECTIONS.memories]: ["shareId"] };
 
 class MemoryCollection<T extends Doc> implements StoreCollection<T> {
   private docs: T[] = [];

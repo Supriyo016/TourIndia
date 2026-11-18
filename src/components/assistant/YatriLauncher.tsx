@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
 import { MessageCircle } from "lucide-react";
 import styles from "./yatri.module.css";
+import { track } from "@/lib/analytics/track";
 
 const loadPanel = () => import("./YatriPanel");
 const YatriPanel = dynamic(loadPanel, { ssr: false });
@@ -47,6 +48,10 @@ export function YatriLauncher() {
     void loadPanel();
     void loadFace().then((face) => setFace(() => face));
   }, []);
+
+  useEffect(() => {
+    if (open) track("yatri_open");
+  }, [open]);
 
   useEffect(() => {
     const cancel = afterLoad(warmUp);

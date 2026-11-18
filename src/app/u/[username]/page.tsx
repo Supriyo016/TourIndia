@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { MapPin, MessageSquare, CalendarDays, Globe } from "lucide-react";
+import { BadgeArt } from "@/components/achievements/BadgeArt";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { publicProfile } from "@/features/profile/service";
 import { currentSession } from "@/lib/auth/session";
@@ -82,6 +83,24 @@ export default async function PublicProfilePage({ params }: Props) {
           {profile.visibility === "members" && <p className="text-muted">Visible to signed-in members only.</p>}
         </aside>
       </div>
+      {profile.achievements && profile.achievements.length > 0 && (
+        <section aria-labelledby="achievements-title" className="card mt-6 p-6">
+          <h2 id="achievements-title" className="text-xl">
+            Achievements
+          </h2>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            {profile.achievements.map((item) => (
+              <li key={item.id} className="flex items-center gap-3">
+                <BadgeArt art={item.art} group={item.group} size={48} className="shrink-0" />
+                <span className="min-w-0">
+                  <span className="block font-semibold">{item.name}</span>
+                  <span className="block text-sm text-ink-2">{item.description}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

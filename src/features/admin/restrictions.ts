@@ -4,6 +4,7 @@ import { adminEmails, type UserDoc } from "@/lib/auth/session";
 import { getStore, STORE_COLLECTIONS, type Doc, type Store } from "@/lib/database/store";
 import { audit } from "@/lib/security/audit";
 import type { AdminAccess, AdminMemberDoc } from "./rbac";
+import { notify } from "@/features/notifications/service";
 
 /**
  * Account restrictions: timed suspensions, timed or permanent bans, appeals and their history.
@@ -127,11 +128,22 @@ export async function restrict(
     { actorId: actor.user._id, actorEmail: actor.user.email, action: `user.${input.kind}`, target: userId, outcome: "ok", detail: `${input.reason}, ${endsAt ? `until ${endsAt.toISOString().slice(0, 10)}` : "permanent"}`, after: { kind: input.kind, permanent: doc.permanent } },
     store,
   );
+  // Seen once they can sign in again; the appeal page is open to them now.
+  await notify(
+    userId,
+    {
+      kind: "account",
+      title: input.kind === "suspension" ? `Your account was suspended until ${endsAt!.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}` : endsAt ? "Your account was banned for a time" : "Your account was banned",
+      body: `Reason: ${REASONS[input.reason]}. If you think this is wrong, you can ask for a review.`,
+      href: "/appeal",
+    },
+    store,
+  );
   return doc;
 }
 
-/** Ends a restriction early and restores the account. */
-export async function lift(actor: Actor, restrictionId: string, note: string): Promise<void> {
+/** Ends a restriction early and restores the account. `quiet` skips the notification when the caller sends its own. */
+export async function lift(actor: Actor, restrictionId: string, note: string, options: { quiet?: boolean } = {}): Promise<void> {
   const store = await db();
   const row = await restrictions(store).findOne({ _id: restrictionId });
   if (!row) throw new RestrictionError("That restriction doesn't exist.", 404);
@@ -139,6 +151,7 @@ export async function lift(actor: Actor, restrictionId: string, note: string): P
   await restrictions(store).updateOne({ _id: restrictionId }, { $set: { liftedAt: new Date(), liftedBy: actor.user._id, liftNote: note.trim().slice(0, 300) } });
   await store.collection(STORE_COLLECTIONS.users).updateOne({ _id: row.userId }, { $set: { status: "active" }, $unset: { restrictedUntil: "" } });
   await audit({ actorId: actor.user._id, actorEmail: actor.user.email, action: "user.restore", target: row.userId, outcome: "ok", detail: note.slice(0, 120), before: { kind: row.kind } }, store);
+  if (!options.quiet) await notify(row.userId, { kind: "account", title: "Your account has been restored", body: "Welcome back. Everything works as before." }, store);
 }
 
 /**
@@ -154,6 +167,7 @@ export async function liftIfExpired(user: UserDoc, store?: Store): Promise<UserD
   const rows = await db.collection<RestrictionDoc>(STORE_COLLECTIONS.restrictions).find({ userId: user._id }, { sort: { startsAt: -1 }, limit: 5 }).toArray();
   for (const row of rows) if (!row.liftedAt && !row.permanent) await db.collection(STORE_COLLECTIONS.restrictions).updateOne({ _id: row._id }, { $set: { liftedAt: new Date(), liftedBy: "expiry" } });
   await audit({ action: "user.restore", target: user._id, outcome: "ok", detail: "timed restriction expired" }, db);
+  await notify(user._id, { kind: "account", title: "Your account restriction has ended", body: "Welcome back. Everything works as before." }, db);
   return { ...user, status: "active", restrictedUntil: undefined };
 }
 
@@ -184,5 +198,10 @@ export async function decideAppeal(actor: Actor, restrictionId: string, decision
   if (row.createdBy === actor.user._id && !actor.access.superAdmin) throw new RestrictionError("Someone other than the admin who set the restriction should decide the appeal.", 403);
   await restrictions(store).updateOne({ _id: restrictionId }, { $set: { appeal: { ...row.appeal, status: decision, decidedAt: new Date(), decidedBy: actor.user._id, note: note.trim().slice(0, 500) } } });
   await audit({ actorId: actor.user._id, actorEmail: actor.user.email, action: `appeal.${decision}`, target: restrictionId, outcome: "ok", detail: note.slice(0, 120) }, store);
-  if (decision === "overturned") await lift(actor, restrictionId, `Appeal overturned: ${note}`);
+  if (decision === "overturned") {
+    await lift(actor, restrictionId, `Appeal overturned: ${note}`, { quiet: true });
+    await notify(row.userId, { kind: "appeal", title: "Your appeal was accepted", body: "The restriction has been lifted and your account is restored." }, store);
+  } else {
+    await notify(row.userId, { kind: "appeal", title: "Your appeal was reviewed", body: "After a second look, the restriction stays in place. This decision is final." }, store);
+  }
 }

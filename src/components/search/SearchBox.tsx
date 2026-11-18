@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { track } from "@/lib/analytics/track";
 import { Loader2, MapPin, Search } from "lucide-react";
 import { searchEntries, type SearchEntry } from "@/features/discovery/search";
 import { cn } from "@/lib/utils";
@@ -55,6 +56,19 @@ export function SearchBox({
 
   const results = useMemo(() => (entries ? searchEntries(entries, query) : []), [entries, query]);
   const showPanel = open && (query.trim().length > 0 || variant === "plain");
+
+  // Counts a search once the typing has paused, with how many results it found (zero included).
+  const counted = useRef("");
+  useEffect(() => {
+    const words = query.trim();
+    if (!entries || words.length < 2) return;
+    const timer = window.setTimeout(() => {
+      if (counted.current === words.toLowerCase()) return;
+      counted.current = words.toLowerCase();
+      track("search", { q: words, c: results.length });
+    }, 1500);
+    return () => window.clearTimeout(timer);
+  }, [entries, query, results.length]);
 
   const go = (href: string) => {
     setOpen(false);

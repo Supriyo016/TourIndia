@@ -5,6 +5,7 @@ import { Check, Copy, Link2, Link2Off, Pencil, Trash2 } from "lucide-react";
 import { postJson, useAuth } from "@/components/auth/AuthProvider";
 import type { CollectionView } from "@/features/saved/service";
 import { useFavourites } from "@/hooks/use-stored-value";
+import { track } from "@/lib/analytics/track";
 
 /** One collection: shows its places, and opens an editor for the name, note and which saved places it holds. */
 function CollectionCard({ collection, names, saved, onChange, onDelete }: { collection: CollectionView; names: Record<string, string>; saved: string[]; onChange: (next: CollectionView) => void; onDelete: () => void }) {
@@ -146,7 +147,7 @@ function CollectionCard({ collection, names, saved, onChange, onDelete }: { coll
                 </button>
               </div>
             ) : (
-              <button type="button" className="btn btn-outline" disabled={busy} onClick={() => void run({ action: "collection-share", on: true })}>
+              <button type="button" className="btn btn-outline" disabled={busy} onClick={() => void run({ action: "collection-share", on: true }, () => track("share_link", { k: "collection" }))}>
                 <Link2 className="size-4" aria-hidden /> Make a read-only link
               </button>
             )}

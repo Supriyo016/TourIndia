@@ -131,7 +131,7 @@ describe("consent", () => {
     const response = await consent(post("/api/consent", { preferences: true }, { base: "https://tourindia.test" }));
     expect(response.status).toBe(200);
     const cookie = response.headers.get("set-cookie") ?? "";
-    expect(cookie).toMatch(/^ti_consent=1\.1\.\d+/);
+    expect(cookie).toMatch(/^ti_consent=2\.1\.0\.\d+/);
     expect(cookie).toContain("Secure");
     expect(cookie.toLowerCase()).toContain("samesite=lax");
     expect(cookie).toContain("Max-Age=15552000");

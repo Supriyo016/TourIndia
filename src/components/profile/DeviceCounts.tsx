@@ -5,8 +5,8 @@ import { isStringList, STORAGE_KEYS, useStoredValue } from "@/hooks/use-stored-v
 
 const NONE: string[] = [];
 
-/** What's saved: trips, places, stamps and collections from the account; recently viewed from this browser. */
-export function DeviceCounts({ account }: { account: { places: number; stamps: number; collections: number; trips: number } | null }) {
+/** What's saved: trips, places, stamps, collections and notes from the account; recently viewed from this browser. */
+export function DeviceCounts({ account }: { account: { places: number; stamps: number; collections: number; trips: number; notes: number } | null }) {
   const [recent] = useStoredValue<string[]>(STORAGE_KEYS.recent, NONE, isStringList);
   const items = [
     ...(account
@@ -14,7 +14,8 @@ export function DeviceCounts({ account }: { account: { places: number; stamps: n
           ["Trips", account.trips],
           ["Saved places", account.places],
           ["Collections", account.collections],
-          ["Passport stamps", account.stamps],
+          ["States visited", account.stamps],
+          ["Notes", account.notes],
         ] as const)
       : []),
     ["Recently viewed", recent.length],
@@ -29,7 +30,7 @@ export function DeviceCounts({ account }: { account: { places: number; stamps: n
           Open your saved list
         </Link>
       </div>
-      <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+      <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {items.map(([label, count]) => (
           <div key={label} className="rounded-[var(--radius-md)] bg-surface-2 p-3">
             <dt className="text-sm text-ink-2">{label}</dt>
@@ -37,7 +38,7 @@ export function DeviceCounts({ account }: { account: { places: number; stamps: n
           </div>
         ))}
       </dl>
-      <p className="mt-3 text-sm text-muted">Trips, saved places, collections and stamps are kept in your account. Recently viewed stays in this browser.</p>
+      <p className="mt-3 text-sm text-muted">Trips, saved places, collections, your passport and notes are kept in your account. Recently viewed stays in this browser.</p>
     </section>
   );
 }

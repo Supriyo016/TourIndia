@@ -1,8 +1,10 @@
+import { gated } from "@/features/settings/gate";
 import { createFormHandler } from "@/lib/api/form-handler";
 import { COLLECTIONS } from "@/lib/database/mongo";
 import { storySchema } from "@/lib/validation/forms";
 
-export const POST = createFormHandler({
+// Admins can pause this from the settings page.
+export const POST = gated("stories", createFormHandler({
   schema: storySchema,
   bucket: "stories",
   limit: { max: 3, windowSeconds: 3600 },
@@ -18,4 +20,4 @@ export const POST = createFormHandler({
       createdAt: new Date(),
     });
   },
-});
+}));

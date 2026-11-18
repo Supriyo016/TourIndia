@@ -10,6 +10,11 @@ export function getImage(key: ImageKey): LicensedImage | undefined {
   return images[key];
 }
 
+/** An image chosen in the media manager (a content field), if it names a real image; otherwise the page's own. */
+export function chosenImage(choice: unknown, fallback: ImageKey): ImageKey {
+  return typeof choice === "string" && Object.hasOwn(images, choice) ? (choice as ImageKey) : fallback;
+}
+
 export function allImages(): (LicensedImage & { key: string })[] {
   return Object.entries(images).map(([key, image]) => ({ key, ...image }));
 }

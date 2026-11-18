@@ -121,16 +121,40 @@ const collections = {
     },
     indexes: [[{ username: 1 }, { unique: true, partialFilterExpression: { username: { $type: "string" } } }]],
   },
-  // Saved places and passport stamps, one per user (_id is the user id).
+  // Saved places and the passport, one per user (_id is the user id). stamps = the visited states.
   saved_lists: {
     required: ["places", "stamps", "updatedAt"],
     properties: {
       _id: { bsonType: "string" },
       places: { bsonType: "array", maxItems: 500, items: str(80) },
       stamps: { bsonType: "array", maxItems: 60, items: str(80) },
+      passport: {
+        bsonType: "array",
+        maxItems: 60,
+        items: {
+          bsonType: "object",
+          required: ["state", "status"],
+          additionalProperties: false,
+          properties: { state: str(80), status: { enum: ["want", "exploring", "visited"] }, month: { bsonType: "string", pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$" } },
+        },
+      },
       updatedAt: { bsonType: "date" },
     },
     indexes: [],
+  },
+  // Private plan notes, one per note. noteId is made by the browser and is unique per person.
+  user_notes: {
+    required: ["userId", "noteId", "title", "body", "date", "createdAt", "updatedAt"],
+    properties: {
+      userId: str(36),
+      noteId: { bsonType: "string", pattern: "^[A-Za-z0-9_-]{1,40}$" },
+      title: str(120),
+      body: str(5000),
+      date: { bsonType: ["string", "null"], pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, noteId: 1 }, { unique: true }], [{ userId: 1, createdAt: -1 }, {}]],
   },
   // Named lists of places. shareId is the read-only link's address while sharing is on.
   collections: {
@@ -161,6 +185,90 @@ const collections = {
       updatedAt: { bsonType: "date" },
     },
     indexes: [[{ userId: 1, updatedAt: -1 }, {}], [{ shareId: 1 }, { unique: true, partialFilterExpression: { shareId: { $type: "string" } } }]],
+  },
+  // Analytics (cookieless, consent only). Raw events go after 90 days; daily totals are kept;
+  // visitor hashes (daily key, never stored with events) go after 2 days.
+  analytics_events: {
+    required: ["at", "day", "type", "path", "device", "browser", "expiresAt"],
+    properties: {
+      at: { bsonType: "date" },
+      day: str(10),
+      type: { enum: ["view", "event", "vital"] },
+      path: str(120),
+      name: str(20),
+      variant: str(20),
+      referrer: str(80),
+      from: str(120),
+      query: str(60),
+      results: { bsonType: ["int", "long", "double"] },
+      value: { bsonType: ["int", "long", "double"] },
+      rating: { enum: ["good", "ni", "poor"] },
+      device: { enum: ["mobile", "tablet", "desktop"] },
+      browser: str(20),
+      country: str(2),
+      state: str(60),
+      expiresAt: { bsonType: "date" },
+    },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }], [{ day: 1, type: 1 }, {}]],
+  },
+  analytics_daily: {
+    required: ["day", "dim", "key", "count"],
+    properties: { day: str(10), dim: str(20), key: str(140), count: { bsonType: ["int", "long", "double"] } },
+    indexes: [[{ day: 1, dim: 1 }, {}], [{ dim: 1, day: 1 }, {}]],
+  },
+  // Core Web Vitals per UTC day, metric and page (written by /api/collect, read by the Health page).
+  web_vitals: {
+    required: ["day", "metric", "path", "count"],
+    properties: {
+      day: str(10),
+      metric: { enum: ["LCP", "INP", "CLS", "FCP", "TTFB"] },
+      path: str(120),
+      count: { bsonType: ["int", "long", "double"] },
+      good: { bsonType: ["int", "long", "double"] },
+      needsImprovement: { bsonType: ["int", "long", "double"] },
+      poor: { bsonType: ["int", "long", "double"] },
+      sum: { bsonType: ["int", "long", "double"] },
+    },
+    indexes: [[{ day: -1 }, {}]],
+  },
+  analytics_visitors: {
+    required: ["day", "expiresAt"],
+    properties: { day: str(10), expiresAt: { bsonType: "date" } },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
+  },
+  // Travel memories: private unless one is shared by link. Photos are keys of the site's own gallery images.
+  memories: {
+    required: ["userId", "title", "body", "date", "place", "tags", "photos", "createdAt", "updatedAt"],
+    properties: {
+      userId: str(36),
+      title: str(100),
+      body: str(4000),
+      date: { bsonType: "string", pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+      place: { bsonType: "string", pattern: "^(?:(?:place|state):[a-z0-9-]{1,60})?$" },
+      tags: { bsonType: "array", maxItems: 10, items: str(30) },
+      photos: { bsonType: "array", maxItems: 6, items: str(120) },
+      shareId: { bsonType: "string", pattern: "^[A-Za-z0-9_-]{16}$" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, date: -1 }, {}], [{ shareId: 1 }, { unique: true, partialFilterExpression: { shareId: { $type: "string" } } }]],
+  },
+  // Travel quiz results: the answers, and the matches worked out on the server.
+  quiz_attempts: {
+    required: ["userId", "answers", "matches", "createdAt"],
+    properties: {
+      userId: str(36),
+      answers: str(400),
+      matches: { bsonType: "array", maxItems: 12, items: str(80) },
+      createdAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, createdAt: -1 }, {}]],
+  },
+  // When each achievement was first earned, one document per user (_id is the user id).
+  achievements: {
+    required: ["earned", "updatedAt"],
+    properties: { earned: { bsonType: "object" }, updatedAt: { bsonType: "date" } },
+    indexes: [],
   },
   otp_codes: {
     required: ["codeHash", "attempts", "sentAt", "expiresAt"],
@@ -232,6 +340,79 @@ const collections = {
     properties: { target: str(100), field: str(40), approvedAt: { bsonType: "date" } },
     indexes: [[{ target: 1 }, {}]],
   },
+  // CMS: one record per editable page, and the versions of its fields (Draft → Review → Approved → Published → Archived).
+  content_items: {
+    required: ["target", "type", "slug", "title", "path", "nextNumber", "updatedAt"],
+    properties: { _id: { bsonType: "string" }, target: str(100), type: str(20), slug: str(80), title: str(120), path: str(160), nextNumber: { bsonType: ["int", "long", "double"] }, updatedAt: { bsonType: "date" } },
+    indexes: [],
+  },
+  content_versions: {
+    required: ["target", "number", "status", "fields", "note", "source", "createdBy", "createdAt", "updatedAt"],
+    properties: {
+      _id: { bsonType: "string" },
+      target: str(100),
+      number: { bsonType: ["int", "long", "double"] },
+      status: { enum: ["draft", "review", "approved", "published", "archived"] },
+      fields: { bsonType: "object" },
+      note: str(300),
+      source: { enum: ["editor", "community", "restore"] },
+      createdBy: str(36),
+      createdByEmail: str(254),
+      reviewNote: str(300),
+      publishAt: { bsonType: "date" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ target: 1, number: -1 }, { unique: true }], [{ status: 1, publishAt: 1 }, {}], [{ status: 1, updatedAt: -1 }, {}]],
+  },
+  // Yatri: one record per answer (words only with consent, redacted), deleted after 30 days; daily counts.
+  yatri_questions: {
+    required: ["mode", "confidence", "tokenHash", "status", "createdAt", "expiresAt"],
+    properties: {
+      _id: { bsonType: "string" },
+      question: { bsonType: ["string", "null"], maxLength: 300 },
+      mode: { enum: ["ai", "guide"] },
+      confidence: { enum: ["ok", "low", "unanswered"] },
+      tokenHash: str(64),
+      feedback: { enum: ["up", "down", null] },
+      status: { enum: ["new", "handled"] },
+      handledBy: str(36),
+      handledNote: str(300),
+      createdAt: { bsonType: "date" },
+      expiresAt: { bsonType: "date" },
+    },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }], [{ status: 1, createdAt: -1 }, {}], [{ confidence: 1, createdAt: -1 }, {}]],
+  },
+  yatri_usage: { required: [], properties: { _id: str(10) }, indexes: [] },
+  // The improvement engine's recommendations: evidence recomputed on each visit, review state kept.
+  recommendations: {
+    required: ["kind", "title", "evidence", "count", "state", "active", "firstSeen", "lastSeen"],
+    properties: {
+      _id: str(200),
+      kind: { enum: ["zero-search", "yatri-gap", "wrong-report", "missing-image", "missing-alt"] },
+      title: str(200),
+      evidence: str(300),
+      state: { enum: ["new", "accepted", "dismissed", "done"] },
+      active: { bsonType: "bool" },
+      decidedBy: str(36),
+      note: str(300),
+      firstSeen: { bsonType: "date" },
+      lastSeen: { bsonType: "date" },
+    },
+    indexes: [[{ state: 1, count: -1 }, {}], [{ active: 1 }, {}]],
+  },
+  // Site settings: one document (_id "site") with feature flags and maintenance mode.
+  site_settings: {
+    required: [],
+    properties: {
+      _id: str(20),
+      flags: { bsonType: "object" },
+      maintenance: { bsonType: "object", properties: { on: { bsonType: "bool" }, message: str(300), since: { bsonType: "date" }, by: str(36) } },
+      updatedAt: { bsonType: "date" },
+      updatedBy: str(36),
+    },
+    indexes: [],
+  },
   reports: {
     required: ["commentId", "userId", "reason", "createdAt"],
     properties: { commentId: str(36), userId: str(36), reason: str(20), createdAt: { bsonType: "date" } },
@@ -274,6 +455,33 @@ const collections = {
     properties: { reference: str(12), status: { enum: ["new", "contacted", "closed"] }, createdAt: { bsonType: "date" } },
     indexes: [[{ reference: 1 }, { unique: true }], [{ userId: 1, createdAt: -1 }, {}]],
   },
+  // In-app notifications (P8): short fixed wording written by the app, expire after 180 days.
+  user_notifications: {
+    required: ["userId", "kind", "title", "createdAt", "expiresAt"],
+    properties: {
+      userId: str(36),
+      kind: { enum: ["support", "appeal", "account", "edit", "comment"] },
+      title: str(140),
+      body: str(400),
+      href: { bsonType: "string", maxLength: 200, pattern: "^/" },
+      createdAt: { bsonType: "date" },
+      readAt: { bsonType: "date" },
+      expiresAt: { bsonType: "date" },
+    },
+    indexes: [[{ userId: 1, createdAt: -1 }, {}], [{ userId: 1, readAt: 1 }, {}], [{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
+  },
+  // Server errors for the health page (P8): where and what kind, never messages or people; 30 days.
+  app_errors: {
+    required: ["at", "source", "name", "expiresAt"],
+    properties: { at: { bsonType: "date" }, source: str(40), name: str(60), expiresAt: { bsonType: "date" } },
+    indexes: [[{ at: -1 }, {}], [{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
+  },
+  // Backup history (P8): who made a download, when, counts and checksum. The data itself isn't kept.
+  backups: {
+    required: ["createdAt", "createdBy", "status"],
+    properties: { createdAt: { bsonType: "date" }, createdBy: str(36), createdByEmail: str(254), status: { enum: ["started", "complete"] }, checksum: str(64), finishedAt: { bsonType: "date" } },
+    indexes: [[{ createdAt: -1 }, {}], [{ checksum: 1 }, {}]],
+  },
   // Cached page translations, keyed by a hash of language and source text; they expire after 180 days.
   translations: {
     required: ["lang", "text", "createdAt", "expiresAt"],
@@ -310,6 +518,16 @@ try {
     migrated += 1;
   }
   if (migrated) console.log(`migrated: ${migrated} contact messages to tickets`);
+
+  // One-off migration: passport stamps from before statuses become visits.
+  const saved = db.collection("saved_lists");
+  let passports = 0;
+  for await (const old of saved.find({ passport: { $exists: false } }, { projection: { _id: 1, stamps: 1 } })) {
+    const stamps = [...new Set(Array.isArray(old.stamps) ? old.stamps : [])].filter((state) => typeof state === "string");
+    await saved.updateOne({ _id: old._id, passport: { $exists: false } }, { $set: { passport: stamps.map((state) => ({ state, status: "visited" })) } });
+    passports += 1;
+  }
+  if (passports) console.log(`migrated: ${passports} passports to statuses`);
 } catch (error) {
   // Only the error's name is printed, never the connection string.
   console.error(`db-setup failed: ${error?.name ?? "Error"}${error?.codeName ? ` (${error.codeName})` : ""}`);

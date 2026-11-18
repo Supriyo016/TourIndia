@@ -30,6 +30,7 @@ import { RouteOverlay } from "./RouteOverlay";
 import { ExpenseTracker, PackingChecklist } from "./TripExtras";
 import { MapsAndLinks, TripAnalysisPanel } from "./TripAnalysisPanel";
 import type { FestivalFact } from "@/features/itinerary/analysis";
+import { track } from "@/lib/analytics/track";
 
 const NO_TRIPS: SavedTrip[] = [];
 
@@ -167,6 +168,7 @@ function Planner({ catalogue, festivals, states, mapBase, map, initial, editing 
     );
     setTrip(result);
     setDays(result.days);
+    track("planner_build");
     setStatus("");
     window.setTimeout(() => document.getElementById("itinerary")?.scrollIntoView({ block: "start" }), 40);
   };
@@ -206,6 +208,7 @@ function Planner({ catalogue, festivals, states, mapBase, map, initial, editing 
           setSavedId(created.id);
         }
         setStatus("Trip saved to your account.");
+        track("planner_save", { k: "account" });
       } catch (problem) {
         setStatus((problem as Error).message);
       } finally {
@@ -214,6 +217,7 @@ function Planner({ catalogue, festivals, states, mapBase, map, initial, editing 
       return;
     }
     const stored = setSaved((current) => [{ id: `${Date.now()}`, name, input: trip.input, days, savedAt: new Date().toISOString() }, ...current].slice(0, 20));
+    if (stored) track("planner_save", { k: "device" });
     setStatus(stored ? "Trip saved on this device." : "This browser wouldn't let us save the trip. Use Copy share link to keep it.");
   };
 
@@ -400,6 +404,7 @@ function Planner({ catalogue, festivals, states, mapBase, map, initial, editing 
                 className="btn btn-outline"
                 onClick={async () => {
                   try {
+                    track("share_link", { k: "planner" });
                     await navigator.clipboard.writeText(shareLink());
                     setStatus("Share link copied.");
                   } catch {

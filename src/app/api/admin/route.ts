@@ -5,6 +5,7 @@ import { isDenied, requireAdminApi } from "@/features/admin/guard";
 import { endUserSessions, TeamError } from "@/features/admin/team";
 import { activeRestriction, lift, restrict, RestrictionError } from "@/features/admin/restrictions";
 import { CommunityError, decideEdit, moderateComment } from "@/features/community/service";
+import { reportError } from "@/lib/monitoring/errors";
 
 const id = z.string().uuid();
 const note = z.string().trim().max(300).default("");
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof CommunityError || error instanceof TeamError || error instanceof RestrictionError) return fail(error.status, error.message);
-    console.error("[admin]", error);
+    void reportError("admin", error);
     return unavailable();
   }
 }
