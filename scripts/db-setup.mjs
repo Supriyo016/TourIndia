@@ -293,6 +293,18 @@ const collections = {
     },
     indexes: [[{ state: 1, count: -1 }, {}], [{ active: 1 }, {}]],
   },
+  // Site settings: one document (_id "site") with feature flags and maintenance mode.
+  site_settings: {
+    required: [],
+    properties: {
+      _id: str(20),
+      flags: { bsonType: "object" },
+      maintenance: { bsonType: "object", properties: { on: { bsonType: "bool" }, message: str(300), since: { bsonType: "date" }, by: str(36) } },
+      updatedAt: { bsonType: "date" },
+      updatedBy: str(36),
+    },
+    indexes: [],
+  },
   reports: {
     required: ["commentId", "userId", "reason", "createdAt"],
     properties: { commentId: str(36), userId: str(36), reason: str(20), createdAt: { bsonType: "date" } },

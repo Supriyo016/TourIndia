@@ -1,3 +1,4 @@
+import { featureOff } from "@/features/settings/gate";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { isAssistantConnected, runYatri } from "@/features/assistant/agent";
@@ -32,6 +33,8 @@ const dailyLimit = () => {
 const fail = (status: number, error: string) => NextResponse.json({ error }, { status });
 
 export async function POST(request: NextRequest) {
+  const paused = await featureOff("assistant");
+  if (paused) return paused;
   const guarded = await guardJsonPost(request, "assistant", { max: 40, windowSeconds: 3600 });
   if (guarded instanceof NextResponse) return guarded;
 

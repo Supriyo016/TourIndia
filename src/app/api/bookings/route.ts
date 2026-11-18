@@ -1,3 +1,4 @@
+import { featureOff } from "@/features/settings/gate";
 import { randomInt, randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { getDestination } from "@/data";
@@ -40,6 +41,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   if (!isStoreAvailable()) return unavailable();
+  const paused = await featureOff("bookings");
+  if (paused) return paused;
   const body = await readJson(request, bookingSchema, "booking", { max: 10, windowSeconds: 3600 });
   if (body instanceof NextResponse) return body;
   const session = await sessionFromRequest(request).catch(() => null);
