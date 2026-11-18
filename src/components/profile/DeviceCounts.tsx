@@ -1,24 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { isSavedTripList, isStringList, STORAGE_KEYS, useStoredValue, type SavedTrip } from "@/hooks/use-stored-value";
+import { isStringList, STORAGE_KEYS, useStoredValue } from "@/hooks/use-stored-value";
 
 const NONE: string[] = [];
-const NO_TRIPS: SavedTrip[] = [];
 
-/** What's saved: places, stamps and collections from the account; trips and history from this browser. */
-export function DeviceCounts({ account }: { account: { places: number; stamps: number; collections: number } | null }) {
-  const [trips] = useStoredValue<SavedTrip[]>(STORAGE_KEYS.trips, NO_TRIPS, isSavedTripList);
+/** What's saved: trips, places, stamps and collections from the account; recently viewed from this browser. */
+export function DeviceCounts({ account }: { account: { places: number; stamps: number; collections: number; trips: number } | null }) {
   const [recent] = useStoredValue<string[]>(STORAGE_KEYS.recent, NONE, isStringList);
   const items = [
     ...(account
       ? ([
+          ["Trips", account.trips],
           ["Saved places", account.places],
           ["Collections", account.collections],
           ["Passport stamps", account.stamps],
         ] as const)
       : []),
-    ["Trip plans", trips.length],
     ["Recently viewed", recent.length],
   ] as const;
   return (
@@ -39,7 +37,7 @@ export function DeviceCounts({ account }: { account: { places: number; stamps: n
           </div>
         ))}
       </dl>
-      <p className="mt-3 text-sm text-muted">Saved places, collections and stamps are kept in your account. Trip plans and recently viewed stay in this browser.</p>
+      <p className="mt-3 text-sm text-muted">Trips, saved places, collections and stamps are kept in your account. Recently viewed stays in this browser.</p>
     </section>
   );
 }

@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { shareHash } from "@/features/itinerary/share";
 import { computeBadges } from "@/features/user/badges";
 import { isSavedTripList, isStringList, STORAGE_KEYS, useFavourites, useStamps, useStoredValue, type SavedTrip } from "@/hooks/use-stored-value";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { Collections } from "./Collections";
 import { cn, formatDate } from "@/lib/utils";
 import type { RegionId } from "@/types/content";
@@ -25,6 +26,7 @@ export function SavedDashboard({
   stateList: { slug: string; name: string; region: RegionId }[];
 }) {
   const { favourites, ready } = useFavourites();
+  const { user } = useAuth();
   const [recent] = useStoredValue<string[]>(STORAGE_KEYS.recent, NONE, isStringList);
   const { stamps, toggle: toggleStamp } = useStamps();
   const [trips, setTrips] = useStoredValue<SavedTrip[]>(STORAGE_KEYS.trips, NO_TRIPS, isSavedTripList);
@@ -52,9 +54,14 @@ export function SavedDashboard({
 
       <section aria-labelledby="trips">
         <h2 id="trips" className="mb-5">Saved trips</h2>
-        {trips.length === 0 ? (
+        {user ? (
           <p className="text-ink-2">
-            Trips you save from the <Link prefetch={false} href="/planner" className="link-text">planner</Link> will appear here. They stay in this browser for now.
+            Trips you save while signed in are kept in your account.{" "}
+            <Link prefetch={false} href="/profile/trips" className="link-text">Open My trips</Link>
+          </p>
+        ) : trips.length === 0 ? (
+          <p className="text-ink-2">
+            Trips you save from the <Link prefetch={false} href="/planner" className="link-text">planner</Link> will appear here. They stay in this browser until you sign in.
           </p>
         ) : (
           <ul className="grid gap-3 md:grid-cols-2">

@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Eye, IdCard, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { Compass, Eye, IdCard, LayoutDashboard, Route, ShieldCheck } from "lucide-react";
 
 const LINKS = [
   { href: "/profile", label: "Overview", Icon: LayoutDashboard },
+  { href: "/profile/trips", label: "My trips", Icon: Route },
   { href: "/profile/details", label: "Details", Icon: IdCard },
   { href: "/profile/preferences", label: "Preferences", Icon: Compass },
   { href: "/profile/privacy", label: "Privacy", Icon: Eye },
@@ -19,7 +20,7 @@ export function ProfileNav() {
     <nav aria-label="Your profile" className="lg:sticky lg:top-24">
       <ul className="scroll-thin flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
         {LINKS.map(({ href, label, Icon }) => {
-          const active = path === href;
+          const active = href === "/profile" ? path === href : path.startsWith(href);
           return (
             <li key={href} className="shrink-0">
               <Link
