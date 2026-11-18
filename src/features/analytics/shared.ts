@@ -77,6 +77,7 @@ export function referrerHost(raw: string, ownHost?: string): string | null {
 export function cleanQuery(raw: string): string | null {
   const text = raw.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}\p{M} ]+/gu, " ").replace(/\s+/g, " ").trim().slice(0, 60).trim();
   if (text.length < 2) return null;
-  if (/@/.test(raw) || /\d{5,}/.test(raw.replace(/[\s-]/g, ""))) return null;
+  // Phone numbers and other long numbers never enter analytics, however they're punctuated (415.555.1234, (022) 2345 6789).
+  if (/@/.test(raw) || /\d{5,}/.test(raw.replace(/[^\p{N}]+/gu, (gap) => (gap.length <= 3 && !/\p{L}/u.test(gap) ? "" : " ")))) return null;
   return text;
 }

@@ -57,7 +57,8 @@ export function redact(text: string): string {
   return text
     .replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, "[email]")
     .replace(/https?:\/\/\S+|www\.\S+/gi, "[link]")
-    .replace(/\+?\d[\d\s-]{7,}\d/g, "[number]")
+    // Any run of 8+ digits joined by spaces, hyphens, dots, slashes or brackets: phone numbers in every common format.
+    .replace(/\+?\(?\d[\d\s().\/-]{6,}\d/g, (match) => (match.replace(/\D/g, "").length >= 8 ? "[number]" : match))
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 300);

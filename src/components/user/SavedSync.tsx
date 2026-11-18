@@ -120,6 +120,10 @@ export function SavedSync() {
           const notes = offer.extra.notes.map(({ id, title, body, date }) => ({ id, title: title.slice(0, 120), body: body.slice(0, 5000), date }));
           for (let i = 0; i < notes.length; i += 5) await post("/api/notes", { action: "import", notes: notes.slice(i, i + 5) });
           merged.notes = (await getJson<{ notes: PlanNote[] }>("/api/notes"))?.notes ?? merged.notes;
+          // Past the account's note limit some may not fit. Keep this browser's copy rather than lose them.
+          const inAccount = new Set(merged.notes.map((note) => note.id));
+          const left = notes.filter((note) => !inAccount.has(note.id)).length;
+          if (left) throw new Error(`Your account holds up to 100 notes, so ${left} ${left === 1 ? "note" : "notes"} didn't fit. ${left === 1 ? "It's" : "They're"} still in this browser: delete some notes in your account, then try again.`);
         }
         lists = merged;
         // Five at a time keeps each request small; a trip that can't be rebuilt is skipped by the server.

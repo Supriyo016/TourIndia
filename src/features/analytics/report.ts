@@ -159,9 +159,10 @@ export async function readTotals(store: Store, from: string, to: string): Promis
   return store.collection<DailyTotal>(STORE_COLLECTIONS.analyticsDaily).find({ day: { $gte: from, $lte: to } }, { limit: 200_000 }).toArray();
 }
 
+// Every matching row: totals and averages must not be cut short. Rows are one per day, metric and page.
 export async function readVitals(store: Store, range: Range, now = new Date()): Promise<WebVitalTotal[]> {
   const [from, to] = utcRange(range, now);
-  return store.collection<WebVitalTotal>(STORE_COLLECTIONS.webVitals).find({ day: { $gte: from, $lte: to } }, { limit: 50_000 }).toArray();
+  return store.collection<WebVitalTotal>(STORE_COLLECTIONS.webVitals).find({ day: { $gte: from, $lte: to } }).toArray();
 }
 
 export async function firstRecordedDay(store: Store): Promise<string | null> {
