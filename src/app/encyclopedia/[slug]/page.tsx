@@ -8,6 +8,7 @@ import { destinations, getDestination, getState } from "@/data";
 import { categoryName, formatMonthRange, regionName } from "@/data/taxonomy";
 import { overridesFor } from "@/features/community/service";
 import { applyOverrides } from "@/features/community/targets";
+import { chosenImage } from "@/lib/images";
 
 export function generateStaticParams() {
   return destinations.map(({ slug }) => ({ slug }));
@@ -54,7 +55,7 @@ export default async function PlaceEncyclopediaPage({ params }: PageProps<"/ency
         source={item}
         path={path}
         guide={{ href: `/destinations/${slug}`, label: `Read the full ${item.name} travel guide` }}
-        imageKey={`destination:${slug}`}
+        imageKey={chosenImage((item as { image?: unknown }).image, `destination:${slug}`)}
         referenceStem={slug}
         infobox={[
           ["State", state ? <Link prefetch={false} href={`/encyclopedia/states/${state.slug}`} className="link-text">{state.name}</Link> : "—"],

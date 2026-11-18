@@ -232,6 +232,31 @@ const collections = {
     properties: { target: str(100), field: str(40), approvedAt: { bsonType: "date" } },
     indexes: [[{ target: 1 }, {}]],
   },
+  // CMS: one record per editable page, and the versions of its fields (Draft → Review → Approved → Published → Archived).
+  content_items: {
+    required: ["target", "type", "slug", "title", "path", "nextNumber", "updatedAt"],
+    properties: { _id: { bsonType: "string" }, target: str(100), type: str(20), slug: str(80), title: str(120), path: str(160), nextNumber: { bsonType: ["int", "long", "double"] }, updatedAt: { bsonType: "date" } },
+    indexes: [],
+  },
+  content_versions: {
+    required: ["target", "number", "status", "fields", "note", "source", "createdBy", "createdAt", "updatedAt"],
+    properties: {
+      _id: { bsonType: "string" },
+      target: str(100),
+      number: { bsonType: ["int", "long", "double"] },
+      status: { enum: ["draft", "review", "approved", "published", "archived"] },
+      fields: { bsonType: "object" },
+      note: str(300),
+      source: { enum: ["editor", "community", "restore"] },
+      createdBy: str(36),
+      createdByEmail: str(254),
+      reviewNote: str(300),
+      publishAt: { bsonType: "date" },
+      createdAt: { bsonType: "date" },
+      updatedAt: { bsonType: "date" },
+    },
+    indexes: [[{ target: 1, number: -1 }, { unique: true }], [{ status: 1, publishAt: 1 }, {}], [{ status: 1, updatedAt: -1 }, {}]],
+  },
   reports: {
     required: ["commentId", "userId", "reason", "createdAt"],
     properties: { commentId: str(36), userId: str(36), reason: str(20), createdAt: { bsonType: "date" } },

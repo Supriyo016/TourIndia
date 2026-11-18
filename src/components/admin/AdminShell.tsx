@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Gauge, Inbox, KeyRound, LayoutDashboard, LifeBuoy, MessageSquareWarning, Users, UsersRound } from "lucide-react";
+import { FilePenLine, Gauge, Inbox, KeyRound, LayoutDashboard, LifeBuoy, MessageSquareWarning, Users, UsersRound } from "lucide-react";
 import type { Permission } from "@/features/admin/permissions";
 
 const SECTIONS: { href: string; label: string; needs?: Permission; Icon: typeof Gauge }[] = [
@@ -9,6 +9,7 @@ const SECTIONS: { href: string; label: string; needs?: Permission; Icon: typeof 
   { href: "/admin/queue", label: "Moderation queue", needs: "moderation.manage", Icon: Inbox },
   { href: "/admin", label: "Comments and edits", needs: "moderation.manage", Icon: MessageSquareWarning },
   { href: "/admin/support", label: "Support tickets", needs: "support.manage", Icon: LifeBuoy },
+  { href: "/admin/content", label: "Content", needs: "content.edit", Icon: FilePenLine },
   { href: "/admin/team", label: "Team and roles", needs: "admins.manage", Icon: UsersRound },
   { href: "/admin/mfa", label: "Your authenticator", Icon: KeyRound },
 ];
