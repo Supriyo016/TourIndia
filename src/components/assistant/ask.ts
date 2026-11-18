@@ -1,4 +1,5 @@
 import type { AnswerExtras } from "@/features/assistant/extras";
+import { track } from "@/lib/analytics/track";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -13,6 +14,7 @@ export async function askYatri(
   messages: ChatMessage[],
   handlers: { onText: (text: string) => void; onTool?: (name: string) => void; onExtras?: (extras: AnswerExtras) => void; signal?: AbortSignal },
 ): Promise<AskMode> {
+  track("yatri_ask");
   const response = await fetch("/api/assistant", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

@@ -162,6 +162,56 @@ const collections = {
     },
     indexes: [[{ userId: 1, updatedAt: -1 }, {}], [{ shareId: 1 }, { unique: true, partialFilterExpression: { shareId: { $type: "string" } } }]],
   },
+  // Analytics (cookieless, consent only). Raw events go after 90 days; daily totals are kept;
+  // visitor hashes (daily key, never stored with events) go after 2 days.
+  analytics_events: {
+    required: ["at", "day", "type", "path", "device", "browser", "expiresAt"],
+    properties: {
+      at: { bsonType: "date" },
+      day: str(10),
+      type: { enum: ["view", "event", "vital"] },
+      path: str(120),
+      name: str(20),
+      variant: str(20),
+      referrer: str(80),
+      from: str(120),
+      query: str(60),
+      results: { bsonType: ["int", "long", "double"] },
+      value: { bsonType: ["int", "long", "double"] },
+      rating: { enum: ["good", "ni", "poor"] },
+      device: { enum: ["mobile", "tablet", "desktop"] },
+      browser: str(20),
+      country: str(2),
+      state: str(60),
+      expiresAt: { bsonType: "date" },
+    },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }], [{ day: 1, type: 1 }, {}]],
+  },
+  analytics_daily: {
+    required: ["day", "dim", "key", "count"],
+    properties: { day: str(10), dim: str(20), key: str(140), count: { bsonType: ["int", "long", "double"] } },
+    indexes: [[{ day: 1, dim: 1 }, {}], [{ dim: 1, day: 1 }, {}]],
+  },
+  // Core Web Vitals per UTC day, metric and page (written by /api/collect, read by the Health page).
+  web_vitals: {
+    required: ["day", "metric", "path", "count"],
+    properties: {
+      day: str(10),
+      metric: { enum: ["LCP", "INP", "CLS", "FCP", "TTFB"] },
+      path: str(120),
+      count: { bsonType: ["int", "long", "double"] },
+      good: { bsonType: ["int", "long", "double"] },
+      needsImprovement: { bsonType: ["int", "long", "double"] },
+      poor: { bsonType: ["int", "long", "double"] },
+      sum: { bsonType: ["int", "long", "double"] },
+    },
+    indexes: [[{ day: -1 }, {}]],
+  },
+  analytics_visitors: {
+    required: ["day", "expiresAt"],
+    properties: { day: str(10), expiresAt: { bsonType: "date" } },
+    indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }]],
+  },
   otp_codes: {
     required: ["codeHash", "attempts", "sentAt", "expiresAt"],
     properties: { codeHash: str(64), attempts: { bsonType: "int" }, sentAt: { bsonType: "date" }, expiresAt: { bsonType: "date" } },

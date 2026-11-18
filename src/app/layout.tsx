@@ -5,6 +5,7 @@ import { Figtree, Fraunces, Rubik_Wet_Paint } from "next/font/google";
 import { YatriLauncher } from "@/components/assistant/YatriLauncher";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { CookieConsent } from "@/components/layout/CookieConsent";
+import { AnalyticsBeacon } from "@/components/layout/AnalyticsBeacon";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { RouteProgress } from "@/components/layout/RouteProgress";
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
         </AuthProvider>
         <CookieConsent />
+        <AnalyticsBeacon />
         <YatriLauncher />
         <TiltLayer />
       </body>

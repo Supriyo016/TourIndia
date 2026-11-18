@@ -1,0 +1,144 @@
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  align-items: start;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.stats {
+  display: grid;
+  gap: 0.5rem 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+}
+
+.stat dd {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Traffic: one column per day; page views full width, unique visitors a narrower bar in front. */
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 11rem;
+  padding-top: 0.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.column {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+}
+
+.column .views,
+.column .visitors {
+  position: absolute;
+  bottom: 0;
+  border-radius: 2px 2px 0 0;
+}
+
+.column .views {
+  left: 0;
+  right: 0;
+}
+
+.column .visitors {
+  left: 25%;
+  right: 25%;
+}
+
+.views {
+  background: var(--brand);
+}
+
+.visitors {
+  background: var(--accent);
+}
+
+.key {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+}
+
+.scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: 0.4rem 0.25rem;
+  border-top: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table thead th {
+  border-top: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.table tbody th {
+  font-weight: 400;
+}
+
+.num {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.label {
+  position: relative;
+  width: 100%;
+}
+
+.bar {
+  position: absolute;
+  inset: 0.2rem auto 0.2rem 0;
+  border-radius: 3px;
+  background: var(--brand-soft);
+}
+
+.labelText {
+  position: relative;
+  overflow-wrap: anywhere;
+}
+
+/* Good / needs improvement / poor, as shares of one bar. Text above gives the same numbers. */
+.split {
+  display: flex;
+  height: 0.6rem;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.good {
+  background: var(--forest);
+}
+
+.ni {
+  background: var(--gold);
+}
+
+.poor {
+  background: var(--danger);
+}
