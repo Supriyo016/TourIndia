@@ -47,6 +47,12 @@ export const STORE_COLLECTIONS = {
   collections: "collections",
   /** Trips saved from the planner, one document per trip. */
   trips: "trips",
+  /** Travel memories, private unless one is shared by link. */
+  memories: "memories",
+  /** Travel quiz results saved by signed-in people. */
+  quizAttempts: "quiz_attempts",
+  /** When each achievement was first earned, one document per user (_id is the user id). */
+  achievements: "achievements",
   otps: "otp_codes",
   sessions: "sessions",
   comments: "comments",
@@ -132,7 +138,7 @@ function applyUpdate(doc: Doc, update: Update, inserted: boolean) {
 }
 
 /** Keys that must be unique, as unique indexes enforce in MongoDB. */
-const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"], [STORE_COLLECTIONS.collections]: ["shareId"], [STORE_COLLECTIONS.trips]: ["shareId"] };
+const UNIQUE: Record<string, string[]> = { [STORE_COLLECTIONS.users]: ["email"], [STORE_COLLECTIONS.profiles]: ["username"], [STORE_COLLECTIONS.collections]: ["shareId"], [STORE_COLLECTIONS.trips]: ["shareId"], [STORE_COLLECTIONS.memories]: ["shareId"] };
 
 class MemoryCollection<T extends Doc> implements StoreCollection<T> {
   private docs: T[] = [];

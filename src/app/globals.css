@@ -1025,5 +1025,23 @@ html {
     border-color: #bbb;
     box-shadow: none;
   }
+  /* The memories scrapbook: a cover, then each memory kept together on a page where it fits. */
+  .scrapbook .scrapbook-cover {
+    border-color: #bbb;
+  }
+  .scrapbook .scrapbook-page {
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+  }
+  .scrapbook img {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .scrapbook figure {
+    break-inside: avoid;
+  }
+  .scrapbook h2 {
+    break-after: avoid;
+  }
 }
 

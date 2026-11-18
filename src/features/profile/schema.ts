@@ -90,7 +90,7 @@ export type Preferences = z.infer<typeof preferencesSchema>;
 export const VISIBILITY = ["private", "members", "public"] as const;
 export type Visibility = (typeof VISIBILITY)[number];
 /** Fields a person can choose to show on their public page. Name, username and avatar always show when the page is visible. */
-export const SHOWABLE = ["tagline", "bio", "city", "homeState", "website", "interests", "activity", "joined"] as const;
+export const SHOWABLE = ["tagline", "bio", "city", "homeState", "website", "interests", "activity", "joined", "achievements"] as const;
 export type Showable = (typeof SHOWABLE)[number];
 
 export const privacySchema = z

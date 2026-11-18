@@ -13,7 +13,9 @@ const KEPT = [
   ["Sign-in history", "Recent sign-ins and failed attempts, for your security."],
   ["What you save", "Trips, saved places, passport stamps and collections. A trip or collection is seen by others only while you keep its read-only link on, and the link never shows who made it."],
   ["Trip spending", "Expenses and the names you split them between. Only you see these; they never appear on a shared trip."],
-  ["What you post", "Comments, ratings, loves and suggested edits."],
+  ["Memories", "Your travel memories: titles, words, dates, places, tags and the gallery photos you pick. Private unless you turn on a read-only link for one, and the link never shows who wrote it."],
+  ["Quiz results and achievements", "Travel quiz answers saved while you're signed in, and the date each achievement was first earned. Achievements show on your page only if you tick them in the choices above."],
+  ["What you post", "Comments, ratings, loves and suggested edits, and the reports you file. My contributions lists them for you."],
 ] as const;
 
 export default async function ProfilePrivacyPage() {
