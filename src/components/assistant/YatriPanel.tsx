@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { MessageCircle, SquareTerminal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AskMode } from "./ask";
@@ -18,7 +18,9 @@ export default function YatriPanel({ onClose }: { onClose: () => void }) {
   const [mood, setMood] = useState<YatriMood>("idle");
   const panel = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // Before paint, not after: the panel is lazy-loaded, so it can appear in a non-urgent render whose
+  // ordinary effects run late. Escape must work, and focus be inside, from the first frame it shows.
+  useLayoutEffect(() => {
     panel.current?.focus();
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();

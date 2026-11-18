@@ -482,6 +482,10 @@ test.describe("Yatri", () => {
   });
 
   test("closes with Escape and returns focus", async ({ page }) => {
+    // On a slow CPU the lazy-loaded panel can show before its keyboard handling is ready, which once
+    // made Escape do nothing. Slowing the CPU (Chromium only) keeps that race covered.
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send("Emulation.setCPUThrottlingRate", { rate: 6 });
     await open(page);
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: /Yatri/ })).toHaveCount(0);
