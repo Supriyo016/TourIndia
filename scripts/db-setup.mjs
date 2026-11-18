@@ -276,6 +276,23 @@ const collections = {
     indexes: [[{ expiresAt: 1 }, { expireAfterSeconds: 0 }], [{ status: 1, createdAt: -1 }, {}], [{ confidence: 1, createdAt: -1 }, {}]],
   },
   yatri_usage: { required: [], properties: { _id: str(10) }, indexes: [] },
+  // The improvement engine's recommendations: evidence recomputed on each visit, review state kept.
+  recommendations: {
+    required: ["kind", "title", "evidence", "count", "state", "active", "firstSeen", "lastSeen"],
+    properties: {
+      _id: str(200),
+      kind: { enum: ["zero-search", "yatri-gap", "wrong-report", "missing-image", "missing-alt"] },
+      title: str(200),
+      evidence: str(300),
+      state: { enum: ["new", "accepted", "dismissed", "done"] },
+      active: { bsonType: "bool" },
+      decidedBy: str(36),
+      note: str(300),
+      firstSeen: { bsonType: "date" },
+      lastSeen: { bsonType: "date" },
+    },
+    indexes: [[{ state: 1, count: -1 }, {}], [{ active: 1 }, {}]],
+  },
   reports: {
     required: ["commentId", "userId", "reason", "createdAt"],
     properties: { commentId: str(36), userId: str(36), reason: str(20), createdAt: { bsonType: "date" } },
