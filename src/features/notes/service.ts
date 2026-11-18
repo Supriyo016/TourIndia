@@ -106,7 +106,9 @@ export async function importNotes(userId: string, input: NoteInput[]) {
   const collection = await notes();
   let count = await collection.countDocuments({ userId });
   let added = 0;
-  const start = Date.now();
+  // Start after the account's newest note, so a note saved in the same millisecond never ties.
+  const [newest] = await collection.find({ userId }, { sort: { createdAt: -1 }, limit: 1 }).toArray();
+  const start = Math.max(Date.now(), (newest?.createdAt?.getTime() ?? 0) + 1);
   // Oldest first, a millisecond apart, so the newest note ends up at the top like it was in the browser.
   for (const note of [...input].reverse()) {
     if (count >= NOTE_LIMITS.count) break;
