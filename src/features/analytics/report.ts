@@ -186,7 +186,7 @@ const cell = (value: string | number) => {
 
 /** Web Vitals totals as rows of the same table (dimension "vital", key "<metric> <path>"). */
 export const vitalsAsTotals = (rows: WebVitalTotal[]): DailyTotal[] =>
-  rows.map((row) => ({ _id: row._id, day: row.day, dim: "vital", key: `${row.metric} ${row.path}`, count: row.count, sum: row.sum, good: row.good, ni: row.needsImprovement, poor: row.poor }));
+  rows.map((row) => ({ _id: row._id, day: row.day, dim: "vital", key: `${row.metric} ${row.path}`, count: row.count, sum: Math.round(Number(row.sum) * 1000) / 1000, good: row.good, ni: row.needsImprovement, poor: row.poor }));
 
 /** Every daily total in the range, one row each, oldest first. */
 export function totalsCsv(rows: DailyTotal[]): string {
