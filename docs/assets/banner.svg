@@ -1,81 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 400" width="1280" height="400" role="img" aria-label="Tour India: discover and plan travel across India">
-  <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#031217"/>
-      <stop offset="0.55" stop-color="#0b3540"/>
-      <stop offset="1" stop-color="#14505c"/>
-    </linearGradient>
-    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#ffd98a"/>
-      <stop offset="0.6" stop-color="#f2a33c" stop-opacity="0.55"/>
-      <stop offset="1" stop-color="#e8890c" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="gold" x1="0" x2="1">
-      <stop offset="0" stop-color="#f7d774"/>
-      <stop offset="1" stop-color="#f2a33c"/>
-    </linearGradient>
-    <linearGradient id="fade" x1="0" x2="1">
-      <stop offset="0" stop-color="#031217" stop-opacity="0.85"/>
-      <stop offset="0.55" stop-color="#031217" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <style>
-    .drift{animation:drift 20s ease-in-out infinite alternate}
-    .drift2{animation:drift 28s ease-in-out infinite alternate-reverse}
-    .float{animation:float 6s ease-in-out infinite}
-    .twinkle{animation:twinkle 3.2s ease-in-out infinite}
-    .train{animation:train 16s linear infinite}
-    .glow{animation:glow 6s ease-in-out infinite}
-    @keyframes drift{to{transform:translateX(70px)}}
-    @keyframes float{50%{transform:translate(0,-12px) rotate(4deg)}}
-    @keyframes twinkle{50%{opacity:.15}}
-    @keyframes train{from{transform:translateX(-280px)}to{transform:translateX(1320px)}}
-    @keyframes glow{50%{opacity:.6}}
-    @media (prefers-reduced-motion: reduce){*{animation:none!important}}
-  </style>
-  <rect width="1280" height="400" fill="url(#sky)"/>
-  <g fill="#ffffff">
-    <circle class="twinkle" cx="640" cy="46" r="1.8"/>
-    <circle class="twinkle" style="animation-delay:1s" cx="760" cy="96" r="1.4"/>
-    <circle class="twinkle" style="animation-delay:2s" cx="880" cy="36" r="1.6"/>
-    <circle class="twinkle" style="animation-delay:.6s" cx="1180" cy="70" r="1.8"/>
-    <circle class="twinkle" style="animation-delay:1.6s" cx="1230" cy="150" r="1.3"/>
-  </g>
-  <circle class="glow" cx="1010" cy="170" r="130" fill="url(#sun)"/>
-  <g class="drift" fill="#d6eef2" opacity=".16">
-    <ellipse cx="700" cy="130" rx="90" ry="16"/>
-    <ellipse cx="750" cy="118" rx="50" ry="16"/>
-  </g>
-  <g class="drift2" fill="#d6eef2" opacity=".1">
-    <ellipse cx="900" cy="84" rx="80" ry="12"/>
-  </g>
-  <g class="float" transform="translate(1150 80)">
-    <path d="M0 0 24 30 0 62 -24 30Z" fill="#f2a33c"/>
-    <path d="M0 0 24 30 0 30Z" fill="#ffffff" opacity=".28"/>
-    <path d="M0 0V62M-24 30H24" stroke="#00000055" stroke-width="1.5"/>
-    <path d="M0 62c-7 9 7 15 0 24s7 13 0 18" fill="none" stroke="#d81b60" stroke-width="2.2"/>
-  </g>
-  <path d="M560 320 L690 236 L780 290 L890 214 L1010 300 L1130 250 L1280 296 V340 H560Z" fill="#0a2d35"/>
-  <g fill="#072128">
-    <path d="M700 340v-56h14v-20l11-16 11 16v20h14v56z"/>
-    <rect x="790" y="270" width="80" height="70"/>
-    <path d="M798 270q32-46 64 0z"/>
-    <rect x="826" y="214" width="8" height="12"/>
-    <rect x="774" y="246" width="9" height="94"/>
-    <rect x="877" y="246" width="9" height="94"/>
-    <path d="M920 340v-68h70v68h-18v-34q-17-22-34 0v34z"/>
-    <path d="M1030 340v-44l20-26 20 26v44z"/>
-  </g>
-  <g class="train">
-    <rect x="0" y="330" width="76" height="22" rx="5" fill="#f7d774"/>
-    <rect x="80" y="332" width="64" height="20" rx="4" fill="#f2a33c"/>
-    <rect x="148" y="332" width="64" height="20" rx="4" fill="#f2a33c"/>
-    <g fill="#031217"><circle cx="18" cy="354" r="4.5"/><circle cx="58" cy="354" r="4.5"/><circle cx="98" cy="354" r="4.5"/><circle cx="126" cy="354" r="4.5"/><circle cx="166" cy="354" r="4.5"/><circle cx="194" cy="354" r="4.5"/></g>
-  </g>
-  <rect y="356" width="1280" height="4" fill="#f7d774" opacity=".4"/>
-  <rect y="360" width="1280" height="40" fill="#031217"/>
-  <rect width="1280" height="400" fill="url(#fade)"/>
-  <text x="72" y="150" font-family="Georgia,'Times New Roman',serif" font-size="92" font-weight="700" fill="url(#gold)">Tour India</text>
-  <text x="76" y="206" font-family="'Segoe UI',Helvetica,Arial,sans-serif" font-size="30" fill="#eef7f8">Discover and plan travel across India</text>
-  <text x="76" y="256" font-family="'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" fill="#9fd3dc">36 states and UTs · 52 destination guides · festivals · food · trip planner</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1280 400" width="1280" height="400"
+     role="img" aria-labelledby="title desc"><title id="title">Tour India — Discover and plan travel across India</title><desc id="desc">An animated travel illustration with a glowing three-dimensional globe, India's map, orbital travel route, Taj Mahal-inspired architecture, flying aircraft and a moving train.</desc><defs><linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#061820"/><stop offset=".48" stop-color="#0b3540"/><stop offset="1" stop-color="#14505c"/></linearGradient><radialGradient id="horizon" cx="76%" cy="48%" r="58%"><stop offset="0" stop-color="#2c8b91" stop-opacity=".42"/><stop offset=".55" stop-color="#1b6770" stop-opacity=".18"/><stop offset="1" stop-color="#061820" stop-opacity="0"/></radialGradient><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b0"/><stop offset=".42" stop-color="#f8d46e"/><stop offset="1" stop-color="#e99a35"/></linearGradient><linearGradient id="goldEdge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".5" stop-color="#eeb44c"/><stop offset="1" stop-color="#9d5b24"/></linearGradient><linearGradient id="tealGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9ce5de" stop-opacity=".92"/><stop offset=".38" stop-color="#2c9ca0" stop-opacity=".72"/><stop offset="1" stop-color="#0b3540" stop-opacity=".96"/></linearGradient><linearGradient id="globeFill" x1=".15" y1=".08" x2=".88" y2=".95"><stop offset="0" stop-color="#c7fff1"/><stop offset=".2" stop-color="#329e9c"/><stop offset=".62" stop-color="#12616e"/><stop offset="1" stop-color="#062a38"/></linearGradient><linearGradient id="globeShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#03151e" stop-opacity=".05"/><stop offset=".62" stop-color="#03151e" stop-opacity=".05"/><stop offset="1" stop-color="#03151e" stop-opacity=".72"/></linearGradient><radialGradient id="globeShine" cx="26%" cy="18%" r="78%"><stop offset="0" stop-color="#ffffff" stop-opacity=".72"/><stop offset=".22" stop-color="#d7fff5" stop-opacity=".18"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient><radialGradient id="sunGlow"><stop offset="0" stop-color="#ffe7a1" stop-opacity=".8"/><stop offset=".35" stop-color="#f4b84e" stop-opacity=".23"/><stop offset="1" stop-color="#f4b84e" stop-opacity="0"/></radialGradient><linearGradient id="mountainBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b7478"/><stop offset="1" stop-color="#0c414b"/></linearGradient><linearGradient id="mountainFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14505c"/><stop offset="1" stop-color="#062630"/></linearGradient><linearGradient id="trainGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a2"/><stop offset=".55" stop-color="#f2bb57"/><stop offset="1" stop-color="#b66b2c"/></linearGradient><linearGradient id="fadeLeft" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#061820" stop-opacity=".55"/><stop offset=".58" stop-color="#061820" stop-opacity=".12"/><stop offset="1" stop-color="#061820" stop-opacity="0"/></linearGradient><filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="12" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/><feOffset dy="8" result="offset"/><feComponentTransfer><feFuncA type="linear" slope=".34"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="textGlow" x="-20%" y="-40%" width="150%" height="180%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><clipPath id="globeClip"><circle cx="1000" cy="184" r="104"/></clipPath><pattern id="starField" width="170" height="110" patternUnits="userSpaceOnUse"><circle cx="14" cy="19" r="1.2" fill="#e4fbf7" opacity=".65"/><circle cx="83" cy="66" r=".9" fill="#f8d46e" opacity=".75"/><circle cx="147" cy="34" r="1.4" fill="#ffffff" opacity=".5"/><circle cx="125" cy="96" r=".7" fill="#c5f1ee" opacity=".7"/></pattern><g id="star"><path d="M0-5 1.25-1.25 5 0 1.25 1.25 0h0-5" fill="#fff2c2"/></g></defs><style>
+    .sky-drift{animation:skyDrift 28s ease-in-out infinite alternate}
+    .cloud-a{animation:cloudA 34s ease-in-out infinite alternate}
+    .cloud-b{animation:cloudB 42s ease-in-out infinite alternate-reverse}
+    .float{animation:float 6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+    .float-delay{animation:float 7.5s ease-in-out -2s;initial-transform;transform-box:fill-box;transform-origin:center}
+    .twinkle{animation:twinkle 3.4s ease-in-out infinite}
+    .twinkle2{animation:twinkle 4.8s ease-in-out -2s;infinite}
+    .globe-spin{animation:globeSpin 26s linear infinite;transform-box:view-box;transform-origin:1000px 184px}
+    .orbit-spin{animation:orbitSpin 16s linear infinite;transform-box:view-box;transform-origin:1000px 184px}
+    .route-dot{animation:routePulse 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+    .pin-bob{animation:pinBob 3.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+    .train{animation:train 19s linear infinite}
+    .light-sweep{animation:lightSweep 7s ease-in-out infinite}
+    .parallax-one{animation:parallax 24s ease-in-out infinite alternate}
+    .parallax-twoynimation:parallax 31s ease-in-out -10s infinite alternate-reverse}
+    @keyframes skyDrift{to{transform:translate3d(-22px,8px,0)}}
+    @keyframes cloudA{to{transform:translateX(70px)}}
+    @keyframes cloudB{to{transform:translateX(-65px)}}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-11px) rotate(3deg)}}
+    @keyframes twinkle{0%,100%{opacity:.85}50%{opacity:.16}}
+    @keyframes globeSpin{to{transform:rotate(360deg)}}
+    @keyframes orbitSpin{to{transform:rotate(-360deg)}}
+    @keyframes routePulse{0%,100%{opacity:.55;transform:scale(.82)}50%{opacity:1;transform:scale(1.24)}}
+    @keyframes pinBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    @keyframes train{from{transform:translateX(-290px)}to{transform:translateX(1420px)}}
+    @keyframes lightSweep{0%,100%{opacity:.12;transform:translateX(-30px)}50%{opacity:.5;transform:translateX(35px)}}
+    @keyframes parallax{to{transform:translateX(35px)}}
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation:none!important;scroll-behavior:auto!important}
+    }
+  </style><rect width="1280" height="400" fill="url(#sky)"/><rect width="1280" height="400" fill="url(#horizon)"/><rect width="1280" height="400" fill="url(#starField)" opacity=".72"/><g aria-hidden="true"><circle class="twinkle" cx="650" cy="48" r="2" fill="#fff"/><circle class="twinkle2" cx="780" cy="83" r="1.7" fill="#f8d46e"/><circle class="twinkle" cx="890" cy="37" r="1.5" fill="#fff"/><circle class="twinkle2" cx="1190" cy="76" r="2" fill="#fff"/><circle class="twinkle" cx="1215" cy="160" r="1.3" fill="#fff"/><use xlink:href="#star" x="720" y="175" class="twinkle"/><use xlink:href="#star" x="855" y="126" class="twinkle2"/><use xlink:href="#star" x="1140" y="42" class="twinkle"/></g><circle cx="1040" cy="176" r="190" fill="url(#sunGlow)" class="light-sweep"/><g class="cloud-a" fill="#c7eeeb" opacity=".12"><ellipse cx="650" cy="112" rx="76" ry="13"/><ellipse cx="690" cy="100" rx="49" ry="17"/><ellipse cx="728" cy="112" rx="64" ry="12"/></g><g class="cloud-b" fill="#e5f8f6" opacity=".09"><ellipse cx="930" cy="73" rx="72" ry="11"/><ellipse cx="970" cy="63" rx="42" ry="14"/><ellipse cx="1002" cy="75" rx="58" ry="10"/></g><g class="parallax-one"><path d="M560 318 676 259 758 294 845 220 928 286 1015 239 1100 286 1184 249 1280 293V360H560Z" fill="url(#mountainBack)" opacity=".68"/><path d="m810 248 35-28 34 30-29-12-10 8-10-8Z" fill="#b8e3d9" opacity=".2"/><path d="m1152 267 32-18 31 23-25-8-9 6-9-5Z" fill="#b8e3d9" opacity=".17"/></g><g class="parallax-two"><path d="M640 335 754 279 838 319 922 272 1006 321 1092 278 1170 321 1280 285V364H640Z" fill="url(#mountainFront)" opacity=".92"/></g><g transform="translate(760 257)" opacity=".66" filter="url(#shadow)"><path d="M0 83V40H18V83M-7 40H25L9 25Z" fill="#082a34"/><path d="M33 83V51H45V83M29 51H49L39 38Z" fill="#082a34"/><path d="M15 83V45H116V83Z" fill="#082a34"/><path d="M27 45Q65-6 104 45Z" fill="#0b3039"/><path d="M61 17Q65-2 69 17V29H61Z" fill="#0b3039"/><path d="M54 83V61Q65 43 76 61V83Z" fill="#031e28"/><path d="M44 52V83M86 52V83" stroke="#8dc7bd" stroke-opacity=".22" stroke-width="2"/><path d="M15 45H116M7 83H125" stroke="#f4c96e" stroke-opacity=".3" stroke-width="1.5"/></g><g filter="url(#shadow)"><circle cx="1000" cy="184" r="132" fill="#42c7b6" opacity=".09" filter="url(#softGlow)"/><circle cx="1000" cy="184" r="111" fill="#092c36" stroke="#f4cc70" stroke-opacity=".55" stroke-width="1.5"/><circle cx="1000" cy="184" r="104" fill="url(#globeFill)"/><g clip-path="url(#globeClip)"><rect x="890" y="75" width="220" height="220" fill="url(#globeShine")"/><g2
