@@ -878,11 +878,16 @@
 
 /* Glass surfaces: menus, dialogs and the header. Blur sits behind floating layers only. */
 .glass-panel {
-  border: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+  border: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
   border-radius: var(--radius-lg);
-  background: color-mix(in oklab, var(--surface) 88%, transparent);
-  box-shadow: var(--shadow-lg), inset 0 1px 0 rgb(255 255 255 / 0.08);
-  backdrop-filter: blur(18px) saturate(1.4);
+  background: color-mix(in oklab, var(--surface) 85%, transparent);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgb(255 255 255 / 0.08), 0 0 0 0.5px rgb(255 255 255 / 0.04);
+  backdrop-filter: blur(24px) saturate(1.5);
+}
+:root[data-theme="dark"] .glass-panel {
+  border-color: color-mix(in oklab, var(--line) 60%, transparent);
+  background: color-mix(in oklab, var(--surface) 80%, transparent);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgb(255 255 255 / 0.04), 0 0 0 0.5px rgb(255 255 255 / 0.02);
 }
 
 /* Scrollbars, themed to match: the page, inner panels (.scroll-thin) and horizontal rails (.rail). */
@@ -906,9 +911,19 @@ html {
   padding-bottom: 0.75rem;
   scrollbar-width: thin;
   scrollbar-color: var(--accent) color-mix(in oklab, var(--line) 60%, transparent);
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 .rail > * {
   scroll-snap-align: start;
+}
+@media (pointer: coarse) {
+  .rail {
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
 }
 ::-webkit-scrollbar {
   width: 12px;

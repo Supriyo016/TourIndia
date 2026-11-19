@@ -78,9 +78,9 @@ export function YatriLauncher() {
           onClick={() => setOpen(true)}
           onPointerEnter={warmUp}
           onFocus={warmUp}
-          className={`no-print fixed right-4 bottom-4 z-40 inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-brand pr-4 pl-1.5 font-semibold text-on-brand shadow-lg ${styles.launcher}`}
+          className={`no-print fixed right-4 bottom-20 z-40 inline-flex h-11 cursor-pointer items-center gap-1.5 rounded-full bg-brand pr-3.5 pl-1.5 text-sm font-semibold text-on-brand shadow-lg sm:bottom-4 sm:h-12 sm:gap-2 sm:pr-4 sm:text-base ${styles.launcher}`}
         >
-          <span className={`grid size-9 place-items-center overflow-hidden rounded-full bg-white ${styles.launcherFace}`} aria-hidden>
+          <span className={`grid size-8 place-items-center overflow-hidden rounded-full bg-white sm:size-9 ${styles.launcherFace}`} aria-hidden>
             {Face ? <Face className="size-full" /> : <MessageCircle className="size-5 text-brand" />}
           </span>
           Ask Yatri

@@ -10,6 +10,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { RouteProgress } from "@/components/layout/RouteProgress";
 import { TiltLayer } from "@/components/layout/TiltLayer";
+import { OfflineNotice } from "@/components/layout/OfflineNotice";
 import { site } from "@/config/site";
 import "./globals.css";
 
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AnalyticsBeacon />
         <YatriLauncher />
         <TiltLayer />
+        <OfflineNotice />
       </body>
     </html>
   );

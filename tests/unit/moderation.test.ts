@@ -35,7 +35,7 @@ describe("comment moderation", () => {
     expect(moderate("Call me on 98765 43210").action).toBe("reject");
     expect(moderate("mail me at someone@example.com").action).toBe("reject");
     expect(moderate("cheap rooms at https://spam.example/deal").action).toBe("reject");
-    expect(moderate("See https://tour-india-pi.vercel.app/planner", { allowedHosts: ["tour-india-pi.vercel.app"] }).action).toBe("allow");
+    expect(moderate("See https://tour-india.vercel.app/planner", { allowedHosts: ["tour-india.vercel.app"] }).action).toBe("allow");
   });
 
   it("strips invisible and direction-changing characters", () => {

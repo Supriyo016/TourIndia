@@ -40,7 +40,7 @@ End-to-end tests use Microsoft Edge by default on Windows. Set `PW_CHANNEL=chrom
 
 ## Deployment (Vercel and MongoDB Atlas recommended)
 
-The site is live at https://tour-india-pi.vercel.app, deployed with `vercel deploy --prod`. The steps below add the database and automatic deploys.
+The site is live at https://tour-india.vercel.app, deployed with `vercel deploy --prod`. The steps below add the database and automatic deploys.
 
 GitHub Pages only serves static files, so it can't run the API routes.
 
