@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="Tour India: discover and plan travel across India">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#04161c"/>
+      <stop offset="0.6" stop-color="#0c3c47"/>
+      <stop offset="1" stop-color="#14505c"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffd27a"/>
+      <stop offset="1" stop-color="#e8890c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" x2="1">
+      <stop offset="0" stop-color="#f2c84b"/>
+      <stop offset="1" stop-color="#e8890c"/>
+    </linearGradient>
+  </defs>
+  <style>
+    .drift{animation:drift 18s ease-in-out infinite alternate}
+    .drift2{animation:drift 26s ease-in-out infinite alternate-reverse}
+    .float{animation:float 6s ease-in-out infinite}
+    .twinkle{animation:twinkle 3s ease-in-out infinite}
+    .train{animation:train 14s linear infinite}
+    .glow{animation:glow 5s ease-in-out infinite}
+    @keyframes drift{to{transform:translateX(60px)}}
+    @keyframes float{50%{transform:translateY(-10px)}}
+    @keyframes twinkle{50%{opacity:.2}}
+    @keyframes train{from{transform:translateX(-260px)}to{transform:translateX(1260px)}}
+    @keyframes glow{50%{opacity:.55}}
+    @media (prefers-reduced-motion: reduce){*{animation:none!important}}
+    text{font-family:Georgia,'Times New Roman',serif}
+  </style>
+  <rect width="1200" height="360" fill="url(#sky)"/>
+  <g fill="#fff">
+    <circle class="twinkle" cx="120" cy="50" r="1.6"/>
+    <circle class="twinkle" style="animation-delay:1s" cx="340" cy="90" r="1.2"/>
+    <circle class="twinkle" style="animation-delay:2s" cx="520" cy="40" r="1.4"/>
+    <circle class="twinkle" style="animation-delay:.5s" cx="980" cy="60" r="1.6"/>
+    <circle class="twinkle" style="animation-delay:1.5s" cx="1110" cy="120" r="1.2"/>
+  </g>
+  <circle class="glow" cx="960" cy="150" r="110" fill="url(#sun)" opacity=".8"/>
+  <g class="drift" fill="#cfe9ee" opacity=".18">
+    <ellipse cx="200" cy="120" rx="80" ry="16"/>
+    <ellipse cx="250" cy="108" rx="44" ry="16"/>
+  </g>
+  <g class="drift2" fill="#cfe9ee" opacity=".12">
+    <ellipse cx="760" cy="80" rx="70" ry="12"/>
+  </g>
+  <!-- Kite -->
+  <g class="float" transform="translate(1040 70)">
+    <path d="M0 0 22 28 0 58 -22 28Z" fill="#e8890c"/>
+    <path d="M0 0V58M-22 28H22" stroke="#00000044" stroke-width="1.5"/>
+    <path d="M0 58c-6 8 6 14 0 22s6 12 0 16" fill="none" stroke="#c2185b" stroke-width="2"/>
+  </g>
+  <!-- Skyline: temple, Taj, Gateway, mountains -->
+  <path d="M0 290 L120 210 L200 260 L300 190 L420 280 Z" fill="#0a2e36"/>
+  <path d="M660 300 L780 220 L860 270 L960 205 L1080 280 L1200 240 V300Z" fill="#0a2e36"/>
+  <g fill="#082329">
+    <path d="M520 300V250h12v-18l10-14 10 14v18h12v50z"/>
+    <path d="M590 300v-56h70v56z"/>
+    <path d="M598 244q27-40 54 0z"/>
+    <path d="M622 206h6v-10h-6z"/>
+    <rect x="576" y="226" width="8" height="74"/>
+    <rect x="666" y="226" width="8" height="74"/>
+    <path d="M700 300v-60h60v60h-16v-30q-14-18-28 0v30z"/>
+  </g>
+  <!-- Train -->
+  <g class="train">
+    <rect x="0" y="292" width="70" height="20" rx="4" fill="#f2c84b"/>
+    <rect x="74" y="294" width="60" height="18" rx="3" fill="#e8890c"/>
+    <rect x="138" y="294" width="60" height="18" rx="3" fill="#e8890c"/>
+    <g fill="#04161c"><circle cx="16" cy="314" r="4"/><circle cx="54" cy="314" r="4"/><circle cx="92" cy="314" r="4"/><circle cx="118" cy="314" r="4"/><circle cx="156" cy="314" r="4"/><circle cx="182" cy="314" r="4"/></g>
+  </g>
+  <rect y="316" width="1200" height="4" fill="#f2c84b" opacity=".35"/>
+  <rect y="320" width="1200" height="40" fill="#04161c"/>
+  <text x="64" y="128" font-size="64" font-weight="700" fill="url(#gold)">Tour India</text>
+  <text x="66" y="172" font-size="22" fill="#dcebee">Discover and plan travel across all 28 states and 8 Union Territories</text>
+  <text x="66" y="204" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="15" fill="#9fd3dc" style="font-family:'Segoe UI',Helvetica,Arial,sans-serif">Interactive map · 52 destination guides · festivals · food · trip planner · Yatri assistant</text>
+</svg>

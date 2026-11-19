@@ -1,0 +1,23 @@
+name: Content correction
+description: A fact, date, name or photo credit that is wrong or out of date
+labels: [content]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Page address
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong, and what should it say?
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: A link to an official or reliable source for the correction.
+    validations:
+      required: true
