@@ -1,3 +1,4 @@
+import "@/lib/zod-config";
 import { z } from "zod";
 import { STATE_NAMES } from "@/data/state-names";
 

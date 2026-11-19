@@ -10,7 +10,8 @@ import {
 import { DestinationCard } from "@/components/destinations/DestinationCard";
 import { LazyNewsletter } from "@/components/forms/LazyNewsletter";
 import { HeroSlider, type HeroSlide } from "@/components/hero/HeroSlider";
-import { TourVideo } from "@/components/ui/TourVideo";
+import heroPortraits from "@/data/generated/hero-portraits.json";
+import { LazyTourVideo } from "@/components/ui/lazy";
 import { JsonLd, Photo, SectionHeading } from "@/components/ui/primitives";
 import { publishedSocials, site } from "@/config/site";
 import { destinations, inSeason } from "@/data";
@@ -77,7 +78,7 @@ export default function HomePage() {
   // Only slides whose photo is in the library, so a missing file never leaves a gap.
   const pool = heroPool.flatMap(([key, place, region, href, tagline]) => {
     const image = getImage(key);
-    return image ? [{ src: image.src, blur: image.blur, alt: image.alt, place, region, href, tagline, credit: `${image.author}, ${image.license}` }] : [];
+    return image ? [{ src: image.src, blur: image.blur, portrait: heroPortraits[image.src as keyof typeof heroPortraits], alt: image.alt, place, region, href, tagline, credit: `${image.author}, ${image.license}` }] : [];
   });
   const slides: HeroSlide[] = heroRotation(pool.length, SLIDES_SHOWN).map((index) => pool[index]!);
 
@@ -281,7 +282,7 @@ export default function HomePage() {
       <section className="section lazy-render" aria-labelledby="video-tour">
         <div className="container-x">
           <SectionHeading eyebrow="Video tour" title="See India in motion" lede="A short film of the places and celebrations that make the trip worthwhile." />
-          <TourVideo />
+          <LazyTourVideo />
         </div>
       </section>
 

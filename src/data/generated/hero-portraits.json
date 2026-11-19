@@ -1,0 +1,157 @@
+{
+  "/images/hero/airavatesvara.webp": {
+    "src": "/images/hero/portrait/airavatesvara.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/amritsar.webp": {
+    "src": "/images/hero/portrait/amritsar.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/durga-idol.webp": {
+    "src": "/images/hero/portrait/durga-idol.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/durga-pandal.webp": {
+    "src": "/images/hero/portrait/durga-pandal.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/goa.webp": {
+    "src": "/images/hero/portrait/goa.webp",
+    "width": 444,
+    "height": 740
+  },
+  "/images/hero/hampi.webp": {
+    "src": "/images/hero/portrait/hampi.webp",
+    "width": 680,
+    "height": 1134
+  },
+  "/images/hero/hawa-mahal.webp": {
+    "src": "/images/hero/portrait/hawa-mahal.webp",
+    "width": 1172,
+    "height": 1953
+  },
+  "/images/hero/holi-barsana.webp": {
+    "src": "/images/hero/portrait/holi-barsana.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/holi-vrindavan.webp": {
+    "src": "/images/hero/portrait/holi-vrindavan.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/kashmir.webp": {
+    "src": "/images/hero/portrait/kashmir.webp",
+    "width": 768,
+    "height": 1280
+  },
+  "/images/hero/kathakali.webp": {
+    "src": "/images/hero/portrait/kathakali.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/kerala-thali.webp": {
+    "src": "/images/hero/portrait/kerala-thali.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/kerala.webp": {
+    "src": "/images/hero/portrait/kerala.webp",
+    "width": 832,
+    "height": 1387
+  },
+  "/images/hero/khajuraho-dance.webp": {
+    "src": "/images/hero/portrait/khajuraho-dance.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/khajuraho.webp": {
+    "src": "/images/hero/portrait/khajuraho.webp",
+    "width": 963,
+    "height": 1605
+  },
+  "/images/hero/konark.webp": {
+    "src": "/images/hero/portrait/konark.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/ladakh.webp": {
+    "src": "/images/hero/portrait/ladakh.webp",
+    "width": 528,
+    "height": 880
+  },
+  "/images/hero/malpua.webp": {
+    "src": "/images/hero/portrait/malpua.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/masala-dosa.webp": {
+    "src": "/images/hero/portrait/masala-dosa.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/meenakshi.webp": {
+    "src": "/images/hero/portrait/meenakshi.webp",
+    "width": 1131,
+    "height": 1885
+  },
+  "/images/hero/munnar.webp": {
+    "src": "/images/hero/portrait/munnar.webp",
+    "width": 747,
+    "height": 1245
+  },
+  "/images/hero/mysore-palace.webp": {
+    "src": "/images/hero/portrait/mysore-palace.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/northeast.webp": {
+    "src": "/images/hero/portrait/northeast.webp",
+    "width": 937,
+    "height": 1561
+  },
+  "/images/hero/rajasthan.webp": {
+    "src": "/images/hero/portrait/rajasthan.webp",
+    "width": 930,
+    "height": 1550
+  },
+  "/images/hero/red-fort.webp": {
+    "src": "/images/hero/portrait/red-fort.webp",
+    "width": 997,
+    "height": 1661
+  },
+  "/images/hero/shore-temple.webp": {
+    "src": "/images/hero/portrait/shore-temple.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/taj-mahal.webp": {
+    "src": "/images/hero/portrait/taj-mahal.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/tamil-thali.webp": {
+    "src": "/images/hero/portrait/tamil-thali.webp",
+    "width": 1200,
+    "height": 2000
+  },
+  "/images/hero/udaipur.webp": {
+    "src": "/images/hero/portrait/udaipur.webp",
+    "width": 833,
+    "height": 1389
+  },
+  "/images/hero/varanasi.webp": {
+    "src": "/images/hero/portrait/varanasi.webp",
+    "width": 706,
+    "height": 1177
+  },
+  "/images/hero/victoria-memorial.webp": {
+    "src": "/images/hero/portrait/victoria-memorial.webp",
+    "width": 1031,
+    "height": 1718
+  }
+}

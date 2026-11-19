@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";
+import { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
@@ -10,6 +11,8 @@ import { cn } from "@/lib/utils";
 export interface HeroSlide {
   src: string;
   blur?: string;
+  /** A 3:5 crop for phones held upright (scripts/make-hero-portraits.mts). */
+  portrait?: { src: string; width: number; height: number };
   alt: string;
   place: string;
   region: string;
@@ -109,19 +112,8 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
           const state = position === index ? "active" : position === previous ? "leaving" : "idle";
           return (
             <div key={slide.src} aria-hidden={state !== "active"} className="hero-slide" data-state={state}>
-              <div className="hero-photo">
-                <Image
-                  src={slide.src}
-                  alt={state === "active" ? slide.alt : ""}
-                  fill
-                  sizes="100vw"
-                  preload={position === 0}
-                  fetchPriority={position === 0 ? "high" : undefined}
-                  placeholder={slide.blur ? "blur" : "empty"}
-                  blurDataURL={slide.blur}
-                  // The zoom keeps its place while paused, rather than snapping back.
-                  className={cn("object-cover", state === "active" && !paused && "ken-burns", !running && "ken-burns-held")}
-                />
+              <div className="hero-photo" style={slide.blur ? { backgroundImage: `url(${slide.blur})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}>
+                <HeroPicture slide={slide} first={position === 0} active={state === "active"} className={cn("object-cover", state === "active" && !paused && "ken-burns", !running && "ken-burns-held")} />
               </div>
             </div>
           );
@@ -199,5 +191,26 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
         </div>
       </div>
     </section>
+  );
+}
+
+/** Upright phones load the portrait crop; everything else loads the full photo. Only the first slide is preloaded. */
+const PORTRAIT_MEDIA = "(max-aspect-ratio: 4/5)";
+const LANDSCAPE_MEDIA = "(min-aspect-ratio: 4.001/5)";
+
+function HeroPicture({ slide, first, active, className }: { slide: HeroSlide; first: boolean; active: boolean; className: string }) {
+  const common = { alt: active ? slide.alt : "", fill: true, sizes: "100vw" } as const;
+  const { props: wide } = getImageProps({ ...common, src: slide.src, fetchPriority: first ? "high" : undefined, loading: first ? "eager" : "lazy" });
+  const tall = slide.portrait ? getImageProps({ ...common, src: slide.portrait.src }).props : null;
+  if (first) {
+    if (tall) preload(tall.src, { as: "image", imageSrcSet: tall.srcSet, imageSizes: tall.sizes, fetchPriority: "high", media: PORTRAIT_MEDIA });
+    preload(wide.src, { as: "image", imageSrcSet: wide.srcSet, imageSizes: wide.sizes, fetchPriority: "high", media: tall ? LANDSCAPE_MEDIA : undefined });
+  }
+  return (
+    <picture>
+      {tall && <source media={PORTRAIT_MEDIA} srcSet={tall.srcSet} sizes={tall.sizes} />}
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- alt comes from getImageProps */}
+      <img {...wide} className={className} />
+    </picture>
   );
 }

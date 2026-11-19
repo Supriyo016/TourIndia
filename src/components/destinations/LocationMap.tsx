@@ -67,6 +67,7 @@ export function LocationMap({ center, name, points }: { center: LatLng; name: st
           <iframe
             title={`Google map of ${name}`}
             src={`https://maps.google.com/maps?q=${center.lat},${center.lng}&z=11&output=embed`}
+            loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             className="size-full"
           />

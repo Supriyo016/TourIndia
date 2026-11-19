@@ -6,7 +6,7 @@ import { MapExplorer } from "@/components/maps/MapExplorer";
 import { DestinationPins, statePreviews } from "@/components/maps/map-data";
 import { PageIntro, Photo } from "@/components/ui/primitives";
 import { destinations, getState, states } from "@/data";
-import { DestinationGlobe } from "@/components/maps/DestinationGlobe";
+import { LazyDestinationGlobe } from "@/components/ui/lazy";
 import { regions } from "@/data/taxonomy";
 
 export const metadata: Metadata = {
@@ -36,10 +36,10 @@ export default function ExplorePage() {
           </p>
         </div>
 
-        <section className="lazy-render mt-12 rounded-[var(--radius-lg)] bg-[radial-gradient(ellipse_at_top,rgb(20_80_92/0.35),transparent_70%)] p-4 sm:p-8" aria-labelledby="globe-title">
+        <section className="mt-12 rounded-[var(--radius-lg)] bg-[radial-gradient(ellipse_at_top,rgb(20_80_92/0.35),transparent_70%)] p-4 sm:p-8" aria-labelledby="globe-title">
           <h2 id="globe-title">Every destination guide on the globe</h2>
           <p className="mt-1 mb-6 max-w-2xl text-ink-2">All {destinations.length} guides, placed by their real coordinates.</p>
-          <DestinationGlobe
+          <LazyDestinationGlobe
             points={destinations.map((place) => ({
               slug: place.slug,
               name: place.name,
@@ -50,7 +50,7 @@ export default function ExplorePage() {
           />
         </section>
 
-        <section className="lazy-render mt-12" aria-labelledby="all-states">
+        <section className="mt-12" aria-labelledby="all-states">
           <h2 id="all-states" className="mb-6">All states and Union Territories</h2>
           <div className="space-y-8">
             {regions.map((region) => (

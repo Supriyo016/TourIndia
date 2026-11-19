@@ -312,11 +312,13 @@ test.describe("home page additions", () => {
 
   test("the site video is on the home page and doesn't preload", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: "See India in motion" })).toBeVisible();
+    const heading = page.getByRole("heading", { name: "See India in motion" });
+    await expect(heading).toBeVisible();
     const video = page.locator('video[aria-label="A video tour of India"]');
+    // The player's code and the video only load once the section comes near the screen.
+    await expect(video).toHaveCount(0);
+    await heading.scrollIntoViewIfNeeded();
     await expect(video).toHaveAttribute("preload", "none");
-    // The poster is only set once the video comes near the screen.
-    await expect(video).not.toHaveAttribute("poster", /.+/);
     await video.scrollIntoViewIfNeeded();
     await expect(video).toHaveAttribute("poster", "/videos/tour-india-poster.webp");
     expect((await page.request.get("/videos/tour-india-poster.webp")).status()).toBe(200);
@@ -326,6 +328,7 @@ test.describe("home page additions", () => {
   test("the video plays in view, takes half the section width, and quality can be chosen", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
+    await page.getByRole("heading", { name: "See India in motion" }).scrollIntoViewIfNeeded();
     const video = page.getByTestId("tour-video");
     await video.scrollIntoViewIfNeeded();
     await expect.poll(() => video.evaluate((element: HTMLVideoElement) => !element.paused && element.currentTime > 0.2), { timeout: 15_000 }).toBe(true);
