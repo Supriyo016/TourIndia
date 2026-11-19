@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-11-16
 **Phase:** Redesign v2 complete (see `REDESIGN_PLAN.md`). Accounts and community are built and tested, and switch on when the owner adds the settings below.
-**Production:** https://tour-india-pi.vercel.app
+**Production:** https://tour-india.vercel.app
 **Branch:** `rebuild/nextjs`. `master` and the GitHub Pages site are untouched.
 
 ## Redesign v2 (2026-11-16)

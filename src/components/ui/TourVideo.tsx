@@ -144,7 +144,7 @@ export function TourVideo({ size = "third", className }: { size?: "third" | "fil
   };
 
   return (
-    <div className={cn("relative mx-auto aspect-video", size === "third" ? "w-[min(100%,calc(max(14rem,33.3svh)*16/9))]" : "w-full", className)}>
+    <div className={cn("relative mx-auto aspect-video", size === "third" ? "w-full max-w-3xl lg:w-[50%]" : "w-full", className)}>
       <video
         ref={video}
         data-testid="tour-video"
