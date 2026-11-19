@@ -1,3 +1,4 @@
+import "@/lib/zod-config";
 import { z } from "zod";
 import { AVATAR_IDS } from "./avatars";
 import { COVER_KEYS } from "./covers";

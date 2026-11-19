@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import type { PassportEntry } from "@/features/saved/passport";
 import { setSyncAccount } from "@/features/saved/sync";
-import { storedInput } from "@/features/itinerary/share";
 import { isNoteList, isSavedTripList, isStringList, readPassport, readStored, STORAGE_KEYS, writeStored, type PlanNote, type SavedTrip } from "@/hooks/use-stored-value";
 
 type Lists = { places: string[]; passport: PassportEntry[]; notes: PlanNote[] };
@@ -126,6 +125,8 @@ export function SavedSync() {
           if (left) throw new Error(`Your account holds up to 100 notes, so ${left} ${left === 1 ? "note" : "notes"} didn't fit. ${left === 1 ? "It's" : "They're"} still in this browser: delete some notes in your account, then try again.`);
         }
         lists = merged;
+        // Loaded here because it brings in the validation library, which most visitors never need.
+        const { storedInput } = await import("@/features/itinerary/share");
         // Five at a time keeps each request small; a trip that can't be rebuilt is skipped by the server.
         const plans = offer.trips.map((trip) => ({ name: (trip.name || "Trip").slice(0, 80), input: storedInput(trip.input), layout: trip.days.map((day) => day.items.map((item) => item.id)) }));
         for (let i = 0; i < plans.length; i += 5) await post("/api/trips", { action: "import", trips: plans.slice(i, i + 5) });

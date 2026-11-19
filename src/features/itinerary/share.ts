@@ -1,3 +1,4 @@
+import "@/lib/zod-config";
 import { z } from "zod";
 import { startCities } from "@/data/start-cities";
 import { interests } from "@/data/taxonomy";
