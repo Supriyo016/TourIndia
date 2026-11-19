@@ -1,70 +1,157 @@
-<p align="center">
-  <a href="https://tour-india-pi.vercel.app"><img src="docs/assets/banner.svg" alt="Tour India: discover and plan travel across India" width="100%"></a>
-</p>
+<div align="center">
 
-<p align="center">
-  <a href="https://tour-india-pi.vercel.app"><b>Live site</b></a> ·
-  <a href="docs/architecture.md">Architecture</a> ·
-  <a href="docs/api.md">API</a> ·
-  <a href="CONTRIBUTING.md">Contributing</a>
-</p>
+<a href="https://tour-india-pi.vercel.app"><img src="docs/assets/banner.svg" alt="Tour India: discover and plan travel across India" width="100%"></a>
 
-<p align="center">
-  <a href="https://github.com/Supriyo016/TourIndia/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Supriyo016/TourIndia/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/Supriyo016/TourIndia/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/Supriyo016/TourIndia/actions/workflows/codeql.yml/badge.svg"></a>
-  <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs">
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=fff">
-  <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-14505c"></a>
-</p>
+**An independent guide to discovering and planning travel across all 28 states and 8 Union Territories of India.**
 
-# Tour India
+[**Visit the live site**](https://tour-india-pi.vercel.app) · [Architecture](docs/architecture.md) · [API](docs/api.md) · [Contributing](CONTRIBUTING.md)
 
-An independent guide to discovering and planning travel across India: an interactive map of all 28 states and 8 Union Territories, destination guides, a festival calendar, regional food, heritage sites and a trip planner.
+[![CI](https://github.com/Supriyo016/TourIndia/actions/workflows/ci.yml/badge.svg)](https://github.com/Supriyo016/TourIndia/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Supriyo016/TourIndia/actions/workflows/codeql.yml/badge.svg)](https://github.com/Supriyo016/TourIndia/actions/workflows/codeql.yml)
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
+![React](https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)
+[![Licence: MIT](https://img.shields.io/badge/licence-MIT-14505c)](LICENSE)
 
-Tour India does not sell travel, take bookings or process payments.
+</div>
 
-**Owner:** Supriyo Sarkar, Founder & Website Owner
+> [!NOTE]
+> Tour India is a travel guide, not a travel agency. It does not sell tours, take bookings or process payments.
 
-## What's inside
+<br>
 
-| Area | Features |
+<img src="docs/assets/screenshot-home.webp" alt="Tour India home page: a full-screen photo slider of the ghats at Varanasi, with search and buttons to explore the map or plan a trip" width="100%">
+
+## Contents
+
+- [Highlights](#highlights)
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Tech stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting started](#getting-started)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [Licence and credits](#licence-and-credits)
+
+## Highlights
+
+| | |
 |---|---|
-| Discover | Interactive India map, a 3D globe of all destination guides, 36 state and UT profiles, 52 destination guides, search with suggestions |
-| Plan | Day-by-day trip planner with drag and drop, season and weather hints, packing list, print and share links, side-by-side comparison |
-| Culture | Festival calendar with calendar export, regional food, heritage sites, arts encyclopedia, stories |
-| Yatri | A travel assistant that answers from the site's own guides and links to them; without an AI provider it answers from the guides directly |
-| Accounts | Saved places, trips, memories, notes, collections, notifications, privacy controls and account deletion |
-| Admin | Moderation, support tickets, content, analytics (cookieless), SEO centre, backups, roles and MFA |
-| Reliability | Animated error screens for 404, 500, 502, 503, 504, 401, 403 and offline; works without a database |
+| **36** | state and Union Territory profiles on an interactive map |
+| **52** | destination guides, also shown on a 3D globe at their real coordinates |
+| **45** | UNESCO World Heritage Sites, plus 20 museums and sites |
+| **24** | festivals in a calendar you can export to your own calendar app |
+| **29** | regional dishes and **64** traditional art forms |
+| **6** | ready-made travel circuits, and a day-by-day trip planner |
+
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/assets/screenshot-explore-globe.webp" alt="Explore page with a 3D globe marking every destination guide; Kutch in Gujarat is highlighted"><br><sub><b>Explore:</b> a 3D globe of every destination guide</sub></td>
+    <td width="50%"><img src="docs/assets/screenshot-destination.webp" alt="Agra destination guide with Agra Fort, best months, suggested stay and cost estimate"><br><sub><b>Destination guide:</b> best months, stay length and cost range</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/assets/screenshot-planner.webp" alt="Trip planner form with starting city, destinations, dates, budget, transport and pace"><br><sub><b>Trip planner:</b> builds an editable day-by-day itinerary</sub></td>
+    <td width="50%" align="center"><img src="docs/assets/screenshot-mobile-destination.webp" alt="The Agra guide on a phone" width="45%"><br><sub><b>On a phone:</b> every page is responsive</sub></td>
+  </tr>
+</table>
+
+## Features
+
+**Discover**
+- Interactive map of India: point to a state for a summary, select it for its full profile
+- 3D globe of all destination guides, with drag to turn and click to open
+- Search with suggestions across places, states, festivals and dishes
+- Side-by-side comparison of destinations
+
+**Plan**
+- Trip planner that orders destinations, fills each day and shows estimates; drag and drop to rearrange
+- Season and weather hints (Open-Meteo), packing list, print, and share links
+- Travel quiz that suggests where to go
+
+**Culture**
+- Festival and public holiday calendar with calendar export
+- Regional food, UNESCO heritage sites, museums and an arts encyclopedia
+- Travel stories, and community contributions with moderation
+
+**Yatri, the travel assistant**
+- Answers from the site's own guides and links to the relevant pages
+- Uses an AI provider when one is configured (Groq or Vercel AI Gateway); otherwise it answers from the guides directly
+
+**Accounts** (when a database is connected)
+- Saved places, trips, memories, notes and collections
+- Notifications, privacy controls and account deletion
+
+**Administration**
+- Moderation, support tickets, content editing, cookieless analytics, SEO centre, backups, roles and two-factor sign-in
+
+**Reliability**
+- Animated error screens for 404, 500, 502, 503, 504, 401, 403 and offline, each with recovery actions
+- Every public page works without a database
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router), React 19 |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS 4 |
+| Data | MongoDB Atlas (optional), content as typed modules in `src/data` |
+| Validation and forms | Zod, React Hook Form |
+| Maps and interaction | Inline SVG map of India, canvas globe, Google Maps embeds, dnd kit |
+| Testing | Vitest (unit and API), Playwright with axe (end to end and accessibility) |
+| Hosting and CI | Vercel, GitHub Actions, CodeQL, Dependabot |
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-  Browser -->|HTML, RSC| Vercel[Next.js 16 on Vercel]
-  Vercel --> Static[Static and ISR pages
-(content in src/data)]
-  Vercel --> API[Route handlers /api/*
-Zod validation, rate limits]
-  API --> Mongo[(MongoDB Atlas
-optional)]
-  API --> Weather[Open-Meteo]
-  Browser --> Tiles[OpenStreetMap tiles]
-  GitHub[GitHub master] -->|CI: lint, types, unit, API, Playwright| Actions[GitHub Actions]
-  GitHub -->|push| Vercel
+  user["Visitor"] --> vercel["Next.js 16 on Vercel"]
+  vercel --> pages["Static and ISR pages<br/>content from src/data"]
+  vercel --> api["API routes<br/>Zod validation and rate limits"]
+  api --> db[("MongoDB Atlas<br/>optional")]
+  api --> weather["Open-Meteo forecasts"]
+  api --> ai["AI provider<br/>optional"]
+  repo["GitHub master branch"] --> ci["GitHub Actions<br/>lint, types, tests, CodeQL"]
+  repo --> vercel
 ```
 
-## Quick start
+Pages are rendered on the server and cached, so the site is fast and works without a database. Only accounts, forms and community features need MongoDB. More detail is in [docs/architecture.md](docs/architecture.md).
+
+## Getting started
+
+You need Node.js 20.9 or later.
 
 ```bash
+git clone https://github.com/Supriyo016/TourIndia.git
+cd TourIndia
 npm install
-```
-
-```bash
 npm run dev
 ```
 
-Open http://localhost:3000. The site works without a database; only the forms need one.
+Open http://localhost:3000. The site runs without any configuration.
+
+To turn on accounts and forms, copy `.env.example` to `.env.local` and fill in the values. Each variable is explained in [docs/setup.md](docs/setup.md).
+
+## Testing
+
+```bash
+npm run lint        # ESLint
+npm run typecheck   # TypeScript
+npm test            # unit and API tests (Vitest)
+npm run test:e2e    # end-to-end and accessibility tests (Playwright)
+```
+
+Every pull request runs all of these in GitHub Actions, along with a CodeQL security scan.
+
+## Deployment
+
+Vercel deploys the `master` branch to production, and every pull request gets a preview deployment. Environment variables, MongoDB setup and rollback steps are in [docs/setup.md](docs/setup.md).
 
 ## Documentation
 
@@ -75,20 +162,24 @@ Open http://localhost:3000. The site works without a database; only the forms ne
 | [Architecture](docs/architecture.md) | Structure, and how to add content |
 | [API](docs/api.md) | Routes and collections |
 | [Security audit](docs/SECURITY_AUDIT.md) | Protections, tests and remaining risks |
+| [Operations](docs/OPERATIONS.md) and [Backups](docs/BACKUPS.md) | Running the site day to day |
+| [Fact checking](docs/FACT_CHECK.md) | How travel information is sourced |
 | [Decisions](docs/DECISIONS.md) | What was chosen and why |
-| [Audit of the original site](docs/AUDIT.md) | What was found and resolved |
-| [Competitor research](docs/research/COMPETITOR_RESEARCH.md) | Research notes |
 
-## Stack
+## Contributing
 
-Next.js 16, React 19, TypeScript, Tailwind CSS 4, MongoDB, Zod, React Hook Form, Leaflet and dnd kit. Tested with Vitest and Playwright.
+Corrections and improvements are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first, and use the issue templates for bugs and content corrections. Report security issues privately as described in [SECURITY.md](SECURITY.md).
 
-## Licence
+## Licence and credits
 
-Code is MIT licensed ([LICENSE](LICENSE)). Photographs, videos and map data keep their own licences.
+The code is released under the [MIT licence](LICENSE). Photographs, videos and map data keep their own licences.
 
-## Credits
+- Photographs from Wikimedia Commons, credited on each page and listed at [/credits](https://tour-india-pi.vercel.app/credits)
+- Destination maps by Google Maps; state boundaries credited at [/credits#map-data](https://tour-india-pi.vercel.app/credits#map-data)
+- Weather forecasts from Open-Meteo
 
-Photographs are from Wikimedia Commons under the licences listed at `/credits`. Map tiles are © OpenStreetMap contributors. Forecasts are from Open-Meteo.
+The project started at Smart India Hackathon 2022. The original static site is preserved in [`legacy/`](legacy/).
 
-The original 2022 static site is preserved in `legacy/`.
+<div align="center">
+<sub>Built and maintained by <a href="https://github.com/Supriyo016">Supriyo Sarkar</a>, founder and owner of Tour India.</sub>
+</div>
