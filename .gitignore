@@ -18,3 +18,6 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 *.log
+
+# Personal files kept out of the repository
+TCS Photo.jpg

@@ -5,7 +5,8 @@ import { IndiaMap } from "@/components/maps/IndiaMap";
 import { MapExplorer } from "@/components/maps/MapExplorer";
 import { DestinationPins, statePreviews } from "@/components/maps/map-data";
 import { PageIntro, Photo } from "@/components/ui/primitives";
-import { states } from "@/data";
+import { destinations, getState, states } from "@/data";
+import { DestinationGlobe } from "@/components/maps/DestinationGlobe";
 import { regions } from "@/data/taxonomy";
 
 export const metadata: Metadata = {
@@ -34,6 +35,20 @@ export default function ExplorePage() {
             <Link prefetch={false} href="/credits#map-data" className="underline">map data credits</Link>.
           </p>
         </div>
+
+        <section className="lazy-render mt-12 rounded-[var(--radius-lg)] bg-[radial-gradient(ellipse_at_top,rgb(20_80_92/0.35),transparent_70%)] p-4 sm:p-8" aria-labelledby="globe-title">
+          <h2 id="globe-title">Every destination guide on the globe</h2>
+          <p className="mt-1 mb-6 max-w-2xl text-ink-2">All {destinations.length} guides, placed by their real coordinates.</p>
+          <DestinationGlobe
+            points={destinations.map((place) => ({
+              slug: place.slug,
+              name: place.name,
+              state: getState(place.stateSlug)?.name ?? "",
+              lat: place.coordinates.lat,
+              lng: place.coordinates.lng,
+            }))}
+          />
+        </section>
 
         <section className="lazy-render mt-12" aria-labelledby="all-states">
           <h2 id="all-states" className="mb-6">All states and Union Territories</h2>
