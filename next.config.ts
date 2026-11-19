@@ -46,6 +46,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // Puts the stylesheet inside each page, so the first paint doesn't wait for a separate CSS request.
     inlineCss: false,
+    // Enables forbidden() and unauthorized(), which render src/app/forbidden.tsx and unauthorized.tsx.
+    authInterrupts: true,
   },
   images: {
     formats: ["image/avif", "image/webp"],

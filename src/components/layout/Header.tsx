@@ -141,7 +141,7 @@ export function Header() {
       // Over the photo slider the header uses the dark tokens, so text and menus stay readable on any image.
       data-theme={overlay ? "dark" : undefined}
       className={cn(
-        "site-header no-print sticky top-0 z-40 border-b backdrop-blur-2xl backdrop-saturate-[1.6] transition-[background-color,border-color,box-shadow] duration-300",
+        "site-header no-print sticky top-0 z-40 border-b backdrop-blur-xl backdrop-saturate-150 transition-[background-color,border-color,box-shadow] duration-300",
         overlay
           ? "border-white/[0.12] bg-[linear-gradient(180deg,rgb(4_16_22/0.68),rgb(4_16_22/0.22))] shadow-[0_1px_32px_rgb(0_0_0/0.3)]"
           : "border-line/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] shadow-[0_1px_24px_rgb(0_0_0/0.06)]",
@@ -187,7 +187,7 @@ export function Header() {
                         aria-expanded={expanded}
                         aria-label={`Show ${item.label} links`}
                         onClick={() => setOpenMenu(expanded ? null : item.label)}
-                        className="flex h-11 w-5 cursor-pointer items-center justify-center text-muted hover:text-brand"
+                        className="flex h-11 w-6 cursor-pointer items-center justify-center text-muted hover:text-brand"
                       >
                         <ChevronDown className={cn("size-3.5 transition-transform", expanded && "rotate-180")} aria-hidden />
                       </button>

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
 import { MessageCircle } from "lucide-react";
 import styles from "./yatri.module.css";
@@ -38,6 +39,9 @@ export function YatriLauncher() {
   const [open, setOpen] = useState(false);
   const [Face, setFace] = useState<ComponentType<{ className?: string }> | null>(null);
   const button = useRef<HTMLButtonElement>(null);
+  // Over the home slider the launcher shrinks to a round button and lifts above the slider's controls.
+  const [overHero, setOverHero] = useState(false);
+  const pathname = usePathname();
 
   const close = useCallback(() => {
     setOpen(false);
@@ -52,6 +56,17 @@ export function YatriLauncher() {
   useEffect(() => {
     if (open) track("yatri_open");
   }, [open]);
+
+  useEffect(() => {
+    const hero = document.querySelector(".hero-stage");
+    if (!hero) return;
+    const observer = new IntersectionObserver(([entry]) => setOverHero(Boolean(entry?.isIntersecting)), { rootMargin: "-78% 0px 0px 0px" });
+    observer.observe(hero);
+    return () => {
+      observer.disconnect();
+      setOverHero(false);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     const cancel = afterLoad(warmUp);
@@ -78,12 +93,13 @@ export function YatriLauncher() {
           onClick={() => setOpen(true)}
           onPointerEnter={warmUp}
           onFocus={warmUp}
-          className={`no-print fixed right-4 bottom-20 z-40 inline-flex h-11 cursor-pointer items-center gap-1.5 rounded-full bg-brand pr-3.5 pl-1.5 text-sm font-semibold text-on-brand shadow-lg sm:bottom-4 sm:h-12 sm:gap-2 sm:pr-4 sm:text-base ${styles.launcher}`}
+          data-compact={overHero || undefined}
+          className={`no-print group fixed right-4 bottom-20 z-40 inline-flex h-11 cursor-pointer items-center gap-1.5 rounded-full bg-brand pr-3.5 pl-1.5 text-sm font-semibold text-on-brand shadow-lg ring-1 ring-white/15 transition-[bottom,padding] duration-300 sm:bottom-5 sm:h-12 sm:gap-2 sm:pr-4 sm:text-base data-[compact]:pr-1.5 sm:data-[compact]:pr-1.5 lg:data-[compact]:bottom-44 ${styles.launcher}`}
         >
           <span className={`grid size-8 place-items-center overflow-hidden rounded-full bg-white sm:size-9 ${styles.launcherFace}`} aria-hidden>
             {Face ? <Face className="size-full" /> : <MessageCircle className="size-5 text-brand" />}
           </span>
-          Ask Yatri
+          <span className={overHero ? "sr-only" : undefined}>Ask Yatri</span>
         </button>
       )}
       {open && <YatriPanel onClose={close} />}

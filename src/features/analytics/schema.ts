@@ -1,3 +1,4 @@
+import "@/lib/zod-config";
 import { z } from "zod";
 import { EVENT_VARIANTS, FEATURE_EVENTS, type FeatureEvent } from "./shared";
 

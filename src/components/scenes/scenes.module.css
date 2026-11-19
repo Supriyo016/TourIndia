@@ -101,13 +101,10 @@
   }
 }
 
-/* Fewer sprites on small screens. */
-@media (max-width: 767px) {
-  .wide {
-    display: none;
-  }
+/* On phones the sky is skipped: it is faint there anyway, and its 3D layers cost more than a second of main-thread time on mid-range devices. */
+@media (max-width: 767px), (prefers-reduced-data: reduce) {
   .ambient {
-    opacity: 0.22;
+    display: none;
   }
 }
 

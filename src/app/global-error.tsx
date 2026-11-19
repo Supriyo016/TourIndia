@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function GlobalError({ reset }: { error: Error; reset: () => void }) {
   return (
     <html lang="en-IN">
@@ -42,7 +44,7 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
           <p>The whole page ran into a problem. This is rare — your data is safe.</p>
           <div className="actions">
             <button type="button" onClick={reset}>Try again</button>
-            <a href="/">Back to home</a>
+            <Link href="/">Back to home</Link>
           </div>
         </div>
       </body>

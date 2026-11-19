@@ -99,7 +99,7 @@ export function AmbientScene() {
         </span>
       ))}
       {petals.map((item, index) => (
-        <span key={`p${index}`} className={`${styles.sprite} ${styles.petal} ${index > 2 ? styles.wide : ""}`} style={style(item)}>
+        <span key={`p${index}`} className={`${styles.sprite} ${styles.petal}`} style={style(item)}>
           <Petal />
         </span>
       ))}

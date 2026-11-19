@@ -79,12 +79,16 @@ export const NOINDEX_PAGES: { path: string; why: string }[] = [
   { path: "/admin/*", why: "Admin area" },
   { path: "/appeal", why: "Account appeals" },
   { path: "/c/[shareId]", why: "Shared collections (private links)" },
+  { path: "/forbidden.tsx", why: "Access denied (403) screen" },
   { path: "/m/[shareId]", why: "Shared memories (private links)" },
   { path: "/maintenance", why: "Maintenance notice" },
+  { path: "/not-found.tsx", why: "Page not found (404) screen" },
   { path: "/profile/*", why: "Personal profile" },
   { path: "/saved", why: "Personal saved places" },
+  { path: "/status/*", why: "Error and status screens (401, 403, 5xx, offline)" },
   { path: "/t/[shareId]", why: "Shared trips (private links)" },
   { path: "/u/[username]", why: "Public profiles" },
+  { path: "/unauthorized.tsx", why: "Sign-in required (401) screen" },
 ];
 
 /** Addresses that exist but aren't in the sitemap (personal, utility or noindex pages). */
