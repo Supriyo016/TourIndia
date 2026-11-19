@@ -1,35 +1,131 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
-     viewBox="0 0 1280 400" width="1280" height="400"
-     role="img" aria-labelledby="title desc"><title id="title">Tour India — Discover and plan travel across India</title><desc id="desc">An animated travel illustration with a glowing three-dimensional globe, India's map, orbital travel route, Taj Mahal-inspired architecture, flying aircraft and a moving train.</desc><defs><linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#061820"/><stop offset=".48" stop-color="#0b3540"/><stop offset="1" stop-color="#14505c"/></linearGradient><radialGradient id="horizon" cx="76%" cy="48%" r="58%"><stop offset="0" stop-color="#2c8b91" stop-opacity=".42"/><stop offset=".55" stop-color="#1b6770" stop-opacity=".18"/><stop offset="1" stop-color="#061820" stop-opacity="0"/></radialGradient><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b0"/><stop offset=".42" stop-color="#f8d46e"/><stop offset="1" stop-color="#e99a35"/></linearGradient><linearGradient id="goldEdge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".5" stop-color="#eeb44c"/><stop offset="1" stop-color="#9d5b24"/></linearGradient><linearGradient id="tealGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9ce5de" stop-opacity=".92"/><stop offset=".38" stop-color="#2c9ca0" stop-opacity=".72"/><stop offset="1" stop-color="#0b3540" stop-opacity=".96"/></linearGradient><linearGradient id="globeFill" x1=".15" y1=".08" x2=".88" y2=".95"><stop offset="0" stop-color="#c7fff1"/><stop offset=".2" stop-color="#329e9c"/><stop offset=".62" stop-color="#12616e"/><stop offset="1" stop-color="#062a38"/></linearGradient><linearGradient id="globeShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#03151e" stop-opacity=".05"/><stop offset=".62" stop-color="#03151e" stop-opacity=".05"/><stop offset="1" stop-color="#03151e" stop-opacity=".72"/></linearGradient><radialGradient id="globeShine" cx="26%" cy="18%" r="78%"><stop offset="0" stop-color="#ffffff" stop-opacity=".72"/><stop offset=".22" stop-color="#d7fff5" stop-opacity=".18"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient><radialGradient id="sunGlow"><stop offset="0" stop-color="#ffe7a1" stop-opacity=".8"/><stop offset=".35" stop-color="#f4b84e" stop-opacity=".23"/><stop offset="1" stop-color="#f4b84e" stop-opacity="0"/></radialGradient><linearGradient id="mountainBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b7478"/><stop offset="1" stop-color="#0c414b"/></linearGradient><linearGradient id="mountainFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14505c"/><stop offset="1" stop-color="#062630"/></linearGradient><linearGradient id="trainGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a2"/><stop offset=".55" stop-color="#f2bb57"/><stop offset="1" stop-color="#b66b2c"/></linearGradient><linearGradient id="fadeLeft" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#061820" stop-opacity=".55"/><stop offset=".58" stop-color="#061820" stop-opacity=".12"/><stop offset="1" stop-color="#061820" stop-opacity="0"/></linearGradient><filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="12" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/><feOffset dy="8" result="offset"/><feComponentTransfer><feFuncA type="linear" slope=".34"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="textGlow" x="-20%" y="-40%" width="150%" height="180%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><clipPath id="globeClip"><circle cx="1000" cy="184" r="104"/></clipPath><pattern id="starField" width="170" height="110" patternUnits="userSpaceOnUse"><circle cx="14" cy="19" r="1.2" fill="#e4fbf7" opacity=".65"/><circle cx="83" cy="66" r=".9" fill="#f8d46e" opacity=".75"/><circle cx="147" cy="34" r="1.4" fill="#ffffff" opacity=".5"/><circle cx="125" cy="96" r=".7" fill="#c5f1ee" opacity=".7"/></pattern><g id="star"><path d="M0-5 1.25-1.25 5 0 1.25 1.25 0h0-5" fill="#fff2c2"/></g></defs><style>
-    .sky-drift{animation:skyDrift 28s ease-in-out infinite alternate}
-    .cloud-a{animation:cloudA 34s ease-in-out infinite alternate}
-    .cloud-b{animation:cloudB 42s ease-in-out infinite alternate-reverse}
-    .float{animation:float 6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-    .float-delay{animation:float 7.5s ease-in-out -2s;initial-transform;transform-box:fill-box;transform-origin:center}
-    .twinkle{animation:twinkle 3.4s ease-in-out infinite}
-    .twinkle2{animation:twinkle 4.8s ease-in-out -2s;infinite}
-    .globe-spin{animation:globeSpin 26s linear infinite;transform-box:view-box;transform-origin:1000px 184px}
-    .orbit-spin{animation:orbitSpin 16s linear infinite;transform-box:view-box;transform-origin:1000px 184px}
-    .route-dot{animation:routePulse 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-    .pin-bob{animation:pinBob 3.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-    .train{animation:train 19s linear infinite}
-    .light-sweep{animation:lightSweep 7s ease-in-out infinite}
-    .parallax-one{animation:parallax 24s ease-in-out infinite alternate}
-    .parallax-twoynimation:parallax 31s ease-in-out -10s infinite alternate-reverse}
-    @keyframes skyDrift{to{transform:translate3d(-22px,8px,0)}}
-    @keyframes cloudA{to{transform:translateX(70px)}}
-    @keyframes cloudB{to{transform:translateX(-65px)}}
-    @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-11px) rotate(3deg)}}
-    @keyframes twinkle{0%,100%{opacity:.85}50%{opacity:.16}}
-    @keyframes globeSpin{to{transform:rotate(360deg)}}
-    @keyframes orbitSpin{to{transform:rotate(-360deg)}}
-    @keyframes routePulse{0%,100%{opacity:.55;transform:scale(.82)}50%{opacity:1;transform:scale(1.24)}}
-    @keyframes pinBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-    @keyframes train{from{transform:translateX(-290px)}to{transform:translateX(1420px)}}
-    @keyframes lightSweep{0%,100%{opacity:.12;transform:translateX(-30px)}50%{opacity:.5;transform:translateX(35px)}}
-    @keyframes parallax{to{transform:translateX(35px)}}
-    @media(prefers-reduced-motion:reduce){
-      *,*::before,*::after{animation:none!important;scroll-behavior:auto!important}
-    }
-  </style><rect width="1280" height="400" fill="url(#sky)"/><rect width="1280" height="400" fill="url(#horizon)"/><rect width="1280" height="400" fill="url(#starField)" opacity=".72"/><g aria-hidden="true"><circle class="twinkle" cx="650" cy="48" r="2" fill="#fff"/><circle class="twinkle2" cx="780" cy="83" r="1.7" fill="#f8d46e"/><circle class="twinkle" cx="890" cy="37" r="1.5" fill="#fff"/><circle class="twinkle2" cx="1190" cy="76" r="2" fill="#fff"/><circle class="twinkle" cx="1215" cy="160" r="1.3" fill="#fff"/><use xlink:href="#star" x="720" y="175" class="twinkle"/><use xlink:href="#star" x="855" y="126" class="twinkle2"/><use xlink:href="#star" x="1140" y="42" class="twinkle"/></g><circle cx="1040" cy="176" r="190" fill="url(#sunGlow)" class="light-sweep"/><g class="cloud-a" fill="#c7eeeb" opacity=".12"><ellipse cx="650" cy="112" rx="76" ry="13"/><ellipse cx="690" cy="100" rx="49" ry="17"/><ellipse cx="728" cy="112" rx="64" ry="12"/></g><g class="cloud-b" fill="#e5f8f6" opacity=".09"><ellipse cx="930" cy="73" rx="72" ry="11"/><ellipse cx="970" cy="63" rx="42" ry="14"/><ellipse cx="1002" cy="75" rx="58" ry="10"/></g><g class="parallax-one"><path d="M560 318 676 259 758 294 845 220 928 286 1015 239 1100 286 1184 249 1280 293V360H560Z" fill="url(#mountainBack)" opacity=".68"/><path d="m810 248 35-28 34 30-29-12-10 8-10-8Z" fill="#b8e3d9" opacity=".2"/><path d="m1152 267 32-18 31 23-25-8-9 6-9-5Z" fill="#b8e3d9" opacity=".17"/></g><g class="parallax-two"><path d="M640 335 754 279 838 319 922 272 1006 321 1092 278 1170 321 1280 285V364H640Z" fill="url(#mountainFront)" opacity=".92"/></g><g transform="translate(760 257)" opacity=".66" filter="url(#shadow)"><path d="M0 83V40H18V83M-7 40H25L9 25Z" fill="#082a34"/><path d="M33 83V51H45V83M29 51H49L39 38Z" fill="#082a34"/><path d="M15 83V45H116V83Z" fill="#082a34"/><path d="M27 45Q65-6 104 45Z" fill="#0b3039"/><path d="M61 17Q65-2 69 17V29H61Z" fill="#0b3039"/><path d="M54 83V61Q65 43 76 61V83Z" fill="#031e28"/><path d="M44 52V83M86 52V83" stroke="#8dc7bd" stroke-opacity=".22" stroke-width="2"/><path d="M15 45H116M7 83H125" stroke="#f4c96e" stroke-opacity=".3" stroke-width="1.5"/></g><g filter="url(#shadow)"><circle cx="1000" cy="184" r="132" fill="#42c7b6" opacity=".09" filter="url(#softGlow)"/><circle cx="1000" cy="184" r="111" fill="#092c36" stroke="#f4cc70" stroke-opacity=".55" stroke-width="1.5"/><circle cx="1000" cy="184" r="104" fill="url(#globeFill)"/><g clip-path="url(#globeClip)"><rect x="890" y="75" width="220" height="220" fill="url(#globeShine")"/><g2
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 400" width="1280" height="400" role="img" aria-labelledby="title desc">
+<title id="title">Tour India — Discover and plan travel across India</title>
+<desc id="desc">A moving travel scene with a luminous globe, stylised map of India, orbital route, flying aircraft, hot-air balloon, Taj Mahal silhouette and a passing train.</desc>
+<defs>
+  <linearGradient id="sky" x2="1" y2="1"><stop stop-color="#061820"/><stop offset=".52" stop-color="#0b3540"/><stop offset="1" stop-color="#14505c"/></linearGradient>
+  <radialGradient id="haze"><stop stop-color="#4bb8ad" stop-opacity=".36"/><stop offset="1" stop-color="#4bb8ad" stop-opacity="0"/></radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0b0"/><stop offset=".48" stop-color="#f5cf70"/><stop offset="1" stop-color="#dd8d35"/></linearGradient>
+  <linearGradient id="globe" x1=".1" y1="0" x2=".9" y2="1"><stop stop-color="#c9fff0"/><stop offset=".22" stop-color="#329e9c"/><stop offset=".7" stop-color="#12616e"/><stop offset="1" stop-color="#062532"/></linearGradient>
+  <radialGradient id="shine" cx=".25" cy=".18" r=".8"><stop stop-color="#fff" stop-opacity=".72"/><stop offset=".34" stop-color="#d7fff5" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <linearGradient id="shade" x2="1"><stop stop-color="#03151e" stop-opacity="0"/><stop offset=".68" stop-color="#03151e" stop-opacity=".08"/><stop offset="1" stop-color="#03151e" stop-opacity=".72"/></linearGradient>
+  <linearGradient id="hills" y2="1"><stop stop-color="#28747a"/><stop offset="1" stop-color="#082b35"/></linearGradient>
+  <radialGradient id="sun"><stop stop-color="#ffe2a0" stop-opacity=".7"/><stop offset="1" stop-color="#eea93f" stop-opacity="0"/></radialGradient>
+  <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceAlpha" stdDeviation="7" result="b"/><feOffset dy="7"/><feComponentTransfer><feFuncA type="linear" slope=".32"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <clipPath id="sphere"><circle cx="1002" cy="181" r="103"/></clipPath>
+</defs>
+<style>
+  .cloud1{animation:cloud 32s ease-in-out infinite alternate}
+  .cloud2{animation:cloud 42s ease-in-out -12s infinite alternate-reverse}
+  .float{transform-box:fill-box;transform-origin:center;animation:float 6s ease-in-out infinite}
+  .float2{transform-box:fill-box;transform-origin:center;animation:float 7s ease-in-out -2s infinite}
+  .spin{transform-box:view-box;transform-origin:1002px 181px;animation:spin 28s linear infinite}
+  .orbit{transform-box:view-box;transform-origin:1002px 181px;animation:orbit 17s linear infinite}
+  .train{animation:train 18s linear infinite}
+  .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 2.8s ease-in-out infinite}
+  .stars{animation:twinkle 4s ease-in-out infinite alternate}
+  @keyframes cloud{to{transform:translateX(65px)}}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes orbit{to{transform:rotate(-360deg)}}
+  @keyframes train{from{transform:translateX(-280px)}to{transform:translateX(1400px)}}
+  @keyframes pulse{0%,100%{opacity:.55;transform:scale(.85)}50%{opacity:1;transform:scale(1.25)}}
+  @keyframes twinkle{to{opacity:.2}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
+</style>
+
+<rect width="1280" height="400" fill="url(#sky)"/>
+<rect width="1280" height="400" fill="url(#haze)"/>
+<circle cx="1030" cy="175" r="205" fill="url(#sun)"/>
+<g fill="#fff" class="stars">
+  <circle cx="642" cy="44" r="1.8"/><circle cx="765" cy="86" r="1.4"/><circle cx="884" cy="39" r="1.5"/>
+  <circle cx="1185" cy="66" r="1.8"/><circle cx="1230" cy="151" r="1.3"/><circle cx="708" cy="169" r="1.5"/>
+  <path d="m850 118 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="#ffe7a3"/>
+</g>
+<g class="cloud1" fill="#d8f4f0" opacity=".12"><ellipse cx="652" cy="115" rx="76" ry="13"/><ellipse cx="692" cy="103" rx="52" ry="16"/><ellipse cx="733" cy="115" rx="61" ry="11"/></g>
+<g class="cloud2" fill="#d8f4f0" opacity=".1"><ellipse cx="927" cy="75" rx="75" ry="11"/><ellipse cx="970" cy="64" rx="44" ry="14"/><ellipse cx="1008" cy="76" rx="57" ry="10"/></g>
+
+<!-- Layered hills and a Taj Mahal-inspired silhouette -->
+<path d="M530 319 675 254 759 294 846 220 934 286 1012 240 1100 287 1182 249 1280 291V360H530Z" fill="url(#hills)" opacity=".72"/>
+<path d="M640 338 754 281 838 320 923 274 1006 321 1092 278 1171 321 1280 286V363H640Z" fill="#082e39"/>
+<g transform="translate(758 261)" opacity=".7" filter="url(#shadow)" fill="#061f2a">
+  <path d="M0 82V39H16V82M-7 39H23L8 24Z M31 82V50H44V82M27 50H48L38 36Z"/>
+  <path d="M15 82V45H116V82Z M26 45Q65-6 105 45Z M61 16Q65-3 69 16V29H61Z"/>
+  <path d="M54 82V60Q65 43 76 60V82Z"/>
+  <path d="M15 45H116M7 82H125" stroke="#f4c96e" stroke-opacity=".32" stroke-width="1.5"/>
+</g>
+
+<!-- Volumetric globe with rotating longitude and latitude -->
+<g filter="url(#shadow)">
+  <circle cx="1002" cy="181" r="130" fill="#42c7b6" opacity=".12" filter="url(#glow)"/>
+  <circle cx="1002" cy="181" r="111" fill="#082b36" stroke="#f3cc70" stroke-opacity=".65" stroke-width="1.5"/>
+  <circle cx="1002" cy="181" r="103" fill="url(#globe)"/>
+  <g clip-path="url(#sphere)">
+    <g class="spin" fill="none" stroke="#d7fff4" stroke-opacity=".28">
+      <ellipse cx="1002" cy="181" rx="86" ry="103" stroke-width="1.3"/>
+      <ellipse cx="1002" cy="181" rx="47" ry="103" stroke-width="1.1"/>
+      <path d="M899 181H1105M910 143Q1002 174 1094 143M910 220Q1002 190 1094 220M919 113Q1002 150 1085 113M919 249Q1002 212 1085 249"/>
+    </g>
+    <path d="m970 108 20-6 16 8 10 12 15 5 8 14-9 11 5 12-12 13-4 17-10 12-4 18-11 20-10-16-4-18-12-15-6-18-10-14 6-16-7-13Z"
+      fill="#f1c96f" stroke="#fff1bd" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M1008 226q13 9 12 22-10 9-16-3Z" fill="#f1c96f" stroke="#fff1bd" stroke-width="1.2"/>
+    <path d="m976 120 26-3 19 17m-58 24 42 7 23-13m-48 40 38 6" fill="none" stroke="#fff8d9" stroke-opacity=".38" stroke-width="1.2"/>
+    <circle cx="1009" cy="161" r="3" fill="#fff8d9"/>
+    <rect x="895" y="75" width="215" height="215" fill="url(#shine)"/>
+    <rect x="895" y="75" width="215" height="215" fill="url(#shade)"/>
+  </g>
+  <circle cx="1002" cy="181" r="103" fill="none" stroke="#d7fff4" stroke-opacity=".55"/>
+  <path d="M932 117Q963 86 1006 83" fill="none" stroke="#fff" stroke-opacity=".48" stroke-width="5" stroke-linecap="round"/>
+</g>
+
+<!-- Rotating orbital path and glowing travel beacons -->
+<g class="orbit" fill="none">
+  <ellipse cx="1002" cy="181" rx="151" ry="54" transform="rotate(-20 1002 181)" stroke="#f5d17a" stroke-width="2" stroke-opacity=".78" stroke-dasharray="7 8"/>
+  <ellipse cx="1002" cy="181" rx="151" ry="54" transform="rotate(-20 1002 181)" stroke="#9ce8dc" stroke-width="7" stroke-opacity=".09"/>
+  <circle cx="1143" cy="128" r="5.5" fill="#fff0b0" filter="url(#glow)"/>
+  <circle cx="861" cy="233" r="4.5" fill="#65e2d1" filter="url(#glow)"/>
+</g>
+<g class="float" transform="translate(1009 153)">
+  <path d="M0 0C-13 0-22 10-22 22c0 17 22 39 22 39s22-22 22-39C22 10 13 0 0 0Z" fill="url(#gold)" stroke="#fff3c5" stroke-width="1.4"/>
+  <circle cy="21" r="7" fill="#14505c" stroke="#fff7d8" stroke-width="2"/><circle cy="21" r="2.4" fill="#fff"/>
+</g>
+<circle class="pulse" cx="1009" cy="174" r="17" fill="none" stroke="#ffe7a0" stroke-width="1.6"/>
+
+<!-- Airplane and hot-air balloon -->
+<g class="float" transform="translate(1126 91) rotate(-16)">
+  <path d="m0 0 42 12-25 7-7 16-6-1 3-16-15-4Z" fill="url(#gold)" stroke="#fff2c3" stroke-width="1.1"/>
+</g>
+<g class="float2" transform="translate(1180 160)">
+  <path d="M0-27C-18-27-25-8-19 7-14 19-5 26 0 29 5 26 14 19 19 7 25-8 18-27 0-27Z" fill="url(#gold)" stroke="#fff0b8" stroke-width="1.3"/>
+  <path d="M0-25V25M-14-18Q0 0 0 24M14-18Q0 0 0 24" fill="none" stroke="#9c5d2b" stroke-opacity=".5" stroke-width="1.2"/>
+  <path d="M-5 30H5L3 36H-3Z" fill="#f3bf62"/>
+</g>
+
+<!-- Title and travel-guide details -->
+<rect width="780" height="360" fill="#061820" opacity=".12"/>
+<path d="M76 82H151" stroke="#f5d17a" stroke-width="3" stroke-linecap="round"/><circle cx="160" cy="82" r="3" fill="#f5d17a"/>
+<text x="72" y="158" font-family="Georgia,'Times New Roman',serif" font-size="91" font-weight="700" letter-spacing="-2.5" fill="url(#gold)">Tour India</text>
+<text x="77" y="210" font-family="'Segoe UI',Helvetica,Arial,sans-serif" font-size="29" font-weight="500" fill="#f1fbfa">Discover and plan travel across India</text>
+<text x="78" y="255" font-family="'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#a9d9d7">36 states &amp; UTs · 52 destination guides · culture · trip planner</text>
+<g transform="translate(78 292)">
+  <rect width="215" height="34" rx="17" fill="#fff" fill-opacity=".08" stroke="#9ce5de" stroke-opacity=".45"/>
+  <circle cx="17" cy="17" r="4" fill="#f5d17a"/>
+  <text x="31" y="22.5" font-family="'Segoe UI',Arial,sans-serif" font-size="13.5" font-weight="600" letter-spacing="1.1" fill="#e8f8f4">EXPLORE INCREDIBLE INDIA</text>
+</g>
+
+<!-- Animated Indian train -->
+<path d="M0 351Q270 347 520 353T1280 350" fill="none" stroke="#7bc7bd" stroke-opacity=".25" stroke-width="2"/>
+<g class="train" filter="url(#shadow)">
+  <path d="M0 328Q0 319 10 319H73Q84 319 84 330V350H0Z" fill="url(#gold)" stroke="#fff0b6"/>
+  <path d="M84 329H147V350H84Z" fill="#eaa94e" stroke="#fff0b6" stroke-opacity=".65"/>
+  <path d="M151 329H214V350H151Z" fill="#d98e3e" stroke="#fff0b6" stroke-opacity=".55"/>
+  <path d="M11 324H31V338H11ZM39 324H60V338H39Z" fill="#164753"/>
+  <path d="M94 333H109V341H94ZM119 333H134V341H119ZM161 333H176V341H161ZM186 333H201V341H186Z" fill="#164753"/>
+  <path d="M0 346H214" stroke="#fff1c0" stroke-opacity=".6"/>
+  <g fill="#061820" stroke="#f8d774" stroke-width="1"><circle cx="20" cy="352" r="5.2"/><circle cx="64" cy="352" r="5.2"/><circle cx="106" cy="352" r="4.7"/><circle cx="135" cy="352" r="4.7"/><circle cx="174" cy="352" r="4.7"/><circle cx="201" cy="352" r="4.7"/></g>
+</g>
+<rect y="360" width="1280" height="3" fill="url(#gold)" opacity=".65"/>
+<rect y="363" width="1280" height="37" fill="#04171f"/>
+<path d="M0 363H1280" stroke="#b2e5dc" stroke-opacity=".15"/>
+<circle class="stars" cx="74" cy="382" r="1.5" fill="#f8d774"/><circle class="stars" cx="1200" cy="382" r="1.4" fill="#65d4c6"/>
+</svg>
