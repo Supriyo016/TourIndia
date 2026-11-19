@@ -323,14 +323,17 @@ test.describe("home page additions", () => {
     for (const size of ["", "-480", "-360"]) expect((await page.request.head(`/videos/tour-india${size}.webm`)).status()).toBe(200);
   });
 
-  test("the video plays in view, fills a third of the screen, and quality can be chosen", async ({ page }) => {
+  test("the video plays in view, takes half the section width, and quality can be chosen", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     const video = page.getByTestId("tour-video");
     await video.scrollIntoViewIfNeeded();
     await expect.poll(() => video.evaluate((element: HTMLVideoElement) => !element.paused && element.currentTime > 0.2), { timeout: 15_000 }).toBe(true);
     const box = (await video.boundingBox())!;
-    expect(Math.abs(box.height - 300)).toBeLessThan(4);
+    const frame = (await video.locator("..").boundingBox())!;
+    expect(Math.abs(frame.width - frame.height * (16 / 9))).toBeLessThan(4);
+    expect(frame.width).toBeGreaterThan(560);
+    expect(frame.width).toBeLessThan(760);
     expect(Math.abs(box.x + box.width / 2 - 720)).toBeLessThan(12);
     await page.getByRole("button", { name: /^Auto/ }).click();
     await page.getByRole("menuitemradio", { name: "480p" }).click();

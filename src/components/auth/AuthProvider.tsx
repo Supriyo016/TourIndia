@@ -1,5 +1,6 @@
 "use client";
 
+import "@/lib/zod-config";
 import dynamic from "next/dynamic";
 import { createContext, use, useCallback, useEffect, useMemo, useState } from "react";
 import type { PublicUser } from "@/lib/auth/session";

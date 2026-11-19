@@ -1,3 +1,4 @@
+import "@/lib/zod-config";
 import { z } from "zod";
 import { CATEGORY_IDS } from "@/features/support/types";
 

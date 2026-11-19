@@ -1,3 +1,4 @@
+import { ScrollRail } from "@/components/ui/ScrollRail";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DiyaCharacter, FoodCharacter, HistorianCharacter, DancerCharacter } from "@/components/characters/lazy";
@@ -41,7 +42,7 @@ export default function CulturePage() {
         <section aria-labelledby="year-title" className="mt-14">
           <h2 id="year-title">The festival year</h2>
           <p className="mt-1 text-ink-2">Scroll through the months. Lunar festivals move between years, so check each one for confirmed dates.</p>
-          <ol className="rail mt-5">
+          <ScrollRail as="ol" label="Festivals by month" className="mt-5">
             {monthNames.map((month, index) => {
               const list = festivals.filter((festival) => festival.months.includes((index + 1) as never));
               return (
@@ -61,7 +62,7 @@ export default function CulturePage() {
                 </li>
               );
             })}
-          </ol>
+          </ScrollRail>
         </section>
 
         <section aria-labelledby="regions-title" className="mt-14">
