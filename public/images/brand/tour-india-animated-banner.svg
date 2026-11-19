@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 400" width="1280" height="400" role="img" aria-labelledby="title desc">
+<title id="title">Tour India — Discover and plan travel across India</title>
+<desc id="desc">An animated Indian travel panorama with layered mountains, palace and temple architecture, a rotating globe, floating hot-air balloon, stars and moving train.</desc>
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#07121f"/><stop offset=".5" stop-color="#123d49"/><stop offset="1" stop-color="#1c6870"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#fff4c5" stop-opacity=".95"/><stop offset=".4" stop-color="#ffd47c" stop-opacity=".5"/><stop offset="1" stop-color="#f4a53d" stop-opacity="0"/></radialGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0ae"/><stop offset=".5" stop-color="#f6c85f"/><stop offset="1" stop-color="#e99a35"/></linearGradient>
+ <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f2d093"/><stop offset="1" stop-color="#98603d"/></linearGradient>
+ <radialGradient id="globe" cx=".3" cy=".25" r=".8"><stop stop-color="#91e5df"/><stop offset=".5" stop-color="#21818c"/><stop offset="1" stop-color="#073344"/></radialGradient>
+ <linearGradient id="train" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff0b2"/><stop offset=".5" stop-color="#e7a94c"/><stop offset="1" stop-color="#9d4d27"/></linearGradient>
+ <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feGaussianBlur in="SourceAlpha" stdDeviation="4"/><feOffset dy="6"/><feComponentTransfer><feFuncA type="linear" slope=".35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <clipPath id="globeClip"><circle cx="1090" cy="112" r="49"/></clipPath>
+</defs>
+<style>
+ .cloud{animation:cloud 32s ease-in-out infinite alternate}.cloud2{animation:cloud 40s ease-in-out infinite alternate-reverse}
+ .float{animation:float 6s ease-in-out infinite}.balloon{transform-origin:1140px 165px;animation:balloon 8s ease-in-out infinite}
+ .globeSpin{transform-origin:1090px 112px;animation:spin 24s linear infinite}.orbit{transform-origin:1090px 112px;animation:spin 13s linear infinite reverse}
+ .train{animation:train 21s linear infinite}.twinkle{animation:twinkle 3s ease-in-out infinite}.pulse{animation:pulse 6s ease-in-out infinite}.water{animation:water 5s ease-in-out infinite}
+ @keyframes cloud{to{transform:translateX(80px)}}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px) rotate(2deg)}}
+ @keyframes balloon{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(3deg)}}@keyframes spin{to{transform:rotate(360deg)}}
+ @keyframes train{from{transform:translateX(-300px)}to{transform:translateX(1500px)}}@keyframes twinkle{50%{opacity:.15}}@keyframes pulse{50%{opacity:.55;transform:scale(1.06)}}@keyframes water{50%{opacity:.9}}
+ @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
+</style>
+<rect width="1280" height="400" fill="url(#sky)"/>
+<g fill="#fff"><circle class="twinkle" cx="620" cy="52" r="1.7"/><circle class="twinkle" style="animation-delay:.8s" cx="784" cy="38" r="1.3"/><circle class="twinkle" style="animation-delay:1.4s" cx="1165" cy="43" r="1.5"/><circle class="twinkle" style="animation-delay:2s" cx="1240" cy="126" r="1.2"/><circle class="twinkle" style="animation-delay:.4s" cx="558" cy="124" r="1"/></g>
+<circle cx="955" cy="185" r="110" fill="url(#sun)" class="pulse" filter="url(#glow)"/><circle cx="955" cy="185" r="34" fill="#ffedbd" opacity=".7"/>
+<g fill="#d8f2f4" opacity=".13"><g class="cloud"><ellipse cx="695" cy="105" rx="78" ry="13"/><ellipse cx="728" cy="94" rx="48" ry="17"/><ellipse cx="761" cy="106" rx="55" ry="12"/></g><g class="cloud2"><ellipse cx="870" cy="72" rx="63" ry="10"/><ellipse cx="902" cy="62" rx="41" ry="14"/></g></g>
+<path d="M470 310 610 196 704 270 824 160 938 267 1054 194 1190 292 1280 248V400H470Z" fill="#164550" opacity=".8"/>
+<path d="m670 260 154-100 57 72-43-19-14 24-28-18-26 30-27-13-73 58z" fill="#d5e9e4" opacity=".17"/>
+<path d="M540 340 705 248 795 300 918 220 1040 300 1155 242 1280 313V400H540Z" fill="#0b3540"/>
+<path d="M550 344Q720 310 845 337T1100 335T1280 322V400H550Z" fill="#0d4651"/>
+<path class="water" d="M820 354q46-9 94 0t94 0t94 0t94 0" fill="none" stroke="#8ed2cd" stroke-width="2" opacity=".65"/>
+<g filter="url(#shadow)">
+ <g transform="translate(730 214)">
+  <path d="M0 126V58L18 40 36 58V126Z" fill="#c18d51"/><path d="M8 126V62H28V126Z" fill="#e0b36d"/>
+  <path d="M18 40V17Q36 5 54 17V40Z" fill="url(#stone)"/><path d="M18 17q18-19 36 0" fill="#f5d08b"/>
+  <path d="M36 58V126H88V58L62 37Z" fill="#b97942"/><path d="M47 126V72Q62 48 77 72V126Z" fill="#f0c27a"/>
+  <path d="M88 126V58L106 40 124 58V126Z" fill="#cc9556"/><path d="M106 40V18Q124 4 142 18V40Z" fill="#e8b96f"/><path d="M106 18q18-20 36 0" fill="#fff0b6"/>
+  <path d="M0 58H124V68H0Z" fill="#f3d194"/><path d="M-5 126H130V133H-5Z" fill="#75452f"/>
+  <g fill="#153d45"><path d="M15 126V91Q25 75 35 91V126Z"/><path d="M94 126V91Q106 75 118 91V126Z"/></g><g fill="#ffe1a0"><circle cx="18" cy="48" r="2.4"/><circle cx="106" cy="48" r="2.4"/></g>
+ </g>
+ <g transform="translate(895 226)"><path d="M0 114V64H18V47L34 28 50 47V64H67V114Z" fill="#a9663f"/><path d="M18 47 34 28 50 47V64H18Z" fill="#e2aa61"/><path d="M26 29q8-24 16 0M34 5v19" fill="none" stroke="#f5cd82" stroke-width="3"/><path d="M25 114V80Q34 65 43 80V114Z" fill="#193e45"/><path d="M0 114H67V122H0Z" fill="#6f4636"/></g>
+ <g transform="translate(1015 230)"><rect y="48" width="146" height="78" rx="3" fill="#d3a269"/><path d="M0 48Q73 4 146 48Z" fill="#f1c57d"/><path d="M42 46Q73-2 104 46Z" fill="#f7d99b"/><path d="M67 9V0" stroke="#f5d58e" stroke-width="3"/><circle cx="67" cy="1" r="3" fill="#f8e6b8"/><rect x="-8" y="40" width="162" height="9" rx="3" fill="#f0d29b"/><g fill="#bd804d"><rect x="8" y="20" width="11" height="108"/><rect x="127" y="20" width="11" height="108"/><path d="M4 20Q13 0 23 20Z M123 20Q133 0 142 20Z"/></g><path d="M57 126V78Q73 53 89 78V126Z" fill="#123b43"/><path d="M-8 126H154V134H-8Z" fill="#754a34"/></g>
+</g>
+<g class="balloon" filter="url(#shadow)"><path d="M1138 180Q1099 149 1111 115Q1120 87 1140 83Q1165 93 1170 116Q1176 148 1142 180Z" fill="url(#gold)" stroke="#ffe6a0" stroke-width="2"/><path d="M1138 180Q1120 151 1126 105Q1140 85 1140 85Q1155 108 1151 153Q1147 170 1142 180Z" fill="#d84e55" opacity=".9"/><path d="M1120 129Q1140 141 1165 128" fill="none" stroke="#fff0bf" stroke-width="3"/><path d="M1128 170 1132 190M1151 170 1147 190" stroke="#f9dda0" stroke-width="1.5"/><path d="M1130 190H1149L1146 204H1133Z" fill="#70462e"/></g>
+<g filter="url(#shadow)"><circle cx="1090" cy="112" r="54" fill="#041c29" opacity=".5"/><circle cx="1090" cy="112" r="51" fill="url(#globe)" stroke="#c0f1e9" stroke-width="1.5"/><g clip-path="url(#globeClip)"><g class="globeSpin"><ellipse cx="1090" cy="112" rx="22" ry="49" fill="none" stroke="#c4f4ec" opacity=".6"/><ellipse cx="1090" cy="112" rx="43" ry="49" fill="none" stroke="#c4f4ec" opacity=".35"/><path d="M1038 112H1142M1042 89Q1090 101 1138 89M1042 135Q1090 123 1138 135" fill="none" stroke="#c4f4ec" opacity=".5"/><path d="M1060 79l13 6 3 12 12 5-6 9-13 1-4 12-11-5-7-17 6-12zM1100 120l11 5 4 12-7 15-9-4-5-13zM1120 72l10 6-2 10-12 3-4-8z" fill="#a6d8a2"/></g><path d="M1097 119q-4 5-2 11l5 5 3-8-2-8z" fill="#ffd76c" stroke="#fff2bb"/><circle cx="1099" cy="126" r="10" fill="#ffd76c" opacity=".2"/></g></g>
+<g class="orbit" fill="none" stroke="#f5d17d" stroke-width="1.2" opacity=".75"><ellipse cx="1090" cy="112" rx="72" ry="23" transform="rotate(-25 1090 112)"/></g>
+<g fill="#062a32"><path d="M685 360q8-58 5-112q-1-16 7-26q-4 14 0 23q6-14 17-19q-12 11-13 22q16-13 29-10q-17 5-26 19q19-4 31 5q-18-4-32 3q16 7 20 19q-10-9-23-10q7 36 7 86z"/><path d="M1174 360q5-50 2-88q-2-13 5-20q-3 11 2 17q6-12 16-14q-10 8-12 17q13-9 24-5q-14 2-22 12q15-1 24 7q-13-3-25 1q13 7 14 17q-8-8-19-9q5 30 6 65z"/></g>
+<path d="M0 359H1280" stroke="#e6b75e" stroke-width="2" opacity=".55"/><path d="M0 365H1280" stroke="#061923" stroke-width="4"/>
+<g class="train" filter="url(#shadow)"><path d="M0 320H88Q105 320 110 337V355H0Z" fill="url(#train)" stroke="#ffe3a0"/><path d="M14 326H36V340H14Z M44 326H66V340H44Z M74 326H91Q99 326 101 340H74Z" fill="#0d3a46" stroke="#fff0bb"/><path d="M0 347H110V355H0Z" fill="#b34d32"/><rect x="110" y="328" width="68" height="27" rx="3" fill="#d99343" stroke="#ffe0a0"/><rect x="182" y="328" width="68" height="27" rx="3" fill="#c77e3b" stroke="#ffe0a0"/><g fill="#123744"><rect x="122" y="333" width="16" height="9"/><rect x="145" y="333" width="16" height="9"/><rect x="194" y="333" width="16" height="9"/><rect x="217" y="333" width="16" height="9"/></g><g fill="#061923"><circle cx="21" cy="357" r="5"/><circle cx="83" cy="357" r="5"/><circle cx="131" cy="357" r="4.5"/><circle cx="166" cy="357" r="4.5"/><circle cx="199" cy="357" r="4.5"/><circle cx="234" cy="357" r="4.5"/></g></g>
+<path d="M0 0H660Q620 80 644 160T615 300H0Z" fill="#031923" opacity=".25"/><path d="M0 0H5V400H0Z" fill="#f7d774" opacity=".85"/>
+<path d="M72 98H104" stroke="#f2b64d" stroke-width="3" stroke-linecap="round"/>
+<text x="75" y="165" font-family="Georgia,'Times New Roman',serif" font-size="88" font-weight="700" letter-spacing="-2" fill="#061923" opacity=".65" transform="translate(3 5)">Tour India</text>
+<text x="72" y="160" font-family="Georgia,'Times New Roman',serif" font-size="88" font-weight="700" letter-spacing="-2" fill="url(#gold)">Tour India</text>
+<path d="M75 177H405" stroke="#f5cf7b" stroke-width="2" opacity=".8"/>
+<text x="76" y="218" font-family="'Segoe UI',Helvetica,Arial,sans-serif" font-size="28" font-weight="500" fill="#f1fbfb">Discover and plan travel across India</text>
+<text x="77" y="260" font-family="'Segoe UI',Helvetica,Arial,sans-serif" font-size="17" fill="#bce4e5" letter-spacing=".25">Explore places · Culture · Food · Heritage · Festivals</text>
+<rect y="372" width="1280" height="28" fill="#041721" opacity=".96"/><rect y="372" width="1280" height="1" fill="#f5cf7b" opacity=".5"/>
+<text x="72" y="391" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#a8d2d3" letter-spacing="1.1">A JOURNEY THROUGH INDIA</text><g fill="#f5d17d"><circle cx="305" cy="386" r="2"/><circle cx="320" cy="386" r="2"/><circle cx="335" cy="386" r="2"/></g><text x="1207" y="391" text-anchor="end" font-family="'Segoe UI',Arial,sans-serif" font-size="10" fill="#b8d8d8">TOUR INDIA</text>
+</svg>
