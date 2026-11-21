@@ -31,14 +31,14 @@ No accounts, no sessions, no file uploads, no payments and no admin interface. P
 
 | Risk | Protection | Where |
 |---|---|---|
-| Runaway AI cost | Limits per address (40 an hour) and per session (25 an hour), a site-wide daily cap (`ASSISTANT_DAILY_LIMIT`, default 500), 8,000 output tokens per reply, 6 tool rounds, and strict message limits. Set a spend limit in the Anthropic Console too | `api/assistant` |
+| Runaway AI cost | Limits per address (40 an hour) and per session (25 an hour), a site-wide daily cap (`ASSISTANT_DAILY_LIMIT`, default 500), 1,500 output tokens per reply, 3 tool rounds, and strict message limits. Set usage and spending limits in the configured provider account | `api/assistant` |
 | Prompt injection | Tools only read this site's own content, and none can write, browse or send anything. The prompt treats tool text as data | `features/assistant/agent.ts` |
 | Malicious links or markup in replies | Replies render as React text. Only same-site links and bold are recognised | `RichText.tsx` |
-| Secret exposure | The Anthropic key stays on the server | `agent.ts` |
+| Secret exposure | Provider credentials are read from server-side environment variables and are never sent to the browser | `agent.ts` |
 | Session forgery | HMAC-signed session with expiry and constant-time comparison. `__Host-` prefix, HttpOnly, Secure, SameSite=Strict | `lib/security/session.ts` |
 | Consent | Versioned `ti_consent` cookie, set by a same-origin, validated endpoint. Refusing deletes optional storage | `api/consent`, `lib/consent.ts` |
 
-The in-memory rate limiter is per server instance. Until a database is connected, the assistant's limits are approximate on Vercel, so keep an Anthropic spend limit in place.
+The in-memory rate limiter is per server instance. Until a database is connected, the assistant's limits are approximate on Vercel, so configure appropriate usage and spending limits in the selected provider account.
 
 ## Tests performed
 
