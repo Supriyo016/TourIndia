@@ -6,7 +6,7 @@
 
 | Question | Answer |
 |---|---|
-| Sign-in | Walk the owner through MongoDB Atlas, Resend and Google OAuth in their Chrome. The owner signs in and types passwords; Claude copies keys into Vercel |
+| Sign-in | The owner configures MongoDB Atlas, Resend and Google OAuth directly in their respective dashboards, then adds the required deployment variables in Vercel |
 | Maps | Google Maps with an API key restricted to the site. The India map becomes a tilted Google map with states highlighted |
 | Festivals 2000–2100 | Calculated from moon positions and labelled "calculated, may differ by a day locally". Official dates replace them where published |
 | Score vs animation | Score first. 3D loads after the page is ready, pauses off screen and is lighter on slow phones. Target 95+ in all four Lighthouse categories |
