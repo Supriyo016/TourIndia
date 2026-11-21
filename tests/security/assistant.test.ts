@@ -33,8 +33,6 @@ async function events(response: Response) {
 beforeAll(() => {
   process.env.VERCEL = "1";
   process.env.RATE_LIMIT_SALT = "test-salt-test-salt-test-salt-test";
-  delete process.env.ANTHROPIC_API_KEY;
-  delete process.env.ANTHROPIC_AUTH_TOKEN;
   delete process.env.MONGODB_URI;
 });
 
