@@ -43,7 +43,7 @@ The map is plain SVG with real links, so it works before JavaScript loads. Regio
 
 ## Yatri assistant
 
-`src/features/assistant/knowledge.ts` answers questions from the site's data. `agent.ts` exposes those functions to Claude as tools through the SDK's tool runner, and `/api/assistant` streams the reply as NDJSON. With no API key, or if the model call fails before any text is sent, the route answers from `knowledge.ts` alone. The terminal (`terminal.ts`) runs in the browser against `/assistant-data.json`. The panel's code is only loaded when opened.
+`src/features/assistant/knowledge.ts` answers questions from the site's data. `agent.ts` exposes those functions as tools to a configured OpenAI-compatible provider (Groq or Vercel AI Gateway), and `/api/assistant` streams the reply as NDJSON. With no provider configured, or if the model call fails before any text is sent, the route answers from `knowledge.ts` alone. The terminal (`terminal.ts`) runs in the browser against `/assistant-data.json`. The panel's code is only loaded when opened.
 
 ## Theme
 
