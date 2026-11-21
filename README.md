@@ -3,7 +3,7 @@
 <div align="center">
 
 <a href="https://tour-india-pi.vercel.app">
-<img src="https://capsule-render.vercel.app/api?type=waving&height=250&color=0:071A2B,24:0B6B62,56:0F766E,100:312E81&text=TOUR%20INDIA&fontColor=F8FAFC&fontSize=68&fontAlignY=34&desc=DISCOVER%20%E2%80%A2%20EXPLORE%20%E2%80%A2%20EXPERIENCE%20%E2%80%A2%20PLAN&descAlignY=57&descSize=17&animation=fadeIn" width="100%" alt="Tour India — discover, explore, experience and plan journeys across India">
+<img src="docs/assets/banner.svg" width="100%" alt="Tour India — original animated illustrated travel banner">
 </a>
 
 # 🇮🇳 Tour India
