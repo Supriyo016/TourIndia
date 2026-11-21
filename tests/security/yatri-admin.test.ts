@@ -12,7 +12,6 @@ let insights: typeof import("@/features/assistant/insights");
 beforeAll(async () => {
   await setup();
   delete process.env.GROQ_API_KEY;
-  delete process.env.ANTHROPIC_API_KEY;
   assistant = (await import("@/app/api/assistant/route")).POST;
   feedback = (await import("@/app/api/assistant/feedback/route")).POST;
   yatri = (await import("@/app/api/admin/yatri/route")).POST;
