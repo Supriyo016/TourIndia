@@ -1,49 +1,118 @@
-<!-- Tour India | Current application documentation -->
+<!-- Tour India | Travel discovery and itinerary planning platform -->
 
 <div align="center">
 
-<a href="https://tour-india-pi.vercel.app"><img src="docs/assets/banner.svg" width="100%" alt="Tour India — discover and plan travel across India"></a>
+<a href="https://tour-india-pi.vercel.app">
+<img src="public/images/brand/tour-india-animated-banner.svg" width="100%" alt="Animated Tour India banner showing an illustrated travel panorama across India">
+</a>
 
 # 🇮🇳 Tour India
 
 ### Discover India. Explore its culture. Plan your own journey.
 
-**An independent travel discovery and planning platform covering 28 states and 8 Union Territories.**
-
-<a href="https://tour-india-pi.vercel.app"><img src="https://img.shields.io/badge/EXPLORE%20LIVE-Visit%20Tour%20India-0B6B62?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Visit Tour India"></a>
-<a href="https://github.com/Supriyo016/TourIndia/tree/rebuild/nextjs"><img src="https://img.shields.io/badge/CURRENT%20SOURCE-rebuild%2Fnextjs-181717?style=for-the-badge&logo=github" alt="Current branch"></a>
+**An independent travel discovery and planning platform for India's states, destinations, heritage and living culture.**
 
 <p>
-<a href="https://github.com/Supriyo016/TourIndia/actions/workflows/ci.yml"><img src="https://github.com/Supriyo016/TourIndia/actions/workflows/ci.yml/badge.svg?branch=rebuild/nextjs" alt="CI"></a>
-<a href="https://github.com/Supriyo016/TourIndia/actions/workflows/codeql.yml"><img src="https://github.com/Supriyo016/TourIndia/actions/workflows/codeql.yml/badge.svg?branch=rebuild/nextjs" alt="CodeQL"></a>
-<img src="https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs" alt="Next.js">
-<img src="https://img.shields.io/badge/React-19-149ECA?logo=react" alt="React">
-<img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
-<img src="https://img.shields.io/badge/Tailwind_CSS-4-38BDF8?logo=tailwindcss" alt="Tailwind">
-<img src="https://img.shields.io/badge/Hosting-Vercel-000?logo=vercel" alt="Vercel">
-<img src="https://img.shields.io/badge/License-MIT-14505C" alt="MIT">
+<a href="https://tour-india-pi.vercel.app"><img src="https://img.shields.io/badge/EXPLORE%20LIVE-Visit%20Tour%20India-0B6B62?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Visit Tour India"></a>
+<a href="https://github.com/Supriyo016/TourIndia/tree/rebuild/nextjs"><img src="https://img.shields.io/badge/CURRENT%20APPLICATION-rebuild%2Fnextjs-181717?style=for-the-badge&logo=github&logoColor=white" alt="Current application source branch"></a>
+<a href="https://github.com/Supriyo016/TourIndia"><img src="https://img.shields.io/badge/REPOSITORY-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub repository"></a>
 </p>
 
-<sub>Created and maintained by <a href="https://github.com/Supriyo016">Supriyo Sarkar</a> · Founder & Website Owner</sub>
+<p>
+<a href="https://github.com/Supriyo016/TourIndia/actions/workflows/ci.yml"><img src="https://github.com/Supriyo016/TourIndia/actions/workflows/ci.yml/badge.svg?branch=rebuild/nextjs" alt="Continuous integration"></a>
+<a href="https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs"><img src="https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs" alt="Next.js 16"></a>
+<a href="https://img.shields.io/badge/React-19-149ECA?logo=react"><img src="https://img.shields.io/badge/React-19-149ECA?logo=react" alt="React 19"></a>
+<img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
+<img src="https://img.shields.io/badge/Tailwind_CSS-4-38BDF8?logo=tailwindcss" alt="Tailwind CSS 4">
+<img src="https://img.shields.io/badge/MongoDB-Optional-47A248?logo=mongodb&logoColor=white" alt="MongoDB optional">
+<img src="https://img.shields.io/badge/Hosting-Vercel-000?logo=vercel" alt="Vercel">
+<img src="https://img.shields.io/badge/Tests-Vitest%20%7C%20Playwright-16A34A" alt="Vitest and Playwright">
+</p>
+
+<sub>Created and maintained by <a href="https://github.com/Supriyo016"><strong>Supriyo Sarkar</strong></a> · Founder & Website Owner</sub>
+
 </div>
 
 ---
 
 > [!IMPORTANT]
-> Tour India is an **independent travel information and planning platform**, not a travel agency. It does not sell tours, issue tickets, confirm hotel reservations, process payments or guarantee third-party availability. Planner travel times and costs are estimates, not live fares or quotations.
+> **What Tour India is — and is not:** Tour India is an independent travel information and itinerary-planning platform, not a travel agency or booking operator. It does not sell tours, issue tickets, confirm hotel reservations, process payments, or guarantee third-party availability. Route distances, travel times and budget values in planner outputs are estimates. Always confirm current conditions, permits, fares, opening hours and safety information with the relevant official authority or service provider.
 
-## 🏞️ A window into India
+## 🧭 Quick navigation
 
-Tour India connects destination discovery, culture, practical information and itinerary planning. Explore a state, browse destination guides, understand local traditions, compare places and organise your own travel outline.
+| Section | Description |
+|---|---|
+| [About the platform](#-about-the-platform) | What Tour India offers |
+| [Explore India](#-explore-india) | State map, globe and destinations |
+| [Culture and heritage](#-culture-food-and-heritage) | Festivals, regional food, arts and heritage |
+| [Trip planner](#-trip-planner) | Editable itinerary workflow |
+| [Yatri assistant](#-yatri-travel-assistant) | Search and travel guidance |
+| [Screens and experience](#-visual-showcase) | Current visual assets and responsive design |
+| [Technology and architecture](#-technology-stack) | Framework, data and system design |
+| [Run locally](#-run-locally) | Development setup |
+| [Environment and services](#-environment-configuration) | Optional integrations |
+| [Testing and deployment](#-quality-assurance-and-deployment) | Checks and release workflow |
+| [Security and content standards](#-security-privacy-and-travel-information) | Responsible data and travel content |
+| [Documentation](#-project-documentation) | Engineering references |
+
+## 🏞️ About the platform
+
+Tour India brings destination discovery, cultural information and itinerary planning into one place. Visitors can explore an Indian state, browse destination guides, understand local traditions, compare travel ideas and build a personal trip outline.
+
+The current Next.js application is maintained on **`rebuild/nextjs`**. The repository's `master` branch is the legacy/original site in the current branch history. This README documents the Next.js application branch.
+
+### Platform at a glance
 
 <div align="center">
-<a href="https://tour-india-pi.vercel.app"><img src="docs/assets/screenshot-home.webp" width="100%" alt="Tour India homepage with destination photography and explore controls"></a>
-<sub>Homepage · Destination-led discovery</sub>
+<table>
+<tr>
+<td align="center" width="25%"><h2>28 + 8</h2><strong>States & UTs</strong><br><sub>Regional profiles</sub></td>
+<td align="center" width="25%"><h2>52</h2><strong>Destinations</strong><br><sub>Structured travel guides</sub></td>
+<td align="center" width="25%"><h2>45</h2><strong>Heritage entries</strong><br><sub>UNESCO-listed properties</sub></td>
+<td align="center" width="25%"><h2>24</h2><strong>Festivals</strong><br><sub>Editorial calendar entries</sub></td>
+</tr>
+<tr>
+<td align="center" colspan="2"><h2>29</h2><strong>Regional food entries</strong></td>
+<td align="center" colspan="2"><h2>64</h2><strong>Traditional arts and cultural forms</strong></td>
+</tr>
+</table>
+<sub>Counts are derived from the structured content collections in this source branch. They describe the current catalogue, not complete coverage of every place or tradition in India.</sub>
 </div>
 
-## 📍 Travel catalogue
+## ✨ Explore India
 
-| Editorial catalogue | Current entries |
+### 🗺️ Interactive state map
+
+Explore India's 28 states and 8 Union Territories through an interactive map experience.
+
+- Select a region or state to open its profile.
+- Explore state-level destinations, culture, food and festival information.
+- Move from a state overview into its related destination guides.
+- Map geometry and content are part of the project's editorial/navigation experience; consult the map credits and site notes for scope and limitations.
+
+### 🌐 Destination globe
+
+A 3D globe provides another way to explore the destination catalogue.
+
+- Rotate and inspect the globe.
+- Select destination markers to open corresponding guides.
+- Discover locations spatially before reading the detailed destination pages.
+
+### 📍 Destination guides
+
+Destination pages connect editorial travel information with practical planning context, including:
+
+- Overview, location and destination highlights.
+- Attractions and nearby places.
+- Recommended travel period and suggested stay.
+- Ways to reach the destination and local transport notes.
+- Accommodation areas, regional food and experiences.
+- Permit notes, accessibility information and practical precautions.
+- Estimated budget ranges and useful external references.
+
+### Travel catalogue
+
+| Content collection | Current entries |
 |---|---:|
 | State and Union Territory profiles | **36** |
 | Destination guides | **52** |
@@ -53,351 +122,400 @@ Tour India connects destination discovery, culture, practical information and it
 | Traditional art forms | **64** |
 | Travel circuits | **6** |
 
-These figures refer to the current site's structured content records; they are not a claim of exhaustive coverage of all Indian places or traditions.
+## 🎭 Culture, food and heritage
 
-## ✨ Explore the platform
+Tour India treats culture as more than a list of tourist attractions. The catalogue includes living traditions, festivals, food and heritage references.
 
-### 🗺️ Interactive India map
+### Festival calendar
 
-- Explore all 28 states and 8 Union Territories.
-- Hover or focus on a state for a short preview, then open its full profile.
-- Browse state-level culture, food, festivals, languages and related destination guides.
-- Follow map credits and limitations from the map page.
+- Browse festival entries and date information.
+- Filter the calendar and review source notes.
+- Export supported calendar entries.
+- Check the stated date and source because festival dates can vary by regional calendar and announcement.
 
-### 🌐 3D destination globe
+### Regional food
 
-- Rotate the globe to explore destination locations.
-- Select a destination marker to open its guide.
-- Move from globe discovery into the detailed destination catalogue.
+Explore regional dishes and food traditions across states and destination pages.
 
-<div align="center">
-<img src="docs/assets/screenshot-explore-globe.webp" width="90%" alt="Tour India interactive globe showing destination locations">
-<br><sub>Explore · Destination globe</sub>
-</div>
+### Arts and traditions
 
-### 🧭 Detailed destination guides
+Browse traditional art forms, crafts, dance and music, with regional context and supporting information.
 
-Guides bring together seasonal advice, recommended length of stay, attractions, ways to reach the destination, accommodation areas, food, nearby places, cost ranges, permit notes, accessibility and practical precautions.
+### Heritage and museums
 
-<div align="center">
-<img src="docs/assets/screenshot-destination.webp" width="90%" alt="A destination guide showing attractions, recommended travel period and estimated cost">
-<br><sub>Destination guide · Example: Agra</sub>
-</div>
+Explore heritage entries and museums, with references to the relevant source material. UNESCO status and inscription details should always be read in the context of the official World Heritage List.
 
-### 🧳 Editable trip planner
+## 🧳 Trip planner
 
-Build a multi-stop outline from a starting city and selected destinations.
+The trip planner helps users build and edit a multi-stop outline using selected destinations and their travel preferences.
 
-- Choose trip duration, travellers, budget, pace and interests.
-- Select transport preferences or use mixed transport planning.
-- Review day-wise activity suggestions and destination allocation.
-- See estimated travel legs, distance, duration and cost.
-- Rearrange the plan and review warnings about rushed schedules.
-- Share the plan and reopen it from a supported share link.
+- Set a starting point and choose destinations.
+- Configure trip duration, travellers, budget, pace and interests.
+- Review day-wise destination allocation and activity suggestions.
+- Inspect approximate distances, travel legs, time and cost.
+- Rearrange the itinerary and review warnings about overly rushed schedules.
+- Use supported share/export options to retain or share a plan.
 
-<div align="center">
-<img src="docs/assets/screenshot-planner.webp" width="90%" alt="Trip planner with route, destinations, dates and planning preferences">
-<br><sub>Planner · Editable day-by-day itinerary</sub>
-</div>
+> [!NOTE]
+> Planner calculations are estimates based on declared assumptions and available route information. They are not live ticket fares, confirmed transport schedules, accommodation quotes or booking confirmations. Validate every important leg independently before travelling.
 
-> **Planning transparency:** costs, travel times and distances are generated using assumptions and approximate route calculations. Confirm fares, live conditions, transport services and booking availability with the relevant provider.
+## 🤖 Yatri — travel assistant
 
-### 🎭 Culture, food and heritage
+Yatri is the travel assistant integrated with the Tour India content and tools.
 
-- Festival and public holiday calendar with date notes and calendar export.
-- Regional cuisine and traditional dishes.
-- Arts, crafts, dance, music and cultural traditions.
-- UNESCO heritage information and museums.
-- Culture by region and destination.
-- Travel stories, practical explainers and community contributions.
+- Search the site's destination and state catalogue.
+- Ask about destinations, festivals, regional food and practical travel topics.
+- Discover relevant Tour India guides.
+- Generate draft itinerary suggestions using the site's travel data.
+- Use the built-in guide-answer path without an external AI provider.
+- Optionally use a server-configured Groq or Vercel AI Gateway provider.
 
-### 🤖 Yatri — travel assistant
+Yatri is not an official government source. It cannot guarantee current permits, closures, weather warnings, transport availability, personal safety or booking status. Verify consequential information directly with authoritative sources.
 
-Yatri helps users search the site's travel catalogue, ask about a state or destination, find festivals and dishes, explore practical travel information and create a draft itinerary.
+## 👤 Accounts, personal travel and community
 
-- Answers are grounded in Tour India's own content and tools.
-- Works in guide-answer mode without an external AI provider.
-- Can use Groq or Vercel AI Gateway when configured server-side.
-- Provides links to relevant Tour India pages.
-- Uses constrained tools and bounded response handling.
+When the required backend and authentication settings are configured, the application includes account and personal travel workflows such as saved places, trips, notes, memories, collections, profile preferences, notifications, privacy controls and account deletion.
 
-Yatri is not an official government source and cannot verify real-time permits, closures, safety conditions, transport availability or bookings.
+The codebase also contains community and editorial workflows for stories, discussions, tips, questions, suggestions, moderation and review. Public persistence and account-dependent behaviour require the relevant backend services to be configured; their presence in the source code does not mean every feature is enabled on every deployment.
 
-### 👤 Accounts and personal travel space
+## 🛡️ Administration and operations
 
-When the database and authentication services are configured, users can access account and personal-data features such as saved places, trips, notes, memories, collections, notifications, privacy controls and account deletion.
+The application includes protected administration routes and operational tooling for supported content, moderation, support, permissions, audit activity, system health, SEO, backups and scheduled publishing. Administrative pages are access-controlled and are not public travel-guide features.
 
-### 🧑‍🤝‍🧑 Community and editorial tools
+## 🖼️ Visual showcase
 
-The codebase includes moderated stories, discussions, tips, questions, suggestions and an editorial review flow. Public contribution/persistence features depend on the configured backend.
-
-### 🛡️ Administration and operations
-
-Protected admin tools support content management, moderation, support, roles and permissions, audit logs, health monitoring, SEO, backups, feature controls and scheduled content publishing.
-
-## 📱 Responsive interface
-
-The interface is designed for desktop and mobile browsing, with photo-led destination cards and a travel-focused visual system.
+The repository stores the animated brand banner and destination/state/culture image assets in the current application branch.
 
 <div align="center">
-<img src="docs/assets/screenshot-mobile-destination.webp" width="34%" alt="Tour India destination guide on a mobile display">
-<br><sub>Mobile destination view</sub>
+
+<a href="https://tour-india-pi.vercel.app">
+<img src="public/images/destinations/agra.webp" width="48%" alt="Agra destination imagery from the Tour India repository">
+</a>
+<a href="https://tour-india-pi.vercel.app">
+<img src="public/images/destinations/darjeeling.webp" width="48%" alt="Darjeeling destination imagery from the Tour India repository">
+</a>
+<br>
+<sub>Destination catalogue · Examples from the locally maintained image collection</sub>
+
+<br><br>
+
+<a href="https://tour-india-pi.vercel.app">
+<img src="public/images/states/kerala.webp" width="48%" alt="Kerala state imagery">
+</a>
+<a href="https://tour-india-pi.vercel.app">
+<img src="public/images/states/rajasthan.webp" width="48%" alt="Rajasthan state imagery">
+</a>
+<br>
+<sub>State profiles · Regional discovery</sub>
+
+<br><br>
+
+<a href="https://tour-india-pi.vercel.app">
+<img src="public/images/festivals/durga-puja.webp" width="31%" alt="Durga Puja festival imagery">
+</a>
+<a href="https://tour-india-pi.vercel.app">
+<img src="public/images/food/mishti-doi.webp" width="31%" alt="Mishti doi regional food imagery">
+</a>
+<a href="https://tour-india-pi.vercel.app">
+<img src="public/images/art/bankura-terracotta.webp" width="31%" alt="Bankura terracotta traditional art imagery">
+</a>
+<br>
+<sub>Culture · Food · Traditional arts</sub>
+
 </div>
+
+## 📱 Responsive experience
+
+The platform is built for desktop and mobile browsing. The interface combines destination photography, map-based discovery, content-led guide pages and interactive planner controls.
+
+The current source includes responsive page components and browser-based end-to-end tests. Visual media in this README links to repository assets; the deployed site remains the best place to inspect the complete interactive experience.
 
 ## 🧰 Technology stack
 
 <div align="center">
-<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,nodejs,mongodb,vercel,github,git&perline=9" alt="Tour India technologies">
+<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,nodejs,mongodb,vercel,github,git&perline=9" alt="Tour India technology stack">
 </div>
 
-| Layer | Main technology |
+| Layer | Technology |
 |---|---|
 | Framework | Next.js 16 App Router |
 | UI | React 19 |
 | Language | TypeScript strict mode |
 | Styling | Tailwind CSS 4 |
-| Data | Typed content modules · MongoDB driver / Atlas when configured |
+| Database | MongoDB driver / MongoDB Atlas when configured |
 | Validation | Zod |
 | Forms | React Hook Form |
-| Maps and geography | SVG India map · 3D globe · Google Maps integrations |
 | Interactions | dnd kit |
+| Maps and geography | SVG map, 3D globe and optional Google Maps integration |
 | Weather | Open-Meteo |
-| Assistant | Yatri · Groq or Vercel AI Gateway (optional) |
-| Testing | Vitest · Playwright · axe |
-| Code checks | ESLint · TypeScript · npm audit |
-| Security analysis | CodeQL |
-| Dependency updates | Dependabot |
+| Travel assistant | Yatri · Groq or Vercel AI Gateway (optional) |
+| Unit testing | Vitest |
+| Browser testing | Playwright |
+| Accessibility checks | axe-core / Playwright |
+| Code quality | ESLint · TypeScript |
+| Security checks | npm audit · GitHub Actions |
+| Static analysis | CodeQL (where workflow is configured) |
 | Hosting | Vercel |
-| Automation | GitHub Actions |
+| CI | GitHub Actions |
 
 ## 🏗️ Architecture
 
-Next.js App Router serves pages from typed editorial content. Interactive client components are used where required, such as the map, planner, search and forms. Server API routes validate inputs before accessing external services or persistent storage.
+The current application uses Next.js App Router. Most pages are rendered as server components from typed editorial content. Client-side code is reserved for interactive areas such as the navigation, search, hero, maps, filters, trip planner and forms. Server API routes validate incoming requests before accessing external services or persistent storage.
 
 ```mermaid
 flowchart TD
-    Visitor[Visitor] --> App[Next.js 16 App Router]
-    App --> Pages[Server-rendered pages]
-    App --> Client[Interactive client components]
-    Pages --> Content[Typed travel data]
-    Client --> Map[India map and globe]
-    Client --> Planner[Itinerary planner]
-    App --> API[Validated API routes]
-    API --> DB[(MongoDB Atlas - optional)]
+    Visitor[Visitor] --> Next[Next.js 16 App Router]
+    Next --> Pages[Server-rendered guide pages]
+    Next --> Islands[Interactive client components]
+    Pages --> Data[Typed editorial data]
+    Islands --> Map[India map and globe]
+    Islands --> Planner[Trip planner]
+    Islands --> Search[Search and filters]
+    Next --> API[Validated API routes]
+    API --> Mongo[(MongoDB - optional)]
     API --> Weather[Open-Meteo]
-    API --> Assistant[Yatri provider - optional]
-    Repo[GitHub] --> CI[GitHub Actions and CodeQL]
-    CI --> Vercel[Vercel deployment]
-    App --> Vercel
+    API --> Yatri[Yatri provider - optional]
+    API --> Forms[Contact, newsletter and stories]
+    Repo[GitHub repository] --> CI[GitHub Actions]
+    CI --> Tests[Type check, lint, unit and browser tests]
+    Next --> Host[Vercel deployment]
 ```
 
-### Engineering principles
+### Architecture principles
 
-- Content-first architecture with typed records for states, destinations and cultural material.
-- Server Components by default, with small interactive client components.
-- MongoDB is optional for reading the public guide; it is required for persistent account and submission workflows.
-- API boundaries apply origin, content-type, body-size, rate-limit and schema checks.
-- Secrets stay in server-side environment variables.
-- Fallbacks keep the core guide useful when optional integrations are not available.
+- **Content-first structure:** typed editorial data drives state, destination and culture pages.
+- **Server-first rendering:** page content is rendered on the server; client components are used where interaction is required.
+- **Optional persistence:** the public guide works without a database; persistent submissions and account workflows need MongoDB and relevant configuration.
+- **Validated API boundaries:** same-origin checks, content-type checks, request-size limits, rate limits and Zod validation are applied where relevant.
+- **Server-side secrets:** API credentials and database connections belong in server-only environment variables.
+- **Fallback paths:** optional service integrations should not be confused with essential guide content.
 
-See [Architecture](docs/architecture.md) for implementation details.
+Read [docs/architecture.md](docs/architecture.md) for the implementation map.
 
 ## 📂 Repository structure
 
 ```text
 TourIndia/
 ├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   └── workflows/           # CI and CodeQL
+│   └── workflows/             # CI workflows
 ├── docs/
-│   ├── assets/              # Banner and README screenshots
-│   ├── research/
-│   ├── architecture.md
-│   ├── setup.md
-│   ├── api.md
-│   ├── PROJECT_STATUS.md
-│   ├── OPERATIONS.md
-│   ├── SECURITY_AUDIT.md
-│   └── FACT_CHECK.md
-├── legacy/                  # Original static website
-├── public/images/           # Destination, state and culture media
-├── scripts/                 # Map, image and database utilities
+│   ├── research/              # Research notes
+│   ├── architecture.md        # Application architecture
+│   ├── setup.md               # Local setup and deployment
+│   ├── api.md                 # API reference
+│   ├── PROJECT_STATUS.md      # Project state and owner notes
+│   ├── OPERATIONS.md          # Operations guide
+│   ├── SECURITY_AUDIT.md      # Security review notes
+│   └── FACT_CHECK.md          # Travel content fact-check log
+├── legacy/                    # Original static website
+├── public/
+│   └── images/                # Brand, destination and culture assets
+├── scripts/                   # Data builders and database setup
 ├── src/
-│   ├── app/                 # Public, account and admin routes
-│   ├── components/          # UI and feature components
-│   ├── config/              # Site and brand configuration
-│   ├── data/                # Typed travel content
-│   ├── features/            # Planner, assistant, accounts, community
-│   ├── hooks/
-│   ├── lib/                 # Database, security and helpers
-│   └── types/
+│   ├── app/                   # App Router pages and API routes
+│   ├── components/            # Reusable interface components
+│   ├── config/                # Site and brand settings
+│   ├── data/                  # Typed destination and culture content
+│   ├── features/              # Planner, assistant and domain logic
+│   ├── hooks/                 # Reusable client hooks
+│   ├── lib/                   # Database, validation and helpers
+│   └── types/                 # TypeScript content types
 ├── tests/
-│   ├── e2e/
-│   ├── security/
-│   └── unit/
+│   ├── e2e/                   # Browser tests
+│   ├── security/               # Security and route tests
+│   └── unit/                   # Unit tests
 ├── .env.example
-└── package.json
+├── package.json
+└── README.md
 ```
 
-Generated map and image manifests under `src/data/generated/` are built by scripts; update their source data instead of editing generated output manually.
+Generated data under `src/data/generated/` is built by project scripts. Update its source records and regenerate the output rather than editing generated files manually.
 
 ## 🚀 Run locally
 
 ### Requirements
 
-- Node.js 20.9 or later
+- Node.js **20.9 or later**
 - npm
 - Git
 
 ### Clone the current application branch
 
-The current Next.js application is maintained on **`rebuild/nextjs`**. The `master` branch currently represents the legacy/original website.
+The current Next.js application lives on **`rebuild/nextjs`**. Do not assume that `master` contains this application; it is the legacy branch in the current repository history.
 
 ```bash
 git clone --branch rebuild/nextjs https://github.com/Supriyo016/TourIndia.git
 cd TourIndia
 npm install
-cp .env.example .env.local
-npm run dev
 ```
 
-On Windows PowerShell, create the local environment file with:
+Create a local environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+On Windows PowerShell:
 
 ```powershell
 Copy-Item .env.example .env.local
 ```
 
+Start the development server:
+
+```bash
+npm run dev
+```
+
 Open [http://localhost:3000](http://localhost:3000).
 
-Core guide pages do not need a database. Features that save user records, send emails or use external providers require their corresponding configuration.
+The public guide can run without a database. Features that persist submissions, user data or account activity require the relevant backend configuration.
 
-## 🔧 Environment variables and optional integrations
+## 🔧 Environment configuration
 
-The full commented template is [`.env.example`](.env.example). Never commit secrets or real credentials.
+The full commented variable template is [`.env.example`](.env.example). Keep real credentials out of source control.
 
-| Variable | What it configures |
+| Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | Canonical site address |
-| `MONGODB_URI`, `MONGODB_DB` | MongoDB persistence |
-| `RATE_LIMIT_SALT` | Hashed rate-limit identifiers |
-| `GROQ_API_KEY` | Yatri via Groq |
-| `AI_GATEWAY_API_KEY` / `AI_GATEWAY_OIDC` | Yatri via Vercel AI Gateway |
-| `ASSISTANT_MODELS` / `ASSISTANT_DAILY_LIMIT` | Optional Yatri model and usage settings |
-| `AUTH_SECRET` | Account authentication |
-| `RESEND_API_KEY`, `EMAIL_FROM` | Email verification codes |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site origin and same-origin form checks |
+| `MONGODB_URI` | MongoDB connection string |
+| `MONGODB_DB` | Database name (template default: `tour_india`) |
+| `RATE_LIMIT_SALT` | Random secret used for rate-limit identifiers |
+| `GROQ_API_KEY` | Optional Yatri Groq provider |
+| `AI_GATEWAY_API_KEY` / `AI_GATEWAY_OIDC` | Optional Vercel AI Gateway |
+| `AUTH_SECRET` | Authentication code and session-related signing |
+| `RESEND_API_KEY`, `EMAIL_FROM` | Email code delivery |
 | `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | Google OAuth |
 | `ADMIN_EMAILS` | Admin sign-in allowlist |
-| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAP_ID` | Google Maps features |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAP_ID` | Optional Google Maps integration |
 | `GOOGLE_SITE_VERIFICATION` | Search Console verification |
-| `COOKIE_SECRET` | Explicit cookie signing secret |
-| `TRUSTED_PROXY_HOPS` | Trusted reverse proxy configuration for self-hosting |
 
-### Service availability
+Some optional settings are commented in the template and may be enabled for advanced deployment scenarios. Read the comments in `.env.example` and [docs/setup.md](docs/setup.md) before enabling them.
 
-| Feature | Without credentials | With configuration |
+### Feature availability
+
+| Capability | Without optional services | With configuration |
 |---|---|---|
-| State and destination guides | Available | Available |
-| Search, catalogue and planner | Available | Available |
-| Yatri | Guide-grounded answers | AI provider can be used |
-| Persistent accounts and saved data | Unavailable | MongoDB + auth configuration |
-| Email sign-in | Unavailable | Auth secret + Resend |
-| Google sign-in | Unavailable | Google OAuth credentials |
-| Database-backed forms/community | Report unavailable | MongoDB configured |
-| Google Maps enhancements | Supported fallback views | Configured Google Maps features |
+| State and destination guide pages | Available | Available |
+| Editorial culture catalogue | Available | Available |
+| Search and trip-planning interface | Available | Available |
+| Yatri guide-grounded answers | Available | Available |
+| Yatri external AI provider | Not enabled | Groq / Vercel AI Gateway |
+| Persistent submissions and saved records | Not available | MongoDB |
+| Account and email workflows | Not available | Auth, database and email provider |
+| Google sign-in | Not available | OAuth credentials |
+| Google Maps enhancements | Fallback experience | Maps configuration |
 
-Detailed instructions for MongoDB, Yatri, OAuth, email, Maps and Vercel are in [docs/setup.md](docs/setup.md).
+Detailed service setup and deployment guidance: [docs/setup.md](docs/setup.md).
 
 ## 🧪 Quality assurance
 
-Run the following before opening a pull request:
+Run these checks before submitting a change:
 
 ```bash
 npm run typecheck
 npm run lint
 npm test
 npm run build
-npx playwright install --with-deps chrome
 npm run test:e2e
 ```
 
+Browser tests require the configured Playwright browser. Install it with:
+
+```bash
+npx playwright install --with-deps chrome
+```
+
+### Useful npm commands
+
 | Command | Purpose |
 |---|---|
-| `npm run dev` | Start development server |
-| `npm run build` | Build production application |
-| `npm run vercel-build` | Run deployment DB setup and Next.js build |
-| `npm run start` | Serve production build |
+| `npm run dev` | Start local development |
+| `npm run build` | Build the Next.js application |
+| `npm run vercel-build` | Run deployment database setup, then build |
+| `npm run start` | Start the production server |
 | `npm run typecheck` | Generate Next.js types and check TypeScript |
 | `npm run lint` | Run ESLint |
-| `npm test` | Run Vitest tests |
-| `npm run test:e2e` | Run Playwright tests |
-| `npm run db:setup` | Create/update database structures |
-| `npm run data:map` | Rebuild generated map data |
-| `npm run data:images` | Rebuild image manifest |
+| `npm test` | Run Vitest unit tests |
+| `npm run test:e2e` | Run Playwright browser tests |
+| `npm run db:setup` | Prepare database collections and indexes |
+| `npm run data:map` | Regenerate map data |
+| `npm run data:images` | Rebuild the image manifest |
 
 ### GitHub Actions
 
-The CI workflow installs dependencies, audits production dependencies, runs type checking, lint, Vitest, production build and Playwright browser tests against a MongoDB service. CodeQL analyses the TypeScript/JavaScript code. Dependabot monitors dependencies.
+The CI workflow in `.github/workflows/ci.yml` sets up Node.js, starts a MongoDB service, installs dependencies, audits production dependencies, runs type checking and lint, executes tests, builds the application and runs browser tests.
 
 ## ☁️ Deployment
 
-The current Next.js application is configured for Vercel. The deployment build runs `npm run vercel-build`.
+The production site is:
 
-**Branch warning:** verify the Vercel production branch before changing deployment settings. The newer application lives on `rebuild/nextjs`; `master` is the legacy branch in the current repository history. Deploying the wrong branch may publish the old site.
+**[https://tour-india-pi.vercel.app](https://tour-india-pi.vercel.app)**
 
-Read:
-- [Setup and deployment](docs/setup.md)
+The current application source is `rebuild/nextjs`. Check the Vercel project's configured production branch before changing deployment settings. A branch mismatch can deploy the legacy site instead of the current Next.js application.
+
+The deployment build uses:
+
+```bash
+npm run vercel-build
+```
+
+This invokes the deployment database setup script followed by the Next.js production build. MongoDB and other optional service credentials should be configured in the hosting platform's environment settings, never committed to Git.
+
+See:
+- [Setup and deployment guide](docs/setup.md)
 - [Operations guide](docs/OPERATIONS.md)
-- [Project status and owner actions](docs/PROJECT_STATUS.md)
+- [Project status](docs/PROJECT_STATUS.md)
 
-## 🔐 Security, privacy and responsible travel
+## 🔐 Security, privacy and travel information
 
-Security features include server-side validation, same-origin checks, payload limits, rate limits, signed sessions, role-based admin access, protected secrets and security-focused tests. These controls reduce risk; they do not make any application completely secure.
+The codebase includes request validation, origin checks, payload-size limits, rate limiting, session and role-related controls for configured account workflows, protected server-side secrets and security-focused tests.
 
-For controls and known risks see [Security Audit](docs/SECURITY_AUDIT.md), [Operations](docs/OPERATIONS.md) and [Backups](docs/BACKUPS.md).
+These protections reduce risk; they do not mean that any application is completely secure. Review [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md) for recorded controls, scope and residual risks.
 
-**Travel facts change.** Confirm permits, opening periods, road and weather conditions, safety guidance, religious-site rules, fares and availability with the appropriate official authority or service provider. The site's India map is for navigation and is not an authoritative statement of international boundaries.
+### Responsible travel information
 
-The source and review status of travel claims is recorded in [Fact Checking](docs/FACT_CHECK.md).
+- Travel permits, border restrictions, opening periods and local rules can change.
+- Festival dates and observances may vary by region and official announcement.
+- Weather, road access, transport services, fares and accommodation availability require current confirmation.
+- Planner times, distances and budgets are estimates, not guaranteed quotations.
+- The interactive map is for travel discovery and must not be treated as an authoritative legal boundary map.
+- Verify safety-sensitive and permit-related information with the named official authority.
 
-## 📚 Documentation
+The project's sourcing and review notes are available in [docs/FACT_CHECK.md](docs/FACT_CHECK.md).
 
-| Guide | What it explains |
+## 📚 Project documentation
+
+| Document | Coverage |
 |---|---|
-| [Project status](docs/PROJECT_STATUS.md) | Current state, tested items and owner actions |
-| [Setup](docs/setup.md) | Environment, integrations, Vercel and rollback |
-| [Architecture](docs/architecture.md) | Code structure and data flow |
-| [API reference](docs/api.md) | Routes and data contracts |
-| [Operations](docs/OPERATIONS.md) | Running and maintaining the platform |
-| [Backups](docs/BACKUPS.md) | Backup and recovery |
-| [Security audit](docs/SECURITY_AUDIT.md) | Security controls and residual risks |
-| [Fact checking](docs/FACT_CHECK.md) | Travel content sourcing and verification |
-| [Decisions](docs/DECISIONS.md) | Engineering/product decisions |
-| [Contributing](CONTRIBUTING.md) | Issues and pull requests |
+| [Architecture](docs/architecture.md) | Rendering model, code layout and data flow |
+| [Setup and deployment](docs/setup.md) | Local environment, integrations and hosting |
+| [API reference](docs/api.md) | API routes, request validation and responses |
+| [Project status](docs/PROJECT_STATUS.md) | Current project status and owner actions |
+| [Operations](docs/OPERATIONS.md) | Production operation and maintenance |
+| [Security audit](docs/SECURITY_AUDIT.md) | Implemented controls and remaining risks |
+| [Fact-check log](docs/FACT_CHECK.md) | Travel-content source and verification notes |
 
 ## 🤝 Contributing
 
-Corrections, source links, accessibility fixes and reproducible bug reports are welcome.
+Corrections, factual sources, accessibility improvements and reproducible bug reports are welcome.
 
-1. Read [CONTRIBUTING.md](CONTRIBUTING.md).
-2. Use the GitHub issue templates.
-3. Make changes on a focused branch from `rebuild/nextjs`.
-4. Cite sources for factual travel-content changes.
-5. Run lint, typecheck, tests and build.
-6. Describe the change and verification in the pull request.
+1. Start from the current `rebuild/nextjs` branch.
+2. Make a focused change on a separate branch.
+3. Include source references for factual travel-content changes.
+4. Run typecheck, lint, unit tests and production build.
+5. Add or update tests for behaviour changes.
+6. Explain what changed and how it was verified.
 
-Do not invent prices, schedules, permit requirements, visitor counts, safety assurances or booking availability. Reused photographs and other media must have appropriate licences and credits.
-
-Report security concerns privately as described in [SECURITY.md](SECURITY.md).
-
-
+Do not invent travel costs, schedules, permits, visitor statistics, safety guarantees or booking availability. Ensure that photographs and other media have appropriate reuse permissions and credits.
 
 ## 🧩 More projects by the developer
 
-Tour India is part of a wider portfolio of research and engineering projects:
+Tour India is part of a wider collection of academic and engineering projects.
 
 | Project | Focus | Explore |
 |---|---|---|
-| **DeveloperBro. Academic Portfolio** | Research case studies, academic profile and technical writing | [Live portfolio](https://developerbro.vercel.app) · [GitHub repository](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio) |
+| **DeveloperBro. Academic Portfolio** | Academic profile, research case studies and technical writing | [Live portfolio](https://developerbro.vercel.app) · [GitHub repository](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio) |
 | **Third Hand-Eye** | Arduino Uno, ultrasonic sensing and an audible obstacle-alert prototype | [GitHub repository](https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals) |
 
 <div align="center">
@@ -407,26 +525,32 @@ Tour India is part of a wider portfolio of research and engineering projects:
 
 ## 📜 Licence and attribution
 
-The application code is released under the [MIT Licence](LICENSE). This licence does **not** automatically cover every photograph, video, map dataset or third-party asset.
+Review the repository's current licence and attribution files before reusing code, photographs, videos, map data or third-party media. The presence of an asset in this repository does not automatically grant separate rights to every underlying source.
 
-- Photo attributions are available on the relevant pages and [/credits](https://tour-india-pi.vercel.app/credits).
-- Weather information is provided by [Open-Meteo](https://open-meteo.com/).
-- Map/geographic data carries separate provider and licence conditions; review the credits and project status notes.
-- The original static project is retained in [`legacy/`](legacy/).
+Useful credits and source notes are linked from the live site's [Credits page](https://tour-india-pi.vercel.app/credits), and from the project fact-check documentation.
 
 ## 🧑‍💻 Project owner
 
 <div align="center">
-<a href="https://github.com/Supriyo016"><img src="https://img.shields.io/badge/Founder%20%26%20Owner-Supriyo%20Sarkar-0B6B62?style=for-the-badge&logo=github" alt="Supriyo Sarkar"></a>
+
+<a href="https://github.com/Supriyo016"><img src="https://img.shields.io/badge/Founder%20%26%20Website%20Owner-Supriyo%20Sarkar-0B6B62?style=for-the-badge&logo=github" alt="Supriyo Sarkar"></a>
+
 <br>
+
+<a href="https://github.com/Supriyo016"><img src="https://img.shields.io/badge/GitHub-Supriyo016-181717?style=for-the-badge&logo=github" alt="GitHub"></a>
 <a href="https://x.com/Supriyo016"><img src="https://img.shields.io/badge/X-@Supriyo016-000?style=for-the-badge&logo=x" alt="X"></a>
 <a href="https://www.instagram.com/supriyo016/"><img src="https://img.shields.io/badge/Instagram-@supriyo016-E4405F?style=for-the-badge&logo=instagram" alt="Instagram"></a>
 <a href="https://www.youtube.com/@supriyo016"><img src="https://img.shields.io/badge/YouTube-@supriyo016-FF0000?style=for-the-badge&logo=youtube" alt="YouTube"></a>
 <a href="https://www.facebook.com/profile.php?id=100070487584093"><img src="https://img.shields.io/badge/Facebook-Profile-0866FF?style=for-the-badge&logo=facebook" alt="Facebook"></a>
+
 <br><br>
+
 <strong>Explore more. Travel thoughtfully. Respect every place and community.</strong>
 <br>
 <a href="https://tour-india-pi.vercel.app">Visit Tour India ↗</a>
+
 <br><br>
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0B6B62,55:E6A23C,100:136F63&height=105&section=footer" width="100%" alt="">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&height=150&color=0:0B6B62,38:0E7490,72:E6A23C,100:136F63&section=footer&text=DISCOVER%20%E2%80%A2%20EXPLORE%20%E2%80%A2%20EXPERIENCE&fontColor=F8FAFC&fontSize=20&fontAlignY=66" width="100%" alt="Tour India animated footer">
+
 </div>
