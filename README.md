@@ -389,6 +389,22 @@ Do not invent prices, schedules, permit requirements, visitor counts, safety ass
 
 Report security concerns privately as described in [SECURITY.md](SECURITY.md).
 
+
+
+## 🧩 More projects by the developer
+
+Tour India is part of a wider portfolio of research and engineering projects:
+
+| Project | Focus | Explore |
+|---|---|---|
+| **DeveloperBro. Academic Portfolio** | Research case studies, academic profile and technical writing | [Live portfolio](https://developerbro.vercel.app) · [GitHub repository](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio) |
+| **Third Hand-Eye** | Arduino Uno, ultrasonic sensing and an audible obstacle-alert prototype | [GitHub repository](https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals) |
+
+<div align="center">
+<a href="https://developerbro.vercel.app"><img src="https://img.shields.io/badge/DeveloperBro-Academic%20Portfolio-3730A3?style=for-the-badge&logo=vercel&logoColor=white" alt="DeveloperBro Academic Portfolio"></a>
+<a href="https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals"><img src="https://img.shields.io/badge/Third%20Hand--Eye-Arduino%20Prototype-0E7490?style=for-the-badge&logo=arduino&logoColor=white" alt="Third Hand-Eye"></a>
+</div>
+
 ## 📜 Licence and attribution
 
 The application code is released under the [MIT Licence](LICENSE). This licence does **not** automatically cover every photograph, video, map dataset or third-party asset.
