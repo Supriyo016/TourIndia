@@ -477,53 +477,6 @@ Corrections and focused improvements are welcome, especially well-sourced travel
 
 Do not add invented prices, availability, visitor counts, reviews or booking claims. Photographs must have a licence that allows reuse and must be credited appropriately.
 
-## 🌏 Project ecosystem
-
-The Tour India platform is part of a connected portfolio of research, software engineering and practical technology projects. Explore the other projects below.
-
-<div align="center">
-
-<table>
-<tr>
-<td align="center" width="50%">
-<a href="https://developerbro.vercel.app">
-<img src="https://img.shields.io/badge/DeveloperBro.-Academic%20Portfolio-3730A3?style=for-the-badge&logo=vercel&logoColor=white" alt="DeveloperBro Academic Portfolio">
-</a>
-<br><br>
-<strong>Research · Engineering · Ideas</strong>
-<br>
-<sub>A research-focused academic portfolio featuring project case studies, technical writing, research interests and software development work.</sub>
-<br><br>
-<a href="https://developerbro.vercel.app">Live Portfolio</a> ·
-<a href="https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio">Source Code</a>
-</td>
-<td align="center" width="50%">
-<a href="https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals">
-<img src="https://img.shields.io/badge/Third%20Hand--Eye-Arduino%20Prototype-0E7490?style=for-the-badge&logo=arduino&logoColor=white" alt="Third Hand-Eye Arduino Prototype">
-</a>
-<br><br>
-<strong>Sense · Measure · Alert</strong>
-<br>
-<sub>An Arduino Uno and HC-SR04 based ultrasonic obstacle-alert prototype with an audible buzzer, embedded firmware, circuit documentation and C++ tests.</sub>
-<br><br>
-<a href="https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals">Source Code</a> ·
-<a href="https://www.youtube.com/watch?v=xSJj8tTnAgg">Project Demo</a>
-</td>
-</tr>
-</table>
-
-<br>
-
-<a href="https://github.com/Supriyo016">
-<img src="https://img.shields.io/badge/Explore-All%20Projects-181717?style=for-the-badge&logo=github&logoColor=white" alt="Explore all projects on GitHub">
-</a>
-
-<br><br>
-
-<sub><em>From digital experiences to embedded prototypes — building useful ideas through technology.</em></sub>
-
-</div>
-
 ## 📬 Connect with the project
 
 <div align="center">
